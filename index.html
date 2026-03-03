@@ -3,29 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Loves Me 💖</title>
-    <link rel="stylesheet" href="style.css">
+    <title>PDF Loves Me 💖 MAX</title>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f4f9; color: #333; max-width: 900px; margin: 0 auto; padding: 2rem; text-align: center; }
+        h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 0.2rem; }
+        .subtitle { color: #7f8c8d; margin-bottom: 2rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e1e8ed; text-align: left; }
+        .card h3 { margin-top: 0; display: flex; align-items: center; gap: 8px; font-size: 1.2rem; }
+        input[type="file"], input[type="text"], input[type="number"] { width: 90%; padding: 8px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; }
+        button { background: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 10px; transition: background 0.2s; }
+        button:hover { background: #2980b9; }
+        .btn-green { background: #2ecc71; }
+        .btn-green:hover { background: #27ae60; }
+    </style>
 </head>
 <body>
-    <h1>PDF Loves Me 💖</h1>
-    <div class="grid" id="tools-container">
-        <div class="card" id="card-merge">
-            <h3>Merge PDF</h3>
-            <input type="file" id="merge-files" multiple accept="application/pdf">
-            <button onclick="mergePDFs()">Merge</button>
+    <h1>PDF Loves Me 💖 MAX</h1>
+    <div class="subtitle">Fast. Client-Side. Secure.</div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>📑 Merge PDFs</h3>
+            <input type="file" id="merge-files" multiple accept=".pdf">
+            <button onclick="mergePDFs()" class="btn-green">Generate PDF</button>
         </div>
-        <div class="card" id="card-rotate">
-            <h3>Rotate PDF (180°)</h3>
-            <input type="file" id="rotate-file" accept="application/pdf">
-            <button onclick="rotatePDF()">Rotate</button>
+
+        <div class="card">
+            <h3>📸 JPG to PDF</h3>
+            <input type="file" id="jpg-files" multiple accept="image/*">
+            <button onclick="imagesToPDF()" class="btn-green">Convert Images</button>
         </div>
-        <div class="card" id="card-jpg">
-            <h3>JPG to PDF</h3>
-            <input type="file" id="jpg-files" multiple accept="image/jpeg, image/png">
-            <button onclick="imagesToPDF()">Convert</button>
+
+        <div class="card">
+            <h3>✂️ Split PDF</h3>
+            <input type="file" id="split-file" accept=".pdf">
+            <input type="text" id="split-pages" placeholder="e.g. 1,3 (Page numbers)">
+            <button onclick="splitPDF()">Extract Pages</button>
+        </div>
+
+        <div class="card">
+            <h3>🔄 Rotate PDF</h3>
+            <input type="file" id="rotate-file" accept=".pdf">
+            <button onclick="rotatePDF()">Rotate 180°</button>
+        </div>
+
+        <div class="card">
+            <h3>🗑️ Delete Pages</h3>
+            <input type="file" id="delete-file" accept=".pdf">
+            <input type="text" id="delete-pages" placeholder="e.g. 2 (Page to remove)">
+            <button onclick="deletePages()">Remove Pages</button>
+        </div>
+
+        <div class="card">
+            <h3>💧 Add Watermark</h3>
+            <input type="file" id="watermark-file" accept=".pdf">
+            <input type="text" id="watermark-text" placeholder="Watermark Text">
+            <button onclick="watermarkPDF()">Apply Watermark</button>
+        </div>
+
+        <div class="card">
+            <h3>🔢 Page Numbers</h3>
+            <input type="file" id="number-file" accept=".pdf">
+            <button onclick="addPageNumbers()">Add Numbers</button>
+        </div>
+
+        <div class="card">
+            <h3>📝 Add Text (Edit)</h3>
+            <input type="file" id="text-file" accept=".pdf">
+            <input type="text" id="edit-text" placeholder="Text to add to page 1">
+            <button onclick="addText()">Insert Text</button>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        const { PDFDocument, rgb, degrees } = PDFLib;
+
+        function downloadURI(uri, name) {
+            const link = document.createElement("a");
+            link.download = name; link.href = uri;
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        async function processPDF(action, fileName) {
+            try {
+                const pdfBytes = await action();
+                if(pdfBytes) {
+                    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+                    downloadURI(URL.createObjectURL(blob), fileName);
+                }
+            } catch (e) { alert("Error processing PDF. Check your inputs."); console.error(e); }
+        }
+
+        async function mergePDFs() {
+            processPDF(async () => {
+                const files = document.getElementById('merge-files').files;
+                if (files.length < 2) throw new Error();
+                const mergedPdf = await PDFDocument.create();
+                for (let file of files) {
+                    const pdf = await PDFDocument.load(await file.arrayBuffer());
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach((page) => mergedPdf.addPage(page));
+                }
+                return await mergedPdf.save();
+            }, "Merged.pdf");
+        }
+
+        async function imagesToPDF() {
+            processPDF(async () => {
+                const files = document.getElementById('jpg-files').files;
+                if (!files.length) throw new Error();
+                const pdfDoc = await PDFDocument.create();
+                for (let file of files) {
+                    const imgBytes = await file.arrayBuffer();
+                    let image = file.type.includes('png') ? await pdfDoc.embedPng(imgBytes) : await pdfDoc.embedJpg(imgBytes);
+                    const page = pdfDoc.addPage([image.width, image.height]);
+                    page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
+                }
+                return await pdfDoc.save();
+            }, "Images.pdf");
+        }
+
+        async function splitPDF() {
+            processPDF(async () => {
+                const file = document.getElementById('split-file').files[0];
+                const pagesInput = document.getElementById('split-pages').value.split(',').map(Number);
+                const pdf = await PDFDocument.load(await file.arrayBuffer());
+                const newPdf = await PDFDocument.create();
+                const copiedPages = await newPdf.copyPages(pdf, pagesInput.map(p => p - 1));
+                copiedPages.forEach(p => newPdf.addPage(p));
+                return await newPdf.save();
+            }, "Split.pdf");
+        }
+
+        async function rotatePDF() {
+            processPDF(async () => {
+                const pdf = await PDFDocument.load(await document.getElementById('rotate-file').files[0].arrayBuffer());
+                pdf.getPages().forEach(page => page.setRotation(degrees(180)));
+                return await pdf.save();
+            }, "Rotated.pdf");
+        }
+
+        async function deletePages() {
+            processPDF(async () => {
+                const pdf = await PDFDocument.load(await document.getElementById('delete-file').files[0].arrayBuffer());
+                const pageToRemove = Number(document.getElementById('delete-pages').value) - 1;
+                pdf.removePage(pageToRemove);
+                return await pdf.save();
+            }, "Organized.pdf");
+        }
+
+        async function watermarkPDF() {
+            processPDF(async () => {
+                const pdf = await PDFDocument.load(await document.getElementById('watermark-file').files[0].arrayBuffer());
+                const text = document.getElementById('watermark-text').value;
+                pdf.getPages().forEach(page => {
+                    const { width, height } = page.getSize();
+                    page.drawText(text, { x: 50, y: height / 2, size: 50, color: rgb(0.75, 0.75, 0.75), rotate: degrees(45), opacity: 0.5 });
+                });
+                return await pdf.save();
+            }, "Watermarked.pdf");
+        }
+
+        async function addPageNumbers() {
+            processPDF(async () => {
+                const pdf = await PDFDocument.load(await document.getElementById('number-file').files[0].arrayBuffer());
+                pdf.getPages().forEach((page, idx) => {
+                    page.drawText(`${idx + 1}`, { x: page.getSize().width / 2, y: 20, size: 12, color: rgb(0, 0, 0) });
+                });
+                return await pdf.save();
+            }, "Numbered.pdf");
+        }
+
+        async function addText() {
+            processPDF(async () => {
+                const pdf = await PDFDocument.load(await document.getElementById('text-file').files[0].arrayBuffer());
+                const text = document.getElementById('edit-text').value;
+                pdf.getPages()[0].drawText(text, { x: 50, y: 50, size: 24, color: rgb(1, 0, 0) });
+                return await pdf.save();
+            }, "Edited.pdf");
+        }
+    </script>
 </body>
 </html>
