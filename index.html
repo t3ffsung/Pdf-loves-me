@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Loves Me 💖</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+    <h1>PDF Loves Me 💖</h1>
+    <div class="grid" id="tools-container">
+        <div class="card" id="card-merge">
+            <h3>Merge PDF</h3>
+            <input type="file" id="merge-files" multiple accept="application/pdf">
+            <button onclick="mergePDFs()">Merge</button>
+        </div>
+        <div class="card" id="card-rotate">
+            <h3>Rotate PDF (180°)</h3>
+            <input type="file" id="rotate-file" accept="application/pdf">
+            <button onclick="rotatePDF()">Rotate</button>
+        </div>
+        <div class="card" id="card-jpg">
+            <h3>JPG to PDF</h3>
+            <input type="file" id="jpg-files" multiple accept="image/jpeg, image/png">
+            <button onclick="imagesToPDF()">Convert</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
