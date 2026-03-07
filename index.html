@@ -37,15 +37,16 @@
         .btn-login { text-decoration: none; color: #333; font-weight: bold; font-size: 0.9rem; }
         .btn-signup { background: var(--primary); color: white; padding: 8px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
 
-        /* Home View */
-        #home-view { max-width: 1200px; margin: 60px auto; padding: 0 20px; text-align: center; }
+        /* Views */
+        #home-view, #convert-menu-view { max-width: 1200px; margin: 60px auto; padding: 0 20px; text-align: center; position: relative; }
         .hero-title { font-size: 2.5rem; margin-bottom: 10px; }
         .hero-sub { color: #666; margin-bottom: 40px; font-size: 1.1rem; }
         .grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .card { background: #fff; padding: 40px 30px; border-radius: 8px; cursor: pointer; border: 1px solid #e1e1e1; transition: all 0.2s; max-width: 250px; width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .card { background: #fff; padding: 40px 30px; border-radius: 8px; cursor: pointer; border: 1px solid #e1e1e1; transition: all 0.2s; max-width: 250px; width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; }
         .card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
         .card .icon { font-size: 3rem; margin-bottom: 15px; }
-        .card h3 { margin: 0; font-size: 1.5rem; }
+        .card h3 { margin: 0 0 10px 0; font-size: 1.4rem; }
+        .card p { margin: 0; font-size: 0.9rem; color: #666; line-height: 1.4; }
 
         /* Workspace View */
         #workspace-view { display: none; height: calc(100vh - 70px); background: #fafafa; transition: background 0.2s; box-sizing: border-box; }
@@ -54,6 +55,7 @@
         .workspace-main { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
         .sidebar { width: 350px; background: var(--sidebar-bg); border-left: 1px solid #ddd; display: flex; flex-direction: column; box-shadow: -2px 0 10px rgba(0,0,0,0.05); }
         
+        /* Back Button */
         .back-btn { position: absolute; top: 20px; left: 20px; background: white; border: 1px solid #ccc; color: #333; cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 5px; transition: background 0.2s; z-index: 50; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .back-btn:hover { background: #eee; }
 
@@ -121,9 +123,10 @@
             <a onclick="openWorkspace('Merge PDF')">MERGE PDF</a>
             <a onclick="openWorkspace('Split PDF')">SPLIT PDF</a>
             <a onclick="openWorkspace('Compress PDF')">COMPRESS PDF</a>
+            
             <div class="dropdown">
                 <a class="dropbtn">CONVERT PDF <span style="font-size:0.7em; margin-left:5px;">▼</span></a>
-                <div class="dropdown-content" id="nav-dropdown">
+                <div class="dropdown-content" id="nav-dropdown-pdf">
                     <div class="drop-column">
                         <h4>Convert to PDF</h4>
                         <a onclick="openWorkspace('JPG to PDF')">🖼️ JPG to PDF</a>
@@ -138,6 +141,16 @@
                     </div>
                 </div>
             </div>
+
+            <div class="dropdown">
+                <a class="dropbtn">CONVERT IMAGE <span style="font-size:0.7em; margin-left:5px;">▼</span></a>
+                <div class="dropdown-content" id="nav-dropdown-img">
+                    <div class="drop-column">
+                        <a onclick="openWorkspace('Image to Word')">🔍 Image to Word (OCR)</a>
+                    </div>
+                </div>
+            </div>
+
         </nav>
         <div class="auth-buttons">
             <a href="#" class="btn-login">Login</a>
@@ -152,9 +165,21 @@
             <div class="card" onclick="openWorkspace('Merge PDF')"><div class="icon">🔗</div><h3>Merge PDF</h3><p>Combine, reorder, and sort visually.</p></div>
             <div class="card" onclick="openWorkspace('Split PDF')"><div class="icon">✂️</div><h3>Split PDF</h3><p>Extract specific pages or ranges.</p></div>
             <div class="card" onclick="openWorkspace('Compress PDF')"><div class="icon">📉</div><h3>Compress PDF</h3><p>Reduce file size client-side.</p></div>
-            <div class="card" onclick="openWorkspace('PDF to WORD')"><div class="icon">📄</div><h3>PDF to Word</h3><p>Convert PDF to editable DOCX.</p></div>
-            <div class="card" onclick="openWorkspace('WORD to PDF')"><div class="icon">📝</div><h3>Word to PDF</h3><p>Convert Word docs into PDFs.</p></div>
-            <div class="card" onclick="openWorkspace('PDF to EXCEL')"><div class="icon">📈</div><h3>PDF to Excel</h3><p>Extract data to spreadsheets.</p></div>
+            <div class="card" onclick="openConvertMenu()"><div class="icon">🔄</div><h3>Convert PDF</h3><p>Convert Word, Excel, Images to and from PDF.</p></div>
+            <div class="card" onclick="openWorkspace('Image to Word')"><div class="icon">🔍</div><h3>Image to Word</h3><p>Extract editable text from images (OCR).</p></div>
+        </div>
+    </div>
+
+    <div id="convert-menu-view" class="hidden">
+        <button class="back-btn" onclick="goHome()" style="top: 0;">⬅️ Back</button>
+        <div class="hero-title" style="margin-bottom: 40px;">Convert PDF</div>
+        <div class="grid">
+            <div class="card" onclick="openWorkspace('JPG to PDF')"><div class="icon">🖼️</div><h3>JPG to PDF</h3><p>Turn images into PDF.</p></div>
+            <div class="card" onclick="openWorkspace('WORD to PDF')"><div class="icon">📄</div><h3>WORD to PDF</h3><p>Convert DOCX into PDF.</p></div>
+            <div class="card" onclick="openWorkspace('EXCEL to PDF')"><div class="icon">📈</div><h3>EXCEL to PDF</h3><p>Convert Spreadsheets.</p></div>
+            <div class="card" onclick="openWorkspace('PDF to JPG')"><div class="icon">🖼️</div><h3>PDF to JPG</h3><p>Extract images from PDF.</p></div>
+            <div class="card" onclick="openWorkspace('PDF to WORD')"><div class="icon">📄</div><h3>PDF to WORD</h3><p>Convert to editable DOCX.</p></div>
+            <div class="card" onclick="openWorkspace('PDF to EXCEL')"><div class="icon">📈</div><h3>PDF to EXCEL</h3><p>Extract data to tables.</p></div>
         </div>
     </div>
 
@@ -226,42 +251,50 @@
         let totalSplitPages = 0;
         let compressMode = 'recommended';
 
-        const homeView = document.getElementById('home-view');
-        const workspaceView = document.getElementById('workspace-view');
-        const uploadArea = document.getElementById('upload-area');
-        
+        function hideDropdowns() {
+            document.querySelectorAll('.dropdown-content').forEach(el => {
+                el.style.display = 'none';
+                setTimeout(() => el.style.display = '', 200); // restore hover styling
+            });
+        }
+
         function goHome() {
-            homeView.classList.remove('hidden');
-            workspaceView.classList.add('hidden');
-            workspaceView.style.display = 'none'; // Force layout reset
+            document.getElementById('home-view').classList.remove('hidden');
+            document.getElementById('convert-menu-view').classList.add('hidden');
+            document.getElementById('workspace-view').classList.add('hidden');
+            document.getElementById('workspace-view').style.display = 'none'; 
             resetWorkspace();
+            hideDropdowns();
+        }
+
+        function openConvertMenu() {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('workspace-view').classList.add('hidden');
+            document.getElementById('convert-menu-view').classList.remove('hidden');
+            hideDropdowns();
         }
 
         function openWorkspace(toolName) {
             currentTool = toolName;
             document.getElementById('tool-title').innerText = toolName;
             
-            // Fix Dropdown Bug - Forcefully hide menu when clicked
-            const dropdown = document.getElementById('nav-dropdown');
-            if (dropdown) {
-                dropdown.style.display = 'none';
-                setTimeout(() => dropdown.style.display = '', 200); // restore hover styling ability
-            }
+            hideDropdowns();
 
             const fileInput = document.getElementById('file-input');
             const addMoreInput = document.getElementById('add-more-input');
             
             // Set Inputs based on tool
-            if (toolName === 'JPG to PDF') fileInput.accept = addMoreInput.accept = "image/jpeg, image/png, image/webp";
+            if (toolName === 'JPG to PDF' || toolName === 'Image to Word') fileInput.accept = addMoreInput.accept = "image/jpeg, image/png, image/webp";
             else if (toolName === 'WORD to PDF') fileInput.accept = addMoreInput.accept = ".doc, .docx";
             else if (toolName === 'EXCEL to PDF') fileInput.accept = addMoreInput.accept = ".xls, .xlsx, .csv";
             else fileInput.accept = addMoreInput.accept = ".pdf";
             
-            const needsSidebar = ['Split PDF', 'Compress PDF', 'PDF to JPG', 'WORD to PDF', 'EXCEL to PDF', 'PDF to WORD', 'PDF to EXCEL'].includes(toolName);
+            const needsSidebar = ['Split PDF', 'Compress PDF', 'PDF to JPG', 'WORD to PDF', 'EXCEL to PDF', 'PDF to WORD', 'PDF to EXCEL', 'Image to Word'].includes(toolName);
             workspaceView.style.display = needsSidebar ? 'flex' : 'block';
             
-            homeView.classList.add('hidden');
-            workspaceView.classList.remove('hidden');
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('convert-menu-view').classList.add('hidden');
+            document.getElementById('workspace-view').classList.remove('hidden');
             resetWorkspace();
         }
 
@@ -275,7 +308,7 @@
             document.getElementById('action-bar-merge').classList.add('hidden');
             document.getElementById('sidebar-split').classList.add('hidden');
             document.getElementById('sidebar-generic').classList.add('hidden');
-            uploadArea.classList.remove('hidden');
+            document.getElementById('upload-area').classList.remove('hidden');
             document.getElementById('file-input').value = '';
         }
 
@@ -283,14 +316,15 @@
             document.getElementById(id).addEventListener('change', (e) => handleFiles(e.target.files));
         });
 
-        workspaceView.addEventListener('dragover', (e) => { e.preventDefault(); workspaceView.classList.add('dragover-active'); });
-        workspaceView.addEventListener('dragleave', (e) => { e.preventDefault(); if (!workspaceView.contains(e.relatedTarget)) workspaceView.classList.remove('dragover-active'); });
-        workspaceView.addEventListener('drop', (e) => { e.preventDefault(); workspaceView.classList.remove('dragover-active'); handleFiles(e.dataTransfer.files); });
+        const wv = document.getElementById('workspace-view');
+        wv.addEventListener('dragover', (e) => { e.preventDefault(); wv.classList.add('dragover-active'); });
+        wv.addEventListener('dragleave', (e) => { e.preventDefault(); if (!wv.contains(e.relatedTarget)) wv.classList.remove('dragover-active'); });
+        wv.addEventListener('drop', (e) => { e.preventDefault(); wv.classList.remove('dragover-active'); handleFiles(e.dataTransfer.files); });
         new Sortable(document.getElementById('pages-container'), { animation: 150, onEnd: updateMergePageNumbers });
 
         async function handleFiles(files) {
             if (files.length === 0) return;
-            uploadArea.classList.add('hidden');
+            document.getElementById('upload-area').classList.add('hidden');
             const file = files[0];
 
             if (currentTool === 'Merge PDF' || currentTool === 'JPG to PDF') {
@@ -341,7 +375,7 @@
                 updateSplitUI();
 
             } else {
-                // Single File Generic Views (Compress, API Conversions)
+                // Single File Generic Views (Compress, API Conversions, OCR)
                 document.getElementById('editor-area-generic').style.display = 'flex';
                 const sidebar = document.getElementById('sidebar-generic');
                 sidebar.classList.remove('hidden');
@@ -353,11 +387,7 @@
                 
                 if (currentTool === 'Compress PDF') {
                     document.getElementById('generic-sidebar-title').innerText = "Compression";
-                    optionsContent.innerHTML = `
-                        <div class="sidebar-option active">
-                            <strong>Recommended</strong><p>Rasterize pages to reduce size.</p>
-                        </div>
-                    `;
+                    optionsContent.innerHTML = `<div class="sidebar-option active"><strong>Recommended</strong><p>Rasterize pages to reduce size.</p></div>`;
                     document.getElementById('sidebar-action-btn').innerHTML = "Compress <span>➔</span>";
                     
                     const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
@@ -368,19 +398,33 @@
                     canvas.height = viewport.height; canvas.width = viewport.width;
                     await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
                     
-                    document.getElementById('editor-area-generic').innerHTML = `
-                        <div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
-                    `;
+                    document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
                 } 
+                else if (currentTool === 'Image to Word') {
+                    document.getElementById('generic-sidebar-title').innerText = "OCR Conversion";
+                    optionsContent.innerHTML = `<div class="sidebar-option active"><strong>API Extraction</strong><p>Powered by ConvertAPI.</p></div>`;
+                    document.getElementById('sidebar-action-btn').innerHTML = "Extract Text <span>➔</span>";
+                    
+                    const url = URL.createObjectURL(file);
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const scale = 200 / img.width;
+                        canvas.width = 200; canvas.height = img.height * scale;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
+                        URL.revokeObjectURL(url);
+                    };
+                    img.src = url;
+                }
                 else {
                     // API Conversion Tools UI
                     if(currentTool === 'WORD to PDF') { icon = "📝"; document.getElementById('generic-sidebar-title').innerText = "Convert to PDF"; }
                     if(currentTool === 'EXCEL to PDF') { icon = "📊"; document.getElementById('generic-sidebar-title').innerText = "Convert to PDF"; }
-                    
                     if(currentTool === 'PDF to EXCEL' || currentTool === 'PDF to WORD') { 
                         icon = currentTool.includes('WORD') ? "📄" : "📈"; 
                         document.getElementById('generic-sidebar-title').innerText = "High Quality Conversion"; 
-                        // Show thumbnail for PDFs
                         const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
                         pdfJsCache.doc = pdf;
                         const page = await pdf.getPage(1);
@@ -388,11 +432,9 @@
                         const canvas = document.createElement('canvas');
                         canvas.height = viewport.height; canvas.width = viewport.width;
                         await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-                        
-                        document.getElementById('editor-area-generic').innerHTML = `
-                            <div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
-                        `;
-                    } else if (currentTool === 'PDF to JPG') {
+                        document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
+                    } 
+                    else if (currentTool === 'PDF to JPG') {
                         icon = "🖼️"; document.getElementById('generic-sidebar-title').innerText = "Extract Images";
                         const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
                         pdfJsCache.doc = pdf;
@@ -401,21 +443,13 @@
                         const canvas = document.createElement('canvas');
                         canvas.height = viewport.height; canvas.width = viewport.width;
                         await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-                        document.getElementById('editor-area-generic').innerHTML = `
-                            <div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
-                        `;
-                    } else {
-                        // For Word/Excel files, just show the Icon since browsers can't render docx thumbnails easily
-                        document.getElementById('editor-area-generic').innerHTML = `
-                            <div class="preview-card"><div class="icon">${icon}</div><div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
-                        `;
+                        document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
+                    } 
+                    else {
+                        document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card"><div class="icon">${icon}</div><div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
                     }
                     
-                    optionsContent.innerHTML = `
-                        <div class="sidebar-option active">
-                            <strong>Premium Conversion</strong><p>High fidelity conversion powered by ConvertAPI.</p>
-                        </div>
-                    `;
+                    optionsContent.innerHTML = `<div class="sidebar-option active"><strong>Premium Conversion</strong><p>High fidelity conversion powered by ConvertAPI.</p></div>`;
                     document.getElementById('sidebar-action-btn').innerHTML = "Convert <span>➔</span>";
                 }
             }
@@ -538,7 +572,7 @@
                     triggerDownload(await zip.generateAsync({type:"blob"}), "images.zip", true);
                 }
                 else {
-                    // API CONVERSIONS (Word, Excel)
+                    // API CONVERSIONS (Word, Excel, OCR)
                     const formData = new FormData();
                     formData.append('File', fileData.file, fileData.name);
 
@@ -557,15 +591,17 @@
                         mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                         outExt = ".xlsx";
                     }
-                    else if (currentTool === 'WORD to PDF') {
+                    else if (currentTool === 'WORD to PDF' || currentTool === 'EXCEL to PDF') {
                         endpoint = `https://v2.convertapi.com/convert/${inputExt}/to/pdf?Secret=${CONVERT_API_SECRET}`;
                         mimeType = "application/pdf";
                         outExt = ".pdf";
                     }
-                    else if (currentTool === 'EXCEL to PDF') {
-                        endpoint = `https://v2.convertapi.com/convert/${inputExt}/to/pdf?Secret=${CONVERT_API_SECRET}`;
-                        mimeType = "application/pdf";
-                        outExt = ".pdf";
+                    else if (currentTool === 'Image to Word') {
+                        let validExt = ['jpg', 'jpeg', 'png', 'webp'].includes(inputExt) ? inputExt : 'jpg';
+                        if(validExt === 'jpeg') validExt = 'jpg'; // API often prefers 'jpg' over 'jpeg'
+                        endpoint = `https://v2.convertapi.com/convert/${validExt}/to/docx?Secret=${CONVERT_API_SECRET}`;
+                        mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                        outExt = ".docx";
                     }
 
                     const response = await fetch(endpoint, { method: 'POST', body: formData });
