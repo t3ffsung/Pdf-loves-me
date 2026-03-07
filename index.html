@@ -292,10 +292,12 @@
                 for (let f of files) {
                     const arrayBuffer = await f.arrayBuffer();
                     const fileId = `file_${fileIdCounter++}`;
-                    loadedFiles.push({ id: fileId, bytes: arrayBuffer, name: f.name, type: f.type });
+                    // FIXED: Save the native `f` File object to prevent empty payloads later
+                    loadedFiles.push({ id: fileId, file: f, bytes: arrayBuffer, name: f.name, type: f.type });
                     
                     if (currentTool === 'Merge PDF') {
-                        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                        // FIXED: Pass a strict copy `.slice(0)` to prevent pdf.js from eating the buffer
+                        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
                         for (let p = 1; p <= pdf.numPages; p++) {
                             const page = await pdf.getPage(p);
                             const viewport = page.getViewport({ scale: 0.5 }); 
@@ -324,8 +326,8 @@
             } else if (currentTool === 'Split PDF') {
                 document.getElementById('editor-area-split').style.display = 'flex';
                 document.getElementById('sidebar-split').classList.remove('hidden');
-                loadedFiles = [{ id: 'split_file', bytes: await file.arrayBuffer(), name: file.name }];
-                const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes }).promise;
+                loadedFiles = [{ id: 'split_file', file: file, bytes: await file.arrayBuffer(), name: file.name }];
+                const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
                 pdfJsCache.doc = pdf;
                 totalSplitPages = pdf.numPages;
                 splitRanges = [{ id: 1, from: 1, to: totalSplitPages }];
@@ -337,7 +339,7 @@
                 const sidebar = document.getElementById('sidebar-generic');
                 sidebar.classList.remove('hidden');
                 
-                loadedFiles = [{ id: 'generic_file', bytes: await file.arrayBuffer(), name: file.name, type: file.type }];
+                loadedFiles = [{ id: 'generic_file', file: file, bytes: await file.arrayBuffer(), name: file.name, type: file.type }];
                 
                 let icon = "📄", fileMeta = (file.size / 1024 / 1024).toFixed(2) + " MB";
                 const optionsContent = document.getElementById('sidebar-options-content');
@@ -352,7 +354,7 @@
                     `;
                     document.getElementById('sidebar-action-btn').innerHTML = "Compress <span>➔</span>";
                     
-                    const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes }).promise;
+                    const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
                     pdfJsCache.doc = pdf;
                     const page = await pdf.getPage(1);
                     const viewport = page.getViewport({ scale: 0.8 });
@@ -371,7 +373,7 @@
                     
                     if(currentTool === 'PDF to EXCEL') { 
                         icon = "📑"; document.getElementById('generic-sidebar-title').innerText = "Extract Data"; 
-                        const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes }).promise;
+                        const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
                         pdfJsCache.doc = pdf;
                     }
                     
@@ -381,7 +383,7 @@
 
                     if(currentTool === 'PDF to JPG') {
                         icon = "🖼️"; document.getElementById('generic-sidebar-title').innerText = "Extract Images";
-                        const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes }).promise;
+                        const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
                         pdfJsCache.doc = pdf;
                     }
 
@@ -560,8 +562,9 @@
                     // ==========================================
                     const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
                     
+                    // FIXED: Upload the raw, untouched native `File` object so the API gets the real PDF
                     const formData = new FormData();
-                    formData.append('File', new Blob([fileData.bytes], { type: 'application/pdf' }), fileData.name);
+                    formData.append('File', fileData.file, fileData.name);
 
                     const response = await fetch(`https://v2.convertapi.com/convert/pdf/to/docx?Secret=${CONVERT_API_SECRET}`, {
                         method: 'POST',
@@ -573,10 +576,20 @@
                     const result = await response.json();
                     
                     if (result.Files && result.Files.length > 0) {
-                        const fileUrl = result.Files[0].Url;
-                        const fileRes = await fetch(fileUrl);
-                        const fileBlob = await fileRes.blob();
-                        triggerDownload(fileBlob, "converted-by-api.docx", true);
+                        
+                        // FIXED: Read the base64 output directly from the API response so we don't drop the connection
+                        if (result.Files[0].FileData) {
+                            const byteStr = atob(result.Files[0].FileData);
+                            const bytes = new Uint8Array(byteStr.length);
+                            for (let i = 0; i < byteStr.length; i++) bytes[i] = byteStr.charCodeAt(i);
+                            const fileBlob = new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+                            triggerDownload(fileBlob, result.Files[0].FileName || "converted-by-api.docx", true);
+                        } else if (result.Files[0].Url) {
+                            const fileRes = await fetch(result.Files[0].Url);
+                            const fileBlob = await fileRes.blob();
+                            triggerDownload(fileBlob, result.Files[0].FileName || "converted-by-api.docx", true);
+                        }
+                        
                     } else {
                         throw new Error("Conversion failed on the server.");
                     }
