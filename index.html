@@ -368,11 +368,17 @@
                     // Handlers for PDF to JPG, Word/Excel tools
                     if(currentTool === 'WORD to PDF') { icon = "📝"; document.getElementById('generic-sidebar-title').innerText = "Convert to PDF"; }
                     if(currentTool === 'EXCEL to PDF') { icon = "📊"; document.getElementById('generic-sidebar-title').innerText = "Convert to PDF"; }
-                    if(currentTool === 'PDF to WORD' || currentTool === 'PDF to EXCEL') { 
+                    
+                    if(currentTool === 'PDF to EXCEL') { 
                         icon = "📑"; document.getElementById('generic-sidebar-title').innerText = "Extract Data"; 
                         const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes }).promise;
                         pdfJsCache.doc = pdf;
                     }
+                    
+                    if(currentTool === 'PDF to WORD') { 
+                        icon = "📑"; document.getElementById('generic-sidebar-title').innerText = "High Quality Conversion"; 
+                    }
+
                     if(currentTool === 'PDF to JPG') {
                         icon = "🖼️"; document.getElementById('generic-sidebar-title').innerText = "Extract Images";
                         const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes }).promise;
@@ -383,13 +389,21 @@
                         <div class="preview-card"><div class="icon">${icon}</div><div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
                     `;
                     
-                    optionsContent.innerHTML = `
-                        <div class="sidebar-option active">
-                            <strong>Standard Conversion</strong><p>Process document locally.</p>
-                        </div>
-                        ${currentTool.startsWith('PDF to') && currentTool !== 'PDF to JPG' ? '<div class="client-warning"><strong>Note:</strong> Client-side JS only extracts raw text. Formatting, layout, and images will be lost.</div>' : ''}
-                        ${currentTool === 'WORD to PDF' ? '<div class="client-warning"><strong>Note:</strong> Complex styling and layout positioning may be lost during local extraction.</div>' : ''}
-                    `;
+                    if (currentTool === 'PDF to WORD') {
+                        optionsContent.innerHTML = `
+                            <div class="sidebar-option active">
+                                <strong>API Conversion</strong><p>Retains formatting and layout using ConvertAPI.</p>
+                            </div>
+                        `;
+                    } else {
+                        optionsContent.innerHTML = `
+                            <div class="sidebar-option active">
+                                <strong>Standard Conversion</strong><p>Process document locally.</p>
+                            </div>
+                            ${currentTool === 'PDF to EXCEL' ? '<div class="client-warning"><strong>Note:</strong> Client-side JS only extracts raw text. Formatting, layout, and images will be lost.</div>' : ''}
+                            ${currentTool === 'WORD to PDF' ? '<div class="client-warning"><strong>Note:</strong> Complex styling and layout positioning may be lost during local extraction.</div>' : ''}
+                        `;
+                    }
                     document.getElementById('sidebar-action-btn').innerHTML = "Convert <span>➔</span>";
                 }
             }
@@ -526,26 +540,6 @@
                     doc.autoTable({ body: data, startY: 15 });
                     triggerDownload(doc.output('arraybuffer'), "excel-converted.pdf");
                 }
-                else if (currentTool === 'PDF to WORD') {
-                    let fullText = "";
-                    for(let i=1; i<=pdfJsCache.doc.numPages; i++) {
-                        const page = await pdfJsCache.doc.getPage(i);
-                        const content = await page.getTextContent();
-                        fullText += content.items.map(item => item.str).join(" ") + "\n";
-                    }
-                    
-                    const paragraphs = fullText.split("\n").map(line => {
-                        return new docx.Paragraph({
-                            children: [new docx.TextRun({ text: line || " " })]
-                        });
-                    });
-
-                    const docxDoc = new docx.Document({
-                        sections: [{ properties: {}, children: paragraphs }]
-                    });
-                    
-                    triggerDownload(await docx.Packer.toBlob(docxDoc), "extracted.docx", true);
-                }
                 else if (currentTool === 'PDF to EXCEL') {
                     let fullText = "";
                     for(let i=1; i<=pdfJsCache.doc.numPages; i++) {
@@ -558,6 +552,34 @@
                     const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data");
                     const wbout = XLSX.write(wb, {bookType:'xlsx', type:'array'});
                     triggerDownload(new Blob([wbout]), "extracted.xlsx", true);
+                }
+                else if (currentTool === 'PDF to WORD') {
+                    
+                    // ==========================================
+                    // CONVERTAPI INTEGRATION
+                    // ==========================================
+                    const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
+                    
+                    const formData = new FormData();
+                    formData.append('File', new Blob([fileData.bytes], { type: 'application/pdf' }), fileData.name);
+
+                    const response = await fetch(`https://v2.convertapi.com/convert/pdf/to/docx?Secret=${CONVERT_API_SECRET}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) throw new Error("API Request Failed. Check your usage limits or network.");
+                    
+                    const result = await response.json();
+                    
+                    if (result.Files && result.Files.length > 0) {
+                        const fileUrl = result.Files[0].Url;
+                        const fileRes = await fetch(fileUrl);
+                        const fileBlob = await fileRes.blob();
+                        triggerDownload(fileBlob, "converted-by-api.docx", true);
+                    } else {
+                        throw new Error("Conversion failed on the server.");
+                    }
                 }
             } catch (e) { 
                 console.error(e); 
