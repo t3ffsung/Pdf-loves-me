@@ -9,6 +9,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
     <style>
         :root { --primary: #e5322d; --bg: #f3f3f5; --text: #333; --sidebar-bg: #f8f9fa; }
@@ -33,9 +36,32 @@
         .drop-column a { color: #444; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px 0; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; cursor: pointer; }
         .drop-column a:hover { color: var(--primary); }
         
+        /* Auth Buttons & Profile */
         .auth-buttons { display: flex; gap: 15px; align-items: center; }
-        .btn-login { text-decoration: none; color: #333; font-weight: bold; font-size: 0.9rem; }
-        .btn-signup { background: var(--primary); color: white; padding: 8px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .btn-login { text-decoration: none; color: #333; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
+        .btn-signup { background: var(--primary); color: white; padding: 8px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
+        .user-profile { display: none; align-items: center; gap: 15px; font-size: 0.9rem; font-weight: bold; color: #333; }
+        .btn-logout { text-decoration: none; color: var(--primary); border: 1px solid var(--primary); padding: 6px 15px; border-radius: 4px; transition: 0.2s; }
+        .btn-logout:hover { background: #ffebeb; }
+
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-content { background: white; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; text-align: center; }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; cursor: pointer; color: #999; transition: 0.2s; }
+        .close-modal:hover { color: #333; }
+        .modal-content h2 { margin-top: 0; color: #333; }
+        .modal-content p { color: #666; margin-bottom: 25px; }
+        
+        .google-btn { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; background: white; font-size: 1rem; font-weight: bold; color: #444; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: 0.2s; }
+        .google-btn:hover { background: #f9f9f9; }
+        .google-btn img { width: 20px; }
+        
+        .divider { display: flex; align-items: center; text-align: center; margin: 25px 0; color: #999; font-size: 0.8rem; font-weight: bold; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #eee; }
+        .divider span { padding: 0 10px; }
+        
+        .modal-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        #recaptcha-container { margin-bottom: 15px; display: flex; justify-content: center; }
 
         /* Views */
         #home-view, #convert-menu-view { max-width: 1200px; margin: 60px auto; padding: 0 20px; text-align: center; position: relative; }
@@ -95,11 +121,10 @@
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid #ddd; font-size: 1.5rem; font-weight: bold; color: #333; }
         .sidebar-content { padding: 20px; flex-grow: 1; overflow-y: auto; }
         .sidebar-footer { padding: 20px; border-top: 1px solid #ddd; background: white; }
-        .btn-process { background: var(--primary); color: white; padding: 15px; width: 100%; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-process { background: var(--primary); color: white; padding: 15px; width: 100%; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.2s; }
         .btn-process:hover { background: #c82320; }
         .btn-process:disabled { background: #ccc; cursor: not-allowed; }
 
-        /* Sidebar Elements */
         .range-item { background: white; border: 1px solid #ddd; border-radius: 6px; padding: 15px; margin-bottom: 15px; position: relative; }
         .range-inputs { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
         .range-inputs input { width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
@@ -142,21 +167,44 @@
                 </div>
             </div>
 
-            <div class="dropdown">
-                <a class="dropbtn">CONVERT IMAGE <span style="font-size:0.7em; margin-left:5px;">▼</span></a>
-                <div class="dropdown-content" id="nav-dropdown-img">
-                    <div class="drop-column">
-                        <a onclick="openWorkspace('Image to Word')">🔍 Image to Word (OCR)</a>
-                    </div>
-                </div>
-            </div>
-
+            <a onclick="openWorkspace('Image to Word')">CONVERT IMAGE</a>
         </nav>
-        <div class="auth-buttons">
-            <a href="#" class="btn-login">Login</a>
-            <a href="#" class="btn-signup">Sign up</a>
+        
+        <div class="auth-buttons" id="auth-buttons">
+            <a class="btn-login" onclick="openAuthModal()">Login</a>
+            <a class="btn-signup" onclick="openAuthModal()">Sign up</a>
+        </div>
+        <div class="user-profile" id="user-profile">
+            <span id="user-display-name">👤 User</span>
+            <a class="btn-logout" onclick="logoutFirebase()" style="cursor: pointer;">Logout</a>
         </div>
     </header>
+
+    <div id="auth-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAuthModal()">✕</span>
+            <h2>Welcome to PDF Loves Me</h2>
+            <p>Login or Sign up to access your tools.</p>
+            
+            <button class="google-btn" onclick="loginWithGoogle()">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
+                Continue with Google
+            </button>
+
+            <div class="divider"><span>OR</span></div>
+
+            <div id="phone-auth-section">
+                <input type="tel" id="phone-input" class="modal-input" placeholder="Phone (e.g. +1234567890)">
+                <div id="recaptcha-container"></div>
+                <button class="btn-process" id="send-otp-btn" onclick="sendOTP()">Send OTP</button>
+            </div>
+
+            <div id="otp-section" class="hidden">
+                <input type="text" id="otp-input" class="modal-input" placeholder="Enter 6-digit OTP code">
+                <button class="btn-process" onclick="verifyOTP()">Verify & Login</button>
+            </div>
+        </div>
+    </div>
 
     <div id="home-view">
         <div class="hero-title">Every tool you need to work with PDFs</div>
@@ -236,10 +284,103 @@
     </div>
 
     <script>
+        // ==========================================
+        // FIREBASE AUTHENTICATION SETUP
+        // ==========================================
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9jEmFFEPNT0iIUH6ro-0BZSBfvdDy9XU",
+            authDomain: "pdf-loves-me.firebaseapp.com",
+            projectId: "pdf-loves-me",
+            storageBucket: "pdf-loves-me.firebasestorage.app",
+            messagingSenderId: "397926920358",
+            appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        let recaptchaVerifier = null;
+
+        // Listen for Auth State Changes
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('auth-buttons').style.display = 'none';
+                document.getElementById('user-profile').style.display = 'flex';
+                // Show Name if available, otherwise show Phone Number
+                document.getElementById('user-display-name').innerText = `👤 ${user.displayName || user.phoneNumber || "User"}`;
+                closeAuthModal();
+            } else {
+                document.getElementById('auth-buttons').style.display = 'flex';
+                document.getElementById('user-profile').style.display = 'none';
+            }
+        });
+
+        // Auth Modal Controls
+        function openAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            if(!recaptchaVerifier) setupRecaptcha();
+        }
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('otp-section').classList.add('hidden');
+            document.getElementById('phone-auth-section').classList.remove('hidden');
+        }
+
+        // Google Sign In
+        function loginWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(err => alert("Google Sign-In Error: " + err.message));
+        }
+
+        // Phone Sign In
+        function setupRecaptcha() {
+            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                'size': 'normal'
+            });
+            recaptchaVerifier.render();
+        }
+
+        function sendOTP() {
+            const phone = document.getElementById('phone-input').value;
+            if(!phone) return alert("Please enter a valid phone number with country code.");
+            
+            const btn = document.getElementById('send-otp-btn');
+            btn.innerText = "Sending...";
+            btn.disabled = true;
+
+            auth.signInWithPhoneNumber(phone, recaptchaVerifier)
+                .then((confirmationResult) => {
+                    window.confirmationResult = confirmationResult;
+                    document.getElementById('phone-auth-section').classList.add('hidden');
+                    document.getElementById('otp-section').classList.remove('hidden');
+                }).catch((error) => {
+                    alert("Error sending OTP: " + error.message);
+                    btn.innerText = "Send OTP";
+                    btn.disabled = false;
+                });
+        }
+
+        function verifyOTP() {
+            const code = document.getElementById('otp-input').value;
+            if(!code) return alert("Please enter the OTP code.");
+            
+            window.confirmationResult.confirm(code).catch((error) => {
+                alert("Incorrect OTP: " + error.message);
+            });
+        }
+
+        function logoutFirebase() {
+            auth.signOut();
+        }
+
+
+        // ==========================================
+        // APP LOGIC
+        // ==========================================
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         const { PDFDocument, degrees } = PDFLib;
 
-        // Your API Key
         const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
 
         let currentTool = "";
@@ -254,7 +395,7 @@
         function hideDropdowns() {
             document.querySelectorAll('.dropdown-content').forEach(el => {
                 el.style.display = 'none';
-                setTimeout(() => el.style.display = '', 200); // restore hover styling
+                setTimeout(() => el.style.display = '', 200); 
             });
         }
 
@@ -283,14 +424,13 @@
             const fileInput = document.getElementById('file-input');
             const addMoreInput = document.getElementById('add-more-input');
             
-            // Set Inputs based on tool
             if (toolName === 'JPG to PDF' || toolName === 'Image to Word') fileInput.accept = addMoreInput.accept = "image/jpeg, image/png, image/webp";
             else if (toolName === 'WORD to PDF') fileInput.accept = addMoreInput.accept = ".doc, .docx";
             else if (toolName === 'EXCEL to PDF') fileInput.accept = addMoreInput.accept = ".xls, .xlsx, .csv";
             else fileInput.accept = addMoreInput.accept = ".pdf";
             
             const needsSidebar = ['Split PDF', 'Compress PDF', 'PDF to JPG', 'WORD to PDF', 'EXCEL to PDF', 'PDF to WORD', 'PDF to EXCEL', 'Image to Word'].includes(toolName);
-            workspaceView.style.display = needsSidebar ? 'flex' : 'block';
+            document.getElementById('workspace-view').style.display = needsSidebar ? 'flex' : 'block';
             
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('convert-menu-view').classList.add('hidden');
@@ -375,7 +515,6 @@
                 updateSplitUI();
 
             } else {
-                // Single File Generic Views (Compress, API Conversions, OCR)
                 document.getElementById('editor-area-generic').style.display = 'flex';
                 const sidebar = document.getElementById('sidebar-generic');
                 sidebar.classList.remove('hidden');
@@ -419,7 +558,6 @@
                     img.src = url;
                 }
                 else {
-                    // API Conversion Tools UI
                     if(currentTool === 'WORD to PDF') { icon = "📝"; document.getElementById('generic-sidebar-title').innerText = "Convert to PDF"; }
                     if(currentTool === 'EXCEL to PDF') { icon = "📊"; document.getElementById('generic-sidebar-title').innerText = "Convert to PDF"; }
                     if(currentTool === 'PDF to EXCEL' || currentTool === 'PDF to WORD') { 
@@ -598,7 +736,7 @@
                     }
                     else if (currentTool === 'Image to Word') {
                         let validExt = ['jpg', 'jpeg', 'png', 'webp'].includes(inputExt) ? inputExt : 'jpg';
-                        if(validExt === 'jpeg') validExt = 'jpg'; // API often prefers 'jpg' over 'jpeg'
+                        if(validExt === 'jpeg') validExt = 'jpg'; 
                         endpoint = `https://v2.convertapi.com/convert/${validExt}/to/docx?Secret=${CONVERT_API_SECRET}`;
                         mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
                         outExt = ".docx";
