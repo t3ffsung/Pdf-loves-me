@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Loves Me</title>
+    
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://unpkg.com/docx@8.2.3/build/index.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <style>
         :root { --primary: #e5322d; --bg: #f3f3f5; --text: #333; --sidebar-bg: #f8f9fa; }
@@ -29,10 +36,9 @@
         .drop-column { width: 220px; padding: 0 15px; }
         .drop-column:first-child { border-right: 1px solid #eee; }
         .drop-column h4 { color: #999; font-size: 0.75rem; text-transform: uppercase; margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; }
-        .drop-column a { color: #444; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px 0; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        .drop-column a { color: #444; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px 0; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; cursor: pointer; }
         .drop-column a:hover { color: var(--primary); }
         
-        /* Login/Signup Mock */
         .auth-buttons { display: flex; gap: 15px; align-items: center; }
         .btn-login { text-decoration: none; color: #333; font-weight: bold; font-size: 0.9rem; }
         .btn-signup { background: var(--primary); color: white; padding: 8px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
@@ -54,41 +60,35 @@
         .workspace-main { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
         .sidebar { width: 350px; background: var(--sidebar-bg); border-left: 1px solid #ddd; display: flex; flex-direction: column; box-shadow: -2px 0 10px rgba(0,0,0,0.05); }
         
-        /* Upload Area */
         #upload-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 20px; transition: 0.3s; pointer-events: none; }
         .upload-btn { background: var(--primary); color: white; padding: 15px 40px; font-size: 1.4rem; border-radius: 8px; cursor: pointer; font-weight: bold; display: inline-block; margin-bottom: 15px; pointer-events: auto; display: flex; align-items: center; gap: 10px;}
         .upload-btn:hover { background: #c82320; }
         input[type="file"] { display: none; }
 
-        /* Editor Area (Merge / JPG to PDF) */
+        /* Editors */
         #editor-area-merge { display: none; padding: 20px; padding-bottom: 120px; }
         #pages-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
         .page-thumb { background: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); position: relative; cursor: grab; display: flex; flex-direction: column; align-items: center; }
-        .page-thumb:active { cursor: grabbing; }
         .page-thumb canvas { max-width: 150px; border: 1px solid #eee; transition: transform 0.3s ease; }
         .page-controls { margin-top: 10px; display: flex; gap: 10px; }
         .icon-btn { background: #f0f0f0; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 1rem; }
         .icon-btn:hover { background: #e0e0e0; }
-        .icon-btn.delete:hover { background: #ffebeb; color: red; }
         .page-number { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.6); color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.8rem; pointer-events: none; }
         .file-label { position: absolute; bottom: 50px; left: 0; right: 0; text-align: center; background: rgba(255,255,255,0.9); font-size: 0.7rem; padding: 2px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
 
-        /* Editor Area (Split / Compress / Convert) */
         #editor-area-split { display: none; padding: 40px; flex-direction: column; align-items: center; gap: 30px; }
         .split-range-block { display: flex; flex-direction: column; align-items: center; }
-        .split-range-title { color: #666; margin-bottom: 10px; font-weight: bold; }
         .split-visual-box { border: 2px dashed #bbb; border-radius: 8px; padding: 20px; display: flex; align-items: center; gap: 20px; background: white; }
         .split-canvas-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--primary); font-weight: bold; }
         .split-canvas-wrapper canvas { max-width: 160px; border: 1px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
 
-        /* Editor Area (Compress Tool) */
-        #editor-area-compress { display: none; padding: 40px; display: flex; justify-content: center; align-items: center; height: 100%; flex-direction: column; }
-        .compress-preview-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; position: relative; }
-        .compress-preview-card canvas { max-width: 250px; border: 1px solid #ddd; }
-        .compress-badge { position: absolute; top: -10px; right: -10px; background: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 0.9rem; z-index: 5; }
-        .compress-filename { margin-top: 15px; font-size: 0.9rem; color: #666; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: bold; }
+        #editor-area-generic { display: none; padding: 40px; display: flex; justify-content: center; align-items: center; height: 100%; flex-direction: column; }
+        .preview-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; position: relative; max-width: 300px; }
+        .preview-card .icon { font-size: 5rem; margin-bottom: 15px; }
+        .preview-card canvas { max-width: 200px; border: 1px solid #ddd; margin-bottom: 15px; }
+        .preview-filename { font-size: 1rem; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: bold; }
+        .preview-meta { font-size: 0.85rem; color: #999; margin-top: 5px; }
 
-        /* Action Bars */
         .action-bar-merge { position: absolute; bottom: 0; left: 0; right: 0; background: white; padding: 15px 30px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .btn-secondary { background: #f0f0f0; color: #333; padding: 10px 15px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; transition: 0.2s; font-weight: 500;}
         .btn-secondary:hover { background: #e0e0e0; }
@@ -100,21 +100,20 @@
         .btn-process:hover { background: #c82320; }
         .btn-process:disabled { background: #ccc; cursor: not-allowed; }
 
-        /* Split Sidebar Elements */
+        /* Sidebar Elements */
         .range-item { background: white; border: 1px solid #ddd; border-radius: 6px; padding: 15px; margin-bottom: 15px; position: relative; }
-        .range-item-header { display: flex; justify-content: space-between; margin-bottom: 10px; color: #666; font-size: 0.9rem; }
-        .range-inputs { display: flex; align-items: center; gap: 10px; }
+        .range-inputs { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
         .range-inputs input { width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
         .btn-add-range { background: white; border: 1px dashed var(--primary); color: var(--primary); padding: 10px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-size: 0.9rem; color: #555; cursor: pointer; }
 
-        /* Compress Sidebar Elements */
-        .compress-option { border: 2px solid transparent; background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; transition: 0.2s; border: 1px solid #ddd; position: relative; }
-        .compress-option.active { border-color: #2ecc71; background: #f2fcf6; }
-        .compress-option.active::after { content: '✔'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #2ecc71; font-weight: bold; font-size: 1.2rem; }
-        .compress-option strong { display: block; color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
-        .compress-option p { margin: 0; font-size: 0.85rem; color: #666; }
-        .compress-option input[type="number"] { width: 100px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 10px; font-size: 1rem; }
+        .sidebar-option { border: 2px solid transparent; background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; transition: 0.2s; border: 1px solid #ddd; position: relative; }
+        .sidebar-option.active { border-color: #2ecc71; background: #f2fcf6; }
+        .sidebar-option.active::after { content: '✔'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #2ecc71; font-weight: bold; font-size: 1.2rem; }
+        .sidebar-option strong { display: block; color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
+        .sidebar-option p { margin: 0; font-size: 0.85rem; color: #666; }
+        
+        .client-warning { background: #fff3cd; color: #856404; padding: 10px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #ffeeba; margin-top: 20px; }
 
         .hidden { display: none !important; }
     </style>
@@ -134,17 +133,13 @@
                         <h4>Convert to PDF</h4>
                         <a onclick="openWorkspace('JPG to PDF')">🖼️ JPG to PDF</a>
                         <a onclick="openWorkspace('WORD to PDF')">📄 WORD to PDF</a>
-                        <a onclick="openWorkspace('POWERPOINT to PDF')">📊 POWERPOINT to PDF</a>
                         <a onclick="openWorkspace('EXCEL to PDF')">📈 EXCEL to PDF</a>
-                        <a onclick="openWorkspace('HTML to PDF')">🌐 HTML to PDF</a>
                     </div>
                     <div class="drop-column">
                         <h4>Convert from PDF</h4>
                         <a onclick="openWorkspace('PDF to JPG')">🖼️ PDF to JPG</a>
                         <a onclick="openWorkspace('PDF to WORD')">📄 PDF to WORD</a>
-                        <a onclick="openWorkspace('PDF to POWERPOINT')">📊 PDF to POWERPOINT</a>
                         <a onclick="openWorkspace('PDF to EXCEL')">📈 PDF to EXCEL</a>
-                        <a onclick="openWorkspace('PDF to PDF/A')">🏛️ PDF to PDF/A</a>
                     </div>
                 </div>
             </div>
@@ -159,26 +154,13 @@
         <div class="hero-title">Every tool you need to work with PDFs</div>
         <div class="hero-sub">100% Free and Client-Side. Your files never leave your browser.</div>
         <div class="grid">
-            <div class="card" onclick="openWorkspace('Merge PDF')">
-                <div class="icon">🔗</div>
-                <h3>Merge PDF</h3>
-                <p style="font-size: 0.9rem; color: #666;">Combine, reorder, and sort visually.</p>
-            </div>
-            <div class="card" onclick="openWorkspace('Split PDF')">
-                <div class="icon">✂️</div>
-                <h3>Split PDF</h3>
-                <p style="font-size: 0.9rem; color: #666;">Extract specific pages or ranges.</p>
-            </div>
-            <div class="card" onclick="openWorkspace('Compress PDF')">
-                <div class="icon">📉</div>
-                <h3>Compress PDF</h3>
-                <p style="font-size: 0.9rem; color: #666;">Reduce file size while keeping quality.</p>
-            </div>
+            <div class="card" onclick="openWorkspace('Merge PDF')"><div class="icon">🔗</div><h3>Merge PDF</h3><p>Combine, reorder, and sort visually.</p></div>
+            <div class="card" onclick="openWorkspace('Split PDF')"><div class="icon">✂️</div><h3>Split PDF</h3><p>Extract specific pages or ranges.</p></div>
+            <div class="card" onclick="openWorkspace('Compress PDF')"><div class="icon">📉</div><h3>Compress PDF</h3><p>Reduce file size client-side.</p></div>
         </div>
     </div>
 
     <div id="workspace-view" class="hidden">
-        
         <div class="workspace-main">
             <div id="upload-area">
                 <h2 id="tool-title" style="margin-bottom: 20px; font-size: 2.5rem; color:#333;">Tool</h2>
@@ -194,13 +176,12 @@
                 <div id="pages-container"></div>
             </div>
             <div id="editor-area-split"></div>
-            <div id="editor-area-compress"></div>
+            <div id="editor-area-generic"></div>
 
             <div class="action-bar-merge hidden" id="action-bar-merge">
                 <div style="display: flex; gap: 10px;">
                     <label class="btn-secondary" style="background: #e5322d; color: white; border: none; font-weight:bold;">
-                        + Add more files
-                        <input type="file" id="add-more-input" multiple>
+                        + Add more files <input type="file" id="add-more-input" multiple>
                     </label>
                     <button class="btn-secondary" onclick="sortPages('asc')">A-Z ⬇️</button>
                     <button class="btn-secondary" onclick="sortPages('desc')">Z-A ⬆️</button>
@@ -216,41 +197,34 @@
                 <button class="btn-add-range" onclick="addSplitRange()">+ Add Range</button>
             </div>
             <div class="sidebar-footer">
-                <label class="checkbox-group">
-                    <input type="checkbox" id="merge-ranges-checkbox"> Merge all ranges
-                </label>
+                <label class="checkbox-group"><input type="checkbox" id="merge-ranges-checkbox"> Merge all ranges</label>
                 <button class="btn-process" id="split-btn" onclick="executeSplit()">Split PDF <span>➔</span></button>
             </div>
         </div>
 
-        <div class="sidebar hidden" id="sidebar-compress">
+        <div class="sidebar hidden" id="sidebar-generic">
             <div class="sidebar-header" id="generic-sidebar-title">Options</div>
-            <div class="sidebar-content" id="sidebar-options-content">
-                </div>
+            <div class="sidebar-content" id="sidebar-options-content"></div>
             <div class="sidebar-footer">
                 <button class="btn-process" id="sidebar-action-btn" onclick="executeSidebarAction()">Process <span>➔</span></button>
             </div>
         </div>
-
     </div>
 
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         const { PDFDocument, degrees } = PDFLib;
+        const { jsPDF } = window.jspdf;
 
-        // Global State
         let currentTool = "";
         let loadedFiles = []; 
         let fileIdCounter = 0;
         let pageIdCounter = 0;
         let pdfJsCache = {}; 
-        
-        let totalSplitPages = 0;
         let splitRanges = [];
+        let totalSplitPages = 0;
         let compressMode = 'recommended';
-        let originalFileSize = 0;
 
-        // Elements
         const homeView = document.getElementById('home-view');
         const workspaceView = document.getElementById('workspace-view');
         const uploadArea = document.getElementById('upload-area');
@@ -258,7 +232,6 @@
         function goHome() {
             homeView.classList.remove('hidden');
             workspaceView.classList.add('hidden');
-            workspaceView.style.display = 'none';
             resetWorkspace();
         }
 
@@ -266,25 +239,18 @@
             currentTool = toolName;
             document.getElementById('tool-title').innerText = toolName;
             
-            // Set correct accept attribute
             const fileInput = document.getElementById('file-input');
             const addMoreInput = document.getElementById('add-more-input');
-            if (toolName === 'JPG to PDF') {
-                fileInput.accept = addMoreInput.accept = "image/jpeg, image/png, image/webp";
-            } else {
-                fileInput.accept = addMoreInput.accept = ".pdf";
-            }
             
-            // Adjust layout based on tool
-            const needsSidebar = ['Split PDF', 'Compress PDF', 'PDF to JPG'].includes(toolName);
+            // Set Inputs based on tool
+            if (toolName === 'JPG to PDF') fileInput.accept = addMoreInput.accept = "image/jpeg, image/png, image/webp";
+            else if (toolName === 'WORD to PDF') fileInput.accept = addMoreInput.accept = ".docx";
+            else if (toolName === 'EXCEL to PDF') fileInput.accept = addMoreInput.accept = ".xlsx, .xls, .csv";
+            else fileInput.accept = addMoreInput.accept = ".pdf";
+            
+            const needsSidebar = ['Split PDF', 'Compress PDF', 'PDF to JPG', 'WORD to PDF', 'EXCEL to PDF', 'PDF to WORD', 'PDF to EXCEL'].includes(toolName);
             workspaceView.style.display = needsSidebar ? 'flex' : 'block';
             
-            // Handle Mock Tools immediately
-            if (['WORD to PDF', 'POWERPOINT to PDF', 'EXCEL to PDF', 'HTML to PDF', 'PDF to WORD', 'PDF to POWERPOINT', 'PDF to EXCEL', 'PDF to PDF/A'].includes(toolName)) {
-                alert(`The "${toolName}" tool requires a backend server because converting proprietary Microsoft Office formats cannot be done natively in a web browser. \n\n(However, Image/PDF conversions like "JPG to PDF" and "PDF to JPG" are fully functional!)`);
-                return;
-            }
-
             homeView.classList.add('hidden');
             workspaceView.classList.remove('hidden');
             resetWorkspace();
@@ -296,10 +262,10 @@
             document.getElementById('pages-container').innerHTML = '';
             document.getElementById('editor-area-merge').style.display = 'none';
             document.getElementById('editor-area-split').style.display = 'none';
-            document.getElementById('editor-area-compress').style.display = 'none';
+            document.getElementById('editor-area-generic').style.display = 'none';
             document.getElementById('action-bar-merge').classList.add('hidden');
             document.getElementById('sidebar-split').classList.add('hidden');
-            document.getElementById('sidebar-compress').classList.add('hidden');
+            document.getElementById('sidebar-generic').classList.add('hidden');
             uploadArea.classList.remove('hidden');
             document.getElementById('file-input').value = '';
         }
@@ -309,480 +275,285 @@
         });
 
         workspaceView.addEventListener('dragover', (e) => { e.preventDefault(); workspaceView.classList.add('dragover-active'); });
-        workspaceView.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            if (!workspaceView.contains(e.relatedTarget)) workspaceView.classList.remove('dragover-active');
-        });
-        workspaceView.addEventListener('drop', (e) => {
-            e.preventDefault();
-            workspaceView.classList.remove('dragover-active');
-            handleFiles(e.dataTransfer.files);
-        });
-
+        workspaceView.addEventListener('dragleave', (e) => { e.preventDefault(); if (!workspaceView.contains(e.relatedTarget)) workspaceView.classList.remove('dragover-active'); });
+        workspaceView.addEventListener('drop', (e) => { e.preventDefault(); workspaceView.classList.remove('dragover-active'); handleFiles(e.dataTransfer.files); });
         new Sortable(document.getElementById('pages-container'), { animation: 150, onEnd: updateMergePageNumbers });
 
         async function handleFiles(files) {
             if (files.length === 0) return;
             uploadArea.classList.add('hidden');
+            const file = files[0];
 
-            if (currentTool === 'Merge PDF') {
+            if (currentTool === 'Merge PDF' || currentTool === 'JPG to PDF') {
                 document.getElementById('editor-area-merge').style.display = 'block';
                 document.getElementById('action-bar-merge').classList.remove('hidden');
-                document.getElementById('merge-action-btn').innerText = "Merge PDF";
+                document.getElementById('merge-action-btn').innerText = currentTool === 'Merge PDF' ? "Merge PDF" : "Convert to PDF";
                 
-                for (let file of files) {
-                    if (file.type !== "application/pdf") continue;
-                    const arrayBuffer = await file.arrayBuffer();
+                for (let f of files) {
+                    const arrayBuffer = await f.arrayBuffer();
                     const fileId = `file_${fileIdCounter++}`;
-                    loadedFiles.push({ id: fileId, bytes: arrayBuffer, name: file.name, type: 'pdf' });
+                    loadedFiles.push({ id: fileId, bytes: arrayBuffer, name: f.name, type: f.type });
                     
-                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-                        const page = await pdf.getPage(pageNum);
-                        renderMergeThumbnail(page, fileId, file.name, pageNum - 1);
+                    if (currentTool === 'Merge PDF') {
+                        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                        for (let p = 1; p <= pdf.numPages; p++) {
+                            const page = await pdf.getPage(p);
+                            const viewport = page.getViewport({ scale: 0.5 }); 
+                            const canvas = document.createElement('canvas');
+                            canvas.height = viewport.height; canvas.width = viewport.width;
+                            await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+                            createThumbElement(canvas, fileId, f.name, p - 1);
+                        }
+                    } else {
+                        const url = URL.createObjectURL(f);
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            const scale = 150 / img.width;
+                            canvas.width = 150; canvas.height = img.height * scale;
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            createThumbElement(canvas, fileId, f.name, 0);
+                            URL.revokeObjectURL(url);
+                        };
+                        img.src = url;
                     }
                 }
                 updateMergePageNumbers();
 
-            } else if (currentTool === 'JPG to PDF') {
-                document.getElementById('editor-area-merge').style.display = 'block';
-                document.getElementById('action-bar-merge').classList.remove('hidden');
-                document.getElementById('merge-action-btn').innerText = "Convert to PDF";
-                
-                for (let file of files) {
-                    if (!file.type.startsWith("image/")) continue;
-                    const fileId = `img_${fileIdCounter++}`;
-                    const arrayBuffer = await file.arrayBuffer();
-                    loadedFiles.push({ id: fileId, bytes: arrayBuffer, name: file.name, type: file.type });
-                    
-                    // Render image thumbnail
-                    const url = URL.createObjectURL(file);
-                    const img = new Image();
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const scale = 150 / img.width;
-                        canvas.width = 150; canvas.height = img.height * scale;
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        renderImageThumbnail(canvas, fileId, file.name);
-                        URL.revokeObjectURL(url);
-                    };
-                    img.src = url;
-                }
-
             } else if (currentTool === 'Split PDF') {
-                const file = files[0];
-                if (file.type !== "application/pdf") return alert("Please upload a PDF.");
-                
                 document.getElementById('editor-area-split').style.display = 'flex';
                 document.getElementById('sidebar-split').classList.remove('hidden');
-                
-                const arrayBuffer = await file.arrayBuffer();
-                loadedFiles = [{ id: 'split_file', bytes: arrayBuffer, name: file.name }];
-                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                loadedFiles = [{ id: 'split_file', bytes: await file.arrayBuffer(), name: file.name }];
+                const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes }).promise;
                 pdfJsCache.doc = pdf;
                 totalSplitPages = pdf.numPages;
                 splitRanges = [{ id: 1, from: 1, to: totalSplitPages }];
                 updateSplitUI();
 
-            } else if (currentTool === 'Compress PDF') {
-                const file = files[0];
-                if (file.type !== "application/pdf") return alert("Please upload a PDF.");
-                
-                document.getElementById('editor-area-compress').style.display = 'flex';
-                const sidebar = document.getElementById('sidebar-compress');
+            } else {
+                // Generic Sidebar setups (Compress, Word/Excel conversions)
+                document.getElementById('editor-area-generic').style.display = 'flex';
+                const sidebar = document.getElementById('sidebar-generic');
                 sidebar.classList.remove('hidden');
-                document.getElementById('generic-sidebar-title').innerText = "Compression Level";
                 
-                // Inject Compress Options
-                document.getElementById('sidebar-options-content').innerHTML = `
-                    <div class="compress-option" id="comp-extreme" onclick="setCompressMode('extreme')">
-                        <strong>EXTREME COMPRESSION</strong><p>Less quality, high compression</p>
-                    </div>
-                    <div class="compress-option active" id="comp-recommended" onclick="setCompressMode('recommended')">
-                        <strong>RECOMMENDED COMPRESSION</strong><p>Good quality, good compression</p>
-                    </div>
-                    <div class="compress-option" id="comp-less" onclick="setCompressMode('less')">
-                        <strong>LESS COMPRESSION</strong><p>High quality, less compression</p>
-                    </div>
-                `;
-                document.getElementById('sidebar-action-btn').innerHTML = "Compress PDF <span>➔</span>";
+                loadedFiles = [{ id: 'generic_file', bytes: await file.arrayBuffer(), name: file.name, type: file.type }];
                 
-                originalFileSize = file.size;
-                const arrayBuffer = await file.arrayBuffer();
-                loadedFiles = [{ id: 'compress_file', bytes: arrayBuffer, name: file.name }];
-                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-                pdfJsCache.doc = pdf;
+                let icon = "📄", fileMeta = (file.size / 1024 / 1024).toFixed(2) + " MB";
+                const optionsContent = document.getElementById('sidebar-options-content');
                 
-                // FIXED PREVIEW LOGIC
-                const page = await pdf.getPage(1);
-                const viewport = page.getViewport({ scale: 0.8 });
-                const canvas = document.createElement('canvas');
-                canvas.height = viewport.height; canvas.width = viewport.width;
-                await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+                if (currentTool === 'Compress PDF') {
+                    document.getElementById('generic-sidebar-title').innerText = "Compression";
+                    optionsContent.innerHTML = `
+                        <div class="sidebar-option active" onclick="this.classList.add('active')">
+                            <strong>Recommended</strong><p>Rasterize pages to reduce size.</p>
+                        </div>
+                        <div class="client-warning">Client-side compression converts selectable text to images to reduce size.</div>
+                    `;
+                    document.getElementById('sidebar-action-btn').innerHTML = "Compress <span>➔</span>";
+                    
+                    const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes }).promise;
+                    pdfJsCache.doc = pdf;
+                    const page = await pdf.getPage(1);
+                    const viewport = page.getViewport({ scale: 0.8 });
+                    const canvas = document.createElement('canvas');
+                    canvas.height = viewport.height; canvas.width = viewport.width;
+                    await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+                    
+                    document.getElementById('editor-area-generic').innerHTML = `
+                        <div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
+                    `;
+                } 
+                else {
+                    // Handlers for PDF to JPG, Word/Excel tools
+                    if(currentTool === 'WORD to PDF') { icon = "📝"; document.getElementById('generic-sidebar-title').innerText = "Convert to PDF"; }
+                    if(currentTool === 'EXCEL to PDF') { icon = "📊"; document.getElementById('generic-sidebar-title').innerText = "Convert to PDF"; }
+                    if(currentTool === 'PDF to WORD' || currentTool === 'PDF to EXCEL') { 
+                        icon = "📑"; document.getElementById('generic-sidebar-title').innerText = "Extract Data"; 
+                        const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes }).promise;
+                        pdfJsCache.doc = pdf;
+                    }
+                    if(currentTool === 'PDF to JPG') {
+                        icon = "🖼️"; document.getElementById('generic-sidebar-title').innerText = "Extract Images";
+                        const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes }).promise;
+                        pdfJsCache.doc = pdf;
+                    }
 
-                const compArea = document.getElementById('editor-area-compress');
-                compArea.innerHTML = ''; 
-
-                const card = document.createElement('div');
-                card.className = 'compress-preview-card';
-                card.innerHTML = `<div class="compress-badge">1</div>`;
-                card.appendChild(canvas); // Attach canvas safely
-                card.innerHTML += `
-                    <div class="compress-filename" title="${file.name}">${file.name}</div>
-                    <div style="font-size: 0.8rem; color: #999; margin-top: 5px;">Original: ${(originalFileSize / 1024 / 1024).toFixed(2)} MB</div>
-                `;
-                compArea.appendChild(card);
-
-            } else if (currentTool === 'PDF to JPG') {
-                const file = files[0];
-                if (file.type !== "application/pdf") return alert("Please upload a PDF.");
-                
-                document.getElementById('editor-area-compress').style.display = 'flex';
-                const sidebar = document.getElementById('sidebar-compress');
-                sidebar.classList.remove('hidden');
-                document.getElementById('generic-sidebar-title').innerText = "Image Options";
-                
-                document.getElementById('sidebar-options-content').innerHTML = `
-                    <div class="compress-option active">
-                        <strong>Page to JPG</strong><p>Every page of this PDF will be converted into a separate JPG file.</p>
-                    </div>
-                `;
-                document.getElementById('sidebar-action-btn').innerHTML = "Convert to JPG <span>➔</span>";
-                
-                const arrayBuffer = await file.arrayBuffer();
-                loadedFiles = [{ id: 'pdf_to_jpg', bytes: arrayBuffer, name: file.name }];
-                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-                pdfJsCache.doc = pdf;
-
-                // Preview first page
-                const page = await pdf.getPage(1);
-                const viewport = page.getViewport({ scale: 0.8 });
-                const canvas = document.createElement('canvas');
-                canvas.height = viewport.height; canvas.width = viewport.width;
-                await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-
-                const compArea = document.getElementById('editor-area-compress');
-                compArea.innerHTML = '';
-                const card = document.createElement('div');
-                card.className = 'compress-preview-card';
-                card.innerHTML = `<div class="compress-badge">1</div>`;
-                card.appendChild(canvas);
-                card.innerHTML += `<div class="compress-filename">${file.name}</div>`;
-                compArea.appendChild(card);
+                    document.getElementById('editor-area-generic').innerHTML = `
+                        <div class="preview-card"><div class="icon">${icon}</div><div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
+                    `;
+                    
+                    optionsContent.innerHTML = `
+                        <div class="sidebar-option active">
+                            <strong>Standard Conversion</strong><p>Process document locally.</p>
+                        </div>
+                        ${currentTool.startsWith('PDF to') && currentTool !== 'PDF to JPG' ? '<div class="client-warning"><strong>Note:</strong> Client-side JS only extracts raw text. Formatting, layout, and images will be lost.</div>' : ''}
+                        ${currentTool === 'WORD to PDF' ? '<div class="client-warning"><strong>Note:</strong> Complex styling and layout positioning may be lost during local extraction.</div>' : ''}
+                    `;
+                    document.getElementById('sidebar-action-btn').innerHTML = "Convert <span>➔</span>";
+                }
             }
         }
 
-        /* ==========================================
-           SHARED / MERGE / JPG-TO-PDF LOGIC 
-           ========================================== */
-        async function renderMergeThumbnail(page, fileId, fileName, originalPageIndex) {
-            const viewport = page.getViewport({ scale: 0.5 }); 
-            const canvas = document.createElement('canvas');
-            canvas.height = viewport.height; canvas.width = viewport.width;
-            await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-            createThumbElement(canvas, fileId, fileName, originalPageIndex);
-        }
-
-        function renderImageThumbnail(canvas, fileId, fileName) {
-            createThumbElement(canvas, fileId, fileName, 0);
-        }
-
+        // --- SHARED UI LOGIC ---
         function createThumbElement(canvas, fileId, fileName, pageIndex) {
             const pageId = `page_${pageIdCounter++}`;
             const thumbDiv = document.createElement('div');
-            thumbDiv.className = 'page-thumb';
-            thumbDiv.id = pageId;
-            thumbDiv.dataset.fileId = fileId;
-            thumbDiv.dataset.fileName = fileName;
-            thumbDiv.dataset.pageIndex = pageIndex;
-            thumbDiv.dataset.rotation = 0;
-
-            const numDiv = document.createElement('div'); numDiv.className = 'page-number';
-            const cvsContainer = document.createElement('div'); cvsContainer.className = 'canvas-container';
-            cvsContainer.appendChild(canvas);
-            
-            thumbDiv.appendChild(numDiv);
-            thumbDiv.appendChild(cvsContainer);
-            thumbDiv.innerHTML += `
-                <div class="file-label" title="${fileName}">${fileName}</div>
-                <div class="page-controls">
-                    <button class="icon-btn" onclick="rotatePage('${pageId}')">🔄</button>
-                    <button class="icon-btn delete" onclick="deletePage('${pageId}')">❌</button>
-                </div>
-            `;
+            thumbDiv.className = 'page-thumb'; thumbDiv.id = pageId;
+            thumbDiv.dataset.fileId = fileId; thumbDiv.dataset.fileName = fileName; thumbDiv.dataset.pageIndex = pageIndex; thumbDiv.dataset.rotation = 0;
+            thumbDiv.innerHTML = `<div class="page-number"></div><div class="canvas-container"></div><div class="file-label" title="${fileName}">${fileName}</div><div class="page-controls"><button class="icon-btn" onclick="rotatePage('${pageId}')">🔄</button><button class="icon-btn delete" onclick="deletePage('${pageId}')">❌</button></div>`;
+            thumbDiv.querySelector('.canvas-container').appendChild(canvas);
             document.getElementById('pages-container').appendChild(thumbDiv);
         }
 
-        function rotatePage(pageId) {
-            const thumb = document.getElementById(pageId);
-            let rot = (parseInt(thumb.dataset.rotation) + 90) % 360;
-            thumb.dataset.rotation = rot;
-            thumb.querySelector('canvas').style.transform = `rotate(${rot}deg)`;
-        }
+        function rotatePage(pageId) { const thumb = document.getElementById(pageId); let rot = (parseInt(thumb.dataset.rotation) + 90) % 360; thumb.dataset.rotation = rot; thumb.querySelector('canvas').style.transform = `rotate(${rot}deg)`; }
+        function deletePage(pageId) { document.getElementById(pageId).remove(); updateMergePageNumbers(); if (document.getElementById('pages-container').children.length === 0) resetWorkspace(); }
+        function sortPages(order) { const c = document.getElementById('pages-container'); const thumbs = Array.from(c.querySelectorAll('.page-thumb')); thumbs.sort((a, b) => { const nA = a.dataset.fileName.toLowerCase(), nB = b.dataset.fileName.toLowerCase(); if (nA < nB) return order === 'asc' ? -1 : 1; if (nA > nB) return order === 'asc' ? 1 : -1; return parseInt(a.dataset.pageIndex) - parseInt(b.dataset.pageIndex); }); thumbs.forEach(t => c.appendChild(t)); updateMergePageNumbers(); }
+        function updateMergePageNumbers() { document.querySelectorAll('#pages-container .page-thumb').forEach((t, i) => t.querySelector('.page-number').innerText = i + 1); }
 
-        function deletePage(pageId) {
-            document.getElementById(pageId).remove();
-            updateMergePageNumbers();
-            if (document.getElementById('pages-container').children.length === 0) resetWorkspace();
-        }
-
-        function sortPages(order) {
-            const container = document.getElementById('pages-container');
-            const thumbs = Array.from(container.querySelectorAll('.page-thumb'));
-            thumbs.sort((a, b) => {
-                const nameA = a.dataset.fileName.toLowerCase(), nameB = b.dataset.fileName.toLowerCase();
-                if (nameA < nameB) return order === 'asc' ? -1 : 1;
-                if (nameA > nameB) return order === 'asc' ? 1 : -1;
-                return parseInt(a.dataset.pageIndex) - parseInt(b.dataset.pageIndex); 
-            });
-            thumbs.forEach(thumb => container.appendChild(thumb));
-            updateMergePageNumbers();
-        }
-
-        function updateMergePageNumbers() {
-            document.querySelectorAll('#pages-container .page-thumb').forEach((thumb, index) => {
-                thumb.querySelector('.page-number').innerText = index + 1;
-            });
-        }
-
+        // --- MERGE / JPG TO PDF ACTIONS ---
         async function executeMainAction() {
-            if (currentTool === 'Merge PDF') executeMerge();
-            if (currentTool === 'JPG to PDF') executeJPGtoPDF();
-        }
-
-        async function executeMerge() {
             const thumbs = document.querySelectorAll('#pages-container .page-thumb');
             if (!thumbs.length) return;
-            const btn = document.getElementById('merge-action-btn');
-            btn.innerText = "Processing...";
+            const btn = document.getElementById('merge-action-btn'); btn.innerText = "Processing...";
 
             try {
                 const finalPdf = await PDFDocument.create();
-                const pdfLibCache = {};
-                for (let loaded of loadedFiles) pdfLibCache[loaded.id] = await PDFDocument.load(loaded.bytes);
-
-                for (let thumb of thumbs) {
-                    const sourcePdf = pdfLibCache[thumb.dataset.fileId];
-                    const [copiedPage] = await finalPdf.copyPages(sourcePdf, [parseInt(thumb.dataset.pageIndex)]);
-                    let rot = parseInt(thumb.dataset.rotation);
-                    if (rot !== 0) copiedPage.setRotation(degrees(copiedPage.getRotation().angle + rot));
-                    finalPdf.addPage(copiedPage);
-                }
-                triggerDownload(await finalPdf.save(), "merged-loves-me.pdf");
-            } catch (e) { alert("Error merging."); }
-            btn.innerText = "Merge PDF";
-        }
-
-        async function executeJPGtoPDF() {
-            const thumbs = document.querySelectorAll('#pages-container .page-thumb');
-            if (!thumbs.length) return;
-            const btn = document.getElementById('merge-action-btn');
-            btn.innerText = "Converting...";
-
-            try {
-                const finalPdf = await PDFDocument.create();
-                for (let thumb of thumbs) {
-                    const fileObj = loadedFiles.find(f => f.id === thumb.dataset.fileId);
-                    let image;
-                    if (fileObj.type.includes('png')) image = await finalPdf.embedPng(fileObj.bytes);
-                    else image = await finalPdf.embedJpg(fileObj.bytes);
-                    
-                    const page = finalPdf.addPage([image.width, image.height]);
-                    
-                    // Handle Rotation
-                    let rot = parseInt(thumb.dataset.rotation);
-                    if (rot !== 0) {
-                        page.setRotation(degrees(rot));
+                if (currentTool === 'Merge PDF') {
+                    const cache = {};
+                    for (let f of loadedFiles) cache[f.id] = await PDFDocument.load(f.bytes);
+                    for (let t of thumbs) {
+                        const [page] = await finalPdf.copyPages(cache[t.dataset.fileId], [parseInt(t.dataset.pageIndex)]);
+                        let rot = parseInt(t.dataset.rotation); if (rot !== 0) page.setRotation(degrees(page.getRotation().angle + rot));
+                        finalPdf.addPage(page);
                     }
-                    page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
+                    triggerDownload(await finalPdf.save(), "merged.pdf");
+                } else {
+                    for (let t of thumbs) {
+                        const f = loadedFiles.find(x => x.id === t.dataset.fileId);
+                        let img = f.type.includes('png') ? await finalPdf.embedPng(f.bytes) : await finalPdf.embedJpg(f.bytes);
+                        const page = finalPdf.addPage([img.width, img.height]);
+                        let rot = parseInt(t.dataset.rotation); if (rot !== 0) page.setRotation(degrees(rot));
+                        page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+                    }
+                    triggerDownload(await finalPdf.save(), "images-to-pdf.pdf");
                 }
-                triggerDownload(await finalPdf.save(), "images-to-pdf.pdf");
-            } catch (e) { alert("Error converting images."); }
-            btn.innerText = "Convert to PDF";
+            } catch (e) { alert("Error processing."); }
+            btn.innerText = currentTool;
         }
 
-        /* ==========================================
-           SPLIT PDF LOGIC (With Canvas Fix intact)
-           ========================================== */
-        function addSplitRange() {
-            const newId = splitRanges.length ? Math.max(...splitRanges.map(r => r.id)) + 1 : 1;
-            splitRanges.push({ id: newId, from: 1, to: totalSplitPages });
-            updateSplitUI();
-        }
-
-        function removeSplitRange(id) {
-            splitRanges = splitRanges.filter(r => r.id !== id);
-            if (splitRanges.length === 0) addSplitRange(); else updateSplitUI();
-        }
-
-        function handleRangeChange(id, type, value) {
-            let val = parseInt(value);
-            if (isNaN(val)) return;
-            const range = splitRanges.find(r => r.id === id);
-            if (type === 'from') {
-                if (val < 1) val = 1; if (val > range.to) val = range.to; range.from = val;
-            } else {
-                if (val > totalSplitPages) val = totalSplitPages; if (val < range.from) val = range.from; range.to = val;
-            }
-            updateSplitUI();
-        }
-
+        // --- SPLIT LOGIC ---
+        function addSplitRange() { const newId = splitRanges.length ? Math.max(...splitRanges.map(r => r.id)) + 1 : 1; splitRanges.push({ id: newId, from: 1, to: totalSplitPages }); updateSplitUI(); }
+        function removeSplitRange(id) { splitRanges = splitRanges.filter(r => r.id !== id); if (!splitRanges.length) addSplitRange(); else updateSplitUI(); }
+        function handleRangeChange(id, type, val) { val = parseInt(val); if(isNaN(val)) return; const r = splitRanges.find(x => x.id === id); if(type === 'from'){ val = Math.max(1, Math.min(val, r.to)); r.from = val; } else { val = Math.max(r.from, Math.min(val, totalSplitPages)); r.to = val; } updateSplitUI(); }
         async function updateSplitUI() {
-            const list = document.getElementById('ranges-list');
-            list.innerHTML = '';
-            splitRanges.forEach((range, index) => {
-                list.innerHTML += `
-                    <div class="range-item">
-                        <div class="range-item-header">
-                            <span>Range ${index + 1}</span>
-                            ${splitRanges.length > 1 ? `<span style="cursor:pointer;color:red;" onclick="removeSplitRange(${range.id})">✖</span>` : ''}
-                        </div>
-                        <div class="range-inputs">
-                            <span style="color:#666;">from</span>
-                            <input type="number" value="${range.from}" onchange="handleRangeChange(${range.id}, 'from', this.value)">
-                            <span style="color:#666;">to</span>
-                            <input type="number" value="${range.to}" onchange="handleRangeChange(${range.id}, 'to', this.value)">
-                        </div>
-                    </div>
-                `;
+            const list = document.getElementById('ranges-list'); list.innerHTML = '';
+            splitRanges.forEach((r, i) => {
+                list.innerHTML += `<div class="range-item"><div style="display:flex;justify-content:space-between;color:#666;font-size:0.9rem;margin-bottom:10px;"><span>Range ${i + 1}</span>${splitRanges.length>1?`<span style="cursor:pointer;color:red;" onclick="removeSplitRange(${r.id})">✖</span>`:''}</div><div class="range-inputs"><span>from</span><input type="number" value="${r.from}" onchange="handleRangeChange(${r.id}, 'from', this.value)"><span>to</span><input type="number" value="${r.to}" onchange="handleRangeChange(${r.id}, 'to', this.value)"></div></div>`;
             });
-
-            const visualArea = document.getElementById('editor-area-split');
-            visualArea.innerHTML = '';
+            const vis = document.getElementById('editor-area-split'); vis.innerHTML = '';
             for (let i = 0; i < splitRanges.length; i++) {
-                const r = splitRanges[i];
-                const block = document.createElement('div'); block.className = 'split-range-block';
-                const title = document.createElement('div'); title.className = 'split-range-title'; title.innerText = `Range ${i + 1}`;
-                const visualBox = document.createElement('div'); visualBox.className = 'split-visual-box';
-
-                const fromWrapper = document.createElement('div'); fromWrapper.className = 'split-canvas-wrapper';
-                fromWrapper.appendChild(await getRenderedCanvas(r.from));
-                const spanF = document.createElement('span'); spanF.innerText = r.from; fromWrapper.appendChild(spanF);
-                visualBox.appendChild(fromWrapper);
-
+                const r = splitRanges[i]; const b = document.createElement('div'); b.className = 'split-range-block'; b.innerHTML = `<div style="color:#666;font-weight:bold;margin-bottom:10px;">Range ${i+1}</div>`;
+                const vb = document.createElement('div'); vb.className = 'split-visual-box';
+                const fw = document.createElement('div'); fw.className = 'split-canvas-wrapper'; fw.appendChild(await getSplitCanvas(r.from)); const sf = document.createElement('span'); sf.innerText = r.from; fw.appendChild(sf); vb.appendChild(fw);
                 if (r.from !== r.to) {
-                    const dots = document.createElement('div'); dots.innerText = '...'; dots.style.fontSize='2rem'; dots.style.color='#999';
-                    visualBox.appendChild(dots);
-                    const toWrapper = document.createElement('div'); toWrapper.className = 'split-canvas-wrapper';
-                    toWrapper.appendChild(await getRenderedCanvas(r.to));
-                    const spanT = document.createElement('span'); spanT.innerText = r.to; toWrapper.appendChild(spanT);
-                    visualBox.appendChild(toWrapper);
+                    const dots = document.createElement('div'); dots.innerText = '...'; dots.style.fontSize='2rem'; dots.style.color='#999'; vb.appendChild(dots);
+                    const tw = document.createElement('div'); tw.className = 'split-canvas-wrapper'; tw.appendChild(await getSplitCanvas(r.to)); const st = document.createElement('span'); st.innerText = r.to; tw.appendChild(st); vb.appendChild(tw);
                 }
-                block.appendChild(title); block.appendChild(visualBox); visualArea.appendChild(block);
+                b.appendChild(vb); vis.appendChild(b);
             }
         }
-
-        async function getRenderedCanvas(pageNum) {
-            const page = await pdfJsCache.doc.getPage(pageNum);
-            const viewport = page.getViewport({ scale: 0.6 });
-            const canvas = document.createElement('canvas');
-            canvas.height = viewport.height; canvas.width = viewport.width;
-            await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-            return canvas;
-        }
-
+        async function getSplitCanvas(num) { const p = await pdfJsCache.doc.getPage(num); const v = p.getViewport({ scale: 0.6 }); const c = document.createElement('canvas'); c.height = v.height; c.width = v.width; await p.render({ canvasContext: c.getContext('2d'), viewport: v }).promise; return c; }
+        
         async function executeSplit() {
-            const btn = document.getElementById('split-btn');
-            btn.innerHTML = "Processing..."; btn.disabled = true;
-
+            const btn = document.getElementById('split-btn'); btn.innerHTML = "Processing..."; btn.disabled = true;
             try {
-                const sourcePdf = await PDFDocument.load(loadedFiles[0].bytes);
-                const mergeChecked = document.getElementById('merge-ranges-checkbox').checked;
-
-                if (mergeChecked || splitRanges.length === 1) {
-                    const finalPdf = await PDFDocument.create();
-                    for (let r of splitRanges) {
-                        const pageIndices = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i);
-                        const copied = await finalPdf.copyPages(sourcePdf, pageIndices);
-                        copied.forEach(p => finalPdf.addPage(p));
-                    }
-                    triggerDownload(await finalPdf.save(), "split-pdf.pdf");
+                const src = await PDFDocument.load(loadedFiles[0].bytes);
+                if (document.getElementById('merge-ranges-checkbox').checked || splitRanges.length === 1) {
+                    const pdf = await PDFDocument.create();
+                    for (let r of splitRanges) { const idxs = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i); const cp = await pdf.copyPages(src, idxs); cp.forEach(p => pdf.addPage(p)); }
+                    triggerDownload(await pdf.save(), "split.pdf");
                 } else {
                     const zip = new JSZip();
                     for (let i = 0; i < splitRanges.length; i++) {
-                        const r = splitRanges[i];
-                        const finalPdf = await PDFDocument.create();
-                        const pageIndices = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i);
-                        const copied = await finalPdf.copyPages(sourcePdf, pageIndices);
-                        copied.forEach(p => finalPdf.addPage(p));
-                        zip.file(`range_${i+1}_(${r.from}-${r.to}).pdf`, await finalPdf.save());
+                        const pdf = await PDFDocument.create(); const r = splitRanges[i]; const idxs = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i);
+                        const cp = await pdf.copyPages(src, idxs); cp.forEach(p => pdf.addPage(p)); zip.file(`range_${i+1}.pdf`, await pdf.save());
                     }
                     triggerDownload(await zip.generateAsync({type:"blob"}), "split_files.zip", true);
                 }
-            } catch (e) { alert("Error during split."); }
+            } catch (e) { alert("Error splitting."); }
             btn.innerHTML = "Split PDF <span>➔</span>"; btn.disabled = false;
         }
 
-        /* ==========================================
-           COMPRESS & PDF-TO-JPG LOGIC
-           ========================================== */
-        function setCompressMode(mode) {
-            compressMode = mode;
-            document.querySelectorAll('.compress-option').forEach(el => el.classList.remove('active'));
-            document.getElementById(`comp-${mode}`).classList.add('active');
-        }
-
+        // --- GENERIC CONVERSIONS (Compress, Word, Excel, JPG) ---
         async function executeSidebarAction() {
-            if (currentTool === 'Compress PDF') executeCompress();
-            if (currentTool === 'PDF to JPG') executePDFtoJPG();
-        }
-
-        async function executeCompress() {
             const btn = document.getElementById('sidebar-action-btn');
-            btn.innerHTML = "Compressing..."; btn.disabled = true;
+            btn.innerHTML = "Processing..."; btn.disabled = true;
+            const fileData = loadedFiles[0];
 
             try {
-                let scale = 1.5, jpegQuality = 0.6;
-                if (compressMode === 'extreme') { scale = 1.0; jpegQuality = 0.4; } 
-                else if (compressMode === 'less') { scale = 2.0; jpegQuality = 0.8; }
-
-                const doc = pdfJsCache.doc;
-                const newPdf = await PDFDocument.create();
-
-                for (let i = 1; i <= doc.numPages; i++) {
-                    const page = await doc.getPage(i);
-                    const viewport = page.getViewport({ scale: scale });
-                    const canvas = document.createElement('canvas');
-                    canvas.height = viewport.height; canvas.width = viewport.width;
-                    await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-                    
-                    const img = await newPdf.embedJpg(canvas.toDataURL('image/jpeg', jpegQuality));
-                    const newPage = newPdf.addPage([viewport.width, viewport.height]);
-                    newPage.drawImage(img, { x: 0, y: 0, width: viewport.width, height: viewport.height });
+                if (currentTool === 'Compress PDF') {
+                    const newPdf = await PDFDocument.create();
+                    for (let i = 1; i <= pdfJsCache.doc.numPages; i++) {
+                        const p = await pdfJsCache.doc.getPage(i); const v = p.getViewport({ scale: 1.5 });
+                        const c = document.createElement('canvas'); c.height = v.height; c.width = v.width; await p.render({ canvasContext: c.getContext('2d'), viewport: v }).promise;
+                        const img = await newPdf.embedJpg(c.toDataURL('image/jpeg', 0.6));
+                        const np = newPdf.addPage([v.width, v.height]); np.drawImage(img, { x: 0, y: 0, width: v.width, height: v.height });
+                    }
+                    triggerDownload(await newPdf.save(), "compressed.pdf");
+                } 
+                else if (currentTool === 'PDF to JPG') {
+                    const zip = new JSZip();
+                    for (let i = 1; i <= pdfJsCache.doc.numPages; i++) {
+                        const p = await pdfJsCache.doc.getPage(i); const v = p.getViewport({ scale: 2.0 });
+                        const c = document.createElement('canvas'); c.height = v.height; c.width = v.width; await p.render({ canvasContext: c.getContext('2d'), viewport: v }).promise;
+                        zip.file(`page_${i}.jpg`, c.toDataURL('image/jpeg', 0.9).split(',')[1], {base64: true});
+                    }
+                    triggerDownload(await zip.generateAsync({type:"blob"}), "images.zip", true);
                 }
-                triggerDownload(await newPdf.save(), "compressed.pdf");
-            } catch (e) { alert("Compression error."); }
-            btn.innerHTML = "Compress PDF <span>➔</span>"; btn.disabled = false;
-        }
-
-        async function executePDFtoJPG() {
-            const btn = document.getElementById('sidebar-action-btn');
-            btn.innerHTML = "Extracting..."; btn.disabled = true;
-
-            try {
-                const doc = pdfJsCache.doc;
-                const zip = new JSZip();
-
-                for (let i = 1; i <= doc.numPages; i++) {
-                    const page = await doc.getPage(i);
-                    // Render high quality for JPG export
-                    const viewport = page.getViewport({ scale: 2.0 });
-                    const canvas = document.createElement('canvas');
-                    canvas.height = viewport.height; canvas.width = viewport.width;
-                    await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
-                    
-                    // Convert canvas to blob, add to zip
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-                    const base64Data = dataUrl.replace(/^data:image\/(png|jpeg);base64,/, "");
-                    zip.file(`page_${i}.jpg`, base64Data, {base64: true});
+                else if (currentTool === 'WORD to PDF') {
+                    const result = await mammoth.extractToRawText({ arrayBuffer: fileData.bytes });
+                    const doc = new jsPDF();
+                    const splitText = doc.splitTextToSize(result.value || "No text found", 180);
+                    doc.text(splitText, 15, 15);
+                    triggerDownload(doc.output('arraybuffer'), "word-converted.pdf");
                 }
-                
-                const zipContent = await zip.generateAsync({type:"blob"});
-                triggerDownload(zipContent, "pdf_images.zip", true);
-
-            } catch (e) { console.log(e); alert("Extraction error."); }
-            btn.innerHTML = "Convert to JPG <span>➔</span>"; btn.disabled = false;
+                else if (currentTool === 'EXCEL to PDF') {
+                    const wb = XLSX.read(fileData.bytes, {type: 'array'});
+                    const ws = wb.Sheets[wb.SheetNames[0]];
+                    const data = XLSX.utils.sheet_to_json(ws, {header: 1});
+                    const doc = new jsPDF();
+                    doc.autoTable({ body: data, startY: 15 });
+                    triggerDownload(doc.output('arraybuffer'), "excel-converted.pdf");
+                }
+                else if (currentTool === 'PDF to WORD') {
+                    let fullText = "";
+                    for(let i=1; i<=pdfJsCache.doc.numPages; i++) {
+                        const page = await pdfJsCache.doc.getPage(i);
+                        const content = await page.getTextContent();
+                        fullText += content.items.map(item => item.str).join(" ") + "\n\n";
+                    }
+                    const docxDoc = new docx.Document({
+                        sections: [{ properties: {}, children: fullText.split("\n").map(line => new docx.Paragraph({ children: [new docx.TextRun(line)] })) }]
+                    });
+                    triggerDownload(await docx.Packer.toBlob(docxDoc), "extracted.docx", true);
+                }
+                else if (currentTool === 'PDF to EXCEL') {
+                    let fullText = "";
+                    for(let i=1; i<=pdfJsCache.doc.numPages; i++) {
+                        const page = await pdfJsCache.doc.getPage(i);
+                        const content = await page.getTextContent();
+                        fullText += content.items.map(item => item.str).join(" ") + "\n";
+                    }
+                    // Attempt to split loose text into columns by multiple spaces
+                    const aoa = fullText.split('\n').filter(l=>l.trim()).map(line => line.split(/\s{2,}/)); 
+                    const ws = XLSX.utils.aoa_to_sheet(aoa);
+                    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data");
+                    const wbout = XLSX.write(wb, {bookType:'xlsx', type:'array'});
+                    triggerDownload(new Blob([wbout]), "extracted.xlsx", true);
+                }
+            } catch (e) { console.error(e); alert("Processing Error."); }
+            btn.innerHTML = "Process <span>➔</span>"; btn.disabled = false;
         }
 
         function triggerDownload(data, filename, isBlob = false) {
