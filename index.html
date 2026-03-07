@@ -23,7 +23,7 @@
         .hero-title { font-size: 2.5rem; margin-bottom: 10px; }
         .hero-sub { color: #666; margin-bottom: 40px; font-size: 1.1rem; }
         .grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .card { background: #fff; padding: 40px 30px; border-radius: 8px; cursor: pointer; border: 1px solid #e1e1e1; transition: all 0.2s; max-width: 300px; width: 100%; }
+        .card { background: #fff; padding: 40px 30px; border-radius: 8px; cursor: pointer; border: 1px solid #e1e1e1; transition: all 0.2s; max-width: 250px; width: 100%; }
         .card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         .card .icon { font-size: 3rem; margin-bottom: 15px; }
         .card h3 { margin: 0; font-size: 1.5rem; }
@@ -64,14 +64,27 @@
         .split-dots { font-size: 2rem; font-weight: bold; color: #999; letter-spacing: 2px; }
         .split-canvas-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--primary); font-weight: bold; }
 
+        /* Editor Area (Compress Tool) */
+        #editor-area-compress { display: none; padding: 40px; display: flex; justify-content: center; align-items: center; height: 100%; }
+        .compress-preview-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; position: relative; }
+        .compress-preview-card canvas { max-width: 250px; border: 1px solid #ddd; }
+        .compress-badge { position: absolute; top: -10px; right: -10px; background: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 0.9rem; }
+        .compress-filename { margin-top: 15px; font-size: 0.9rem; color: #666; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
         /* Merge Action Bar (Bottom) */
         .action-bar-merge { position: absolute; bottom: 0; left: 0; right: 0; background: white; padding: 15px 30px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .btn-secondary { background: #f0f0f0; color: #333; padding: 10px 15px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; transition: 0.2s; }
         .btn-secondary:hover { background: #e0e0e0; }
 
-        /* Split Sidebar (Right) */
+        /* Sidebar Standard Classes */
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid #ddd; font-size: 1.5rem; font-weight: bold; color: #333; }
         .sidebar-content { padding: 20px; flex-grow: 1; overflow-y: auto; }
+        .sidebar-footer { padding: 20px; border-top: 1px solid #ddd; background: white; }
+        .btn-process { background: var(--primary); color: white; padding: 15px; width: 100%; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-process:hover { background: #c82320; }
+        .btn-process:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Split Specific Sidebar */
         .range-item { background: white; border: 1px solid #ddd; border-radius: 6px; padding: 15px; margin-bottom: 15px; position: relative; }
         .range-item-header { display: flex; justify-content: space-between; margin-bottom: 10px; color: #666; font-size: 0.9rem; }
         .range-item-header span { font-weight: bold; color: #333; }
@@ -79,11 +92,16 @@
         .range-inputs input { width: 60px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
         .btn-add-range { background: white; border: 1px dashed var(--primary); color: var(--primary); padding: 10px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 20px; transition: 0.2s; }
         .btn-add-range:hover { background: #ffebeb; }
-        .sidebar-footer { padding: 20px; border-top: 1px solid #ddd; background: white; }
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-size: 0.9rem; color: #555; cursor: pointer; }
-        .btn-process { background: var(--primary); color: white; padding: 15px; width: 100%; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .btn-process:hover { background: #c82320; }
-        .btn-process:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Compress Specific Sidebar */
+        .compress-option { border: 2px solid transparent; background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; transition: 0.2s; border: 1px solid #ddd; position: relative; }
+        .compress-option:hover { border-color: #aaa; }
+        .compress-option.active { border-color: #2ecc71; background: #f2fcf6; }
+        .compress-option.active::after { content: '✔'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #2ecc71; font-weight: bold; font-size: 1.2rem; }
+        .compress-option strong { display: block; color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
+        .compress-option p { margin: 0; font-size: 0.85rem; color: #666; }
+        .compress-option input[type="number"] { width: 100px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 10px; font-size: 1rem; }
 
         .hidden { display: none !important; }
     </style>
@@ -101,12 +119,17 @@
             <div class="card" onclick="openWorkspace('Merge PDF')">
                 <div class="icon">🔗</div>
                 <h3>Merge PDF</h3>
-                <p style="font-size: 0.9rem; color: #666;">Combine multiple files, reorder, rotate, and sort visually.</p>
+                <p style="font-size: 0.9rem; color: #666;">Combine, reorder, and sort visually.</p>
             </div>
             <div class="card" onclick="openWorkspace('Split PDF')">
                 <div class="icon">✂️</div>
                 <h3>Split PDF</h3>
-                <p style="font-size: 0.9rem; color: #666;">Extract pages or split into multiple ranges easily.</p>
+                <p style="font-size: 0.9rem; color: #666;">Extract specific pages or ranges.</p>
+            </div>
+            <div class="card" onclick="openWorkspace('Compress PDF')">
+                <div class="icon">📉</div>
+                <h3>Compress PDF</h3>
+                <p style="font-size: 0.9rem; color: #666;">Reduce file size while keeping quality.</p>
             </div>
         </div>
     </div>
@@ -128,8 +151,9 @@
                 <div id="pages-container"></div>
             </div>
 
-            <div id="editor-area-split">
-                </div>
+            <div id="editor-area-split"></div>
+
+            <div id="editor-area-compress"></div>
 
             <div class="action-bar-merge hidden" id="action-bar-merge">
                 <div style="display: flex; gap: 10px;">
@@ -159,10 +183,38 @@
             </div>
         </div>
 
+        <div class="sidebar hidden" id="sidebar-compress">
+            <div class="sidebar-header">Compression level</div>
+            <div class="sidebar-content">
+                <div class="compress-option" id="comp-extreme" onclick="setCompressMode('extreme')">
+                    <strong>EXTREME COMPRESSION</strong>
+                    <p>Less quality, high compression</p>
+                </div>
+                <div class="compress-option active" id="comp-recommended" onclick="setCompressMode('recommended')">
+                    <strong>RECOMMENDED COMPRESSION</strong>
+                    <p>Good quality, good compression</p>
+                </div>
+                <div class="compress-option" id="comp-less" onclick="setCompressMode('less')">
+                    <strong>LESS COMPRESSION</strong>
+                    <p>High quality, less compression</p>
+                </div>
+                <div class="compress-option" id="comp-custom" onclick="setCompressMode('custom')">
+                    <strong>CUSTOM SIZE</strong>
+                    <p>Approximate target size (MB)</p>
+                    <input type="number" id="target-size" step="0.1" placeholder="e.g. 1.5" onclick="event.stopPropagation()">
+                </div>
+                <p style="font-size:0.8rem; color:#888; margin-top:20px; line-height:1.4;">
+                    *Note: Client-side compression works by rasterizing pages. Selectable text will be converted to images.
+                </p>
+            </div>
+            <div class="sidebar-footer">
+                <button class="btn-process" id="compress-btn" onclick="executeCompress()">Compress PDF <span>➔</span></button>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'; // Dummy for JSZip load
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         const { PDFDocument, degrees } = PDFLib;
 
@@ -171,18 +223,21 @@
         let loadedPDFs = []; 
         let fileIdCounter = 0;
         let pageIdCounter = 0;
-        let pdfJsCache = {}; // Cache for fast Split rendering
+        let pdfJsCache = {}; 
         
         // Split State
         let totalSplitPages = 0;
         let splitRanges = [];
+
+        // Compress State
+        let compressMode = 'recommended';
+        let originalFileSize = 0;
 
         // UI Elements
         const homeView = document.getElementById('home-view');
         const workspaceView = document.getElementById('workspace-view');
         const uploadArea = document.getElementById('upload-area');
         
-        // Navigation
         function goHome() {
             homeView.classList.remove('hidden');
             workspaceView.classList.add('hidden');
@@ -194,8 +249,7 @@
             currentTool = toolName;
             document.getElementById('tool-title').innerText = toolName;
             
-            // Setup UI based on tool
-            workspaceView.style.display = currentTool === 'Split PDF' ? 'flex' : 'block';
+            workspaceView.style.display = (currentTool === 'Split PDF' || currentTool === 'Compress PDF') ? 'flex' : 'block';
             
             homeView.classList.add('hidden');
             workspaceView.classList.remove('hidden');
@@ -207,13 +261,14 @@
             document.getElementById('pages-container').innerHTML = '';
             document.getElementById('editor-area-merge').style.display = 'none';
             document.getElementById('editor-area-split').style.display = 'none';
+            document.getElementById('editor-area-compress').style.display = 'none';
             document.getElementById('action-bar-merge').classList.add('hidden');
             document.getElementById('sidebar-split').classList.add('hidden');
+            document.getElementById('sidebar-compress').classList.add('hidden');
             uploadArea.classList.remove('hidden');
             document.getElementById('file-input').value = '';
         }
 
-        // File Inputs & Drag Drop
         ['file-input', 'add-more-input'].forEach(id => {
             document.getElementById(id).addEventListener('change', (e) => handleFiles(e.target.files));
         });
@@ -255,7 +310,6 @@
                 updateMergePageNumbers();
 
             } else if (currentTool === 'Split PDF') {
-                // Split usually only handles 1 file at a time
                 const file = files[0];
                 if (file.type !== "application/pdf") return alert("Please upload a PDF.");
                 
@@ -271,6 +325,37 @@
                 
                 splitRanges = [{ id: 1, from: 1, to: totalSplitPages }];
                 updateSplitUI();
+
+            } else if (currentTool === 'Compress PDF') {
+                const file = files[0];
+                if (file.type !== "application/pdf") return alert("Please upload a PDF.");
+                
+                document.getElementById('editor-area-compress').style.display = 'flex';
+                document.getElementById('sidebar-compress').classList.remove('hidden');
+                
+                originalFileSize = file.size;
+                const arrayBuffer = await file.arrayBuffer();
+                loadedPDFs = [{ id: 'compress_file', bytes: arrayBuffer, name: file.name }];
+                
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                pdfJsCache.doc = pdf;
+                
+                // Render just the first page for the preview card
+                const page = await pdf.getPage(1);
+                const viewport = page.getViewport({ scale: 0.8 });
+                const canvas = document.createElement('canvas');
+                canvas.height = viewport.height; canvas.width = viewport.width;
+                await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+
+                const compArea = document.getElementById('editor-area-compress');
+                compArea.innerHTML = `
+                    <div class="compress-preview-card">
+                        <div class="compress-badge">1</div>
+                        ${canvas.outerHTML}
+                        <div class="compress-filename" title="${file.name}">${file.name}</div>
+                        <div style="font-size: 0.8rem; color: #999; margin-top: 5px;">Original: ${(originalFileSize / 1024 / 1024).toFixed(2)} MB</div>
+                    </div>
+                `;
             }
         }
 
@@ -360,9 +445,8 @@
         }
 
         /* ==========================================
-           SPLIT PDF LOGIC 
+           SPLIT PDF LOGIC (With Canvas Fix)
            ========================================== */
-        
         function addSplitRange() {
             const newId = splitRanges.length ? Math.max(...splitRanges.map(r => r.id)) + 1 : 1;
             splitRanges.push({ id: newId, from: 1, to: totalSplitPages });
@@ -371,14 +455,13 @@
 
         function removeSplitRange(id) {
             splitRanges = splitRanges.filter(r => r.id !== id);
-            if (splitRanges.length === 0) addSplitRange(); // Keep at least one
+            if (splitRanges.length === 0) addSplitRange(); 
             else updateSplitUI();
         }
 
         function handleRangeChange(id, type, value) {
             let val = parseInt(value);
             if (isNaN(val)) return;
-            
             const range = splitRanges.find(r => r.id === id);
             if (type === 'from') {
                 if (val < 1) val = 1;
@@ -393,7 +476,6 @@
         }
 
         async function updateSplitUI() {
-            // Update Sidebar List
             const list = document.getElementById('ranges-list');
             list.innerHTML = '';
             
@@ -414,13 +496,11 @@
                 `;
             });
 
-            // Update Visualizer
             const visualArea = document.getElementById('editor-area-split');
             visualArea.innerHTML = '';
 
             for (let i = 0; i < splitRanges.length; i++) {
                 const r = splitRanges[i];
-                
                 const block = document.createElement('div');
                 block.className = 'split-range-block';
                 
@@ -436,7 +516,9 @@
                 fromWrapper.className = 'split-canvas-wrapper';
                 const canvasFrom = await getRenderedCanvas(r.from);
                 fromWrapper.appendChild(canvasFrom);
-                fromWrapper.innerHTML += `<span>${r.from}</span>`;
+                const labelFrom = document.createElement('span');
+                labelFrom.innerText = r.from;
+                fromWrapper.appendChild(labelFrom);
                 visualBox.appendChild(fromWrapper);
 
                 if (r.from !== r.to) {
@@ -450,7 +532,9 @@
                     toWrapper.className = 'split-canvas-wrapper';
                     const canvasTo = await getRenderedCanvas(r.to);
                     toWrapper.appendChild(canvasTo);
-                    toWrapper.innerHTML += `<span>${r.to}</span>`;
+                    const labelTo = document.createElement('span');
+                    labelTo.innerText = r.to;
+                    toWrapper.appendChild(labelTo);
                     visualBox.appendChild(toWrapper);
                 }
 
@@ -480,7 +564,6 @@
                 const mergeChecked = document.getElementById('merge-ranges-checkbox').checked;
 
                 if (mergeChecked) {
-                    // Combine all selected ranges into ONE file
                     const finalPdf = await PDFDocument.create();
                     for (let r of splitRanges) {
                         const pageIndices = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i);
@@ -489,7 +572,6 @@
                     }
                     triggerDownload(await finalPdf.save(), "split-merged.pdf");
                 } else {
-                    // Separate file for each range
                     if (splitRanges.length === 1) {
                         const finalPdf = await PDFDocument.create();
                         const r = splitRanges[0];
@@ -498,7 +580,6 @@
                         copied.forEach(p => finalPdf.addPage(p));
                         triggerDownload(await finalPdf.save(), `split-${r.from}-to-${r.to}.pdf`);
                     } else {
-                        // Generate a ZIP file if multiple ranges
                         const zip = new JSZip();
                         for (let i = 0; i < splitRanges.length; i++) {
                             const r = splitRanges[i];
@@ -506,17 +587,11 @@
                             const pageIndices = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i);
                             const copied = await finalPdf.copyPages(sourcePdf, pageIndices);
                             copied.forEach(p => finalPdf.addPage(p));
-                            
                             const bytes = await finalPdf.save();
                             zip.file(`split_range_${i+1}_(${r.from}-${r.to}).pdf`, bytes);
                         }
                         const zipContent = await zip.generateAsync({type:"blob"});
-                        const link = document.createElement("a");
-                        link.href = URL.createObjectURL(zipContent);
-                        link.download = "split_files.zip";
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
+                        triggerDownload(zipContent, "split_files.zip", true);
                     }
                 }
             } catch (e) {
@@ -528,9 +603,80 @@
             }
         }
 
-        // Helper for downloads
-        function triggerDownload(bytes, filename) {
-            const blob = new Blob([bytes], { type: "application/pdf" });
+        /* ==========================================
+           COMPRESS PDF LOGIC
+           ========================================== */
+        function setCompressMode(mode) {
+            compressMode = mode;
+            document.querySelectorAll('.compress-option').forEach(el => el.classList.remove('active'));
+            document.getElementById(`comp-${mode}`).classList.add('active');
+        }
+
+        async function executeCompress() {
+            const btn = document.getElementById('compress-btn');
+            btn.innerHTML = "Compressing... (Takes a moment)";
+            btn.disabled = true;
+
+            try {
+                let scale = 1.5; // Render resolution
+                let jpegQuality = 0.6; // Image compression quality
+
+                if (compressMode === 'extreme') {
+                    scale = 1.0; jpegQuality = 0.4;
+                } else if (compressMode === 'less') {
+                    scale = 2.0; jpegQuality = 0.8;
+                } else if (compressMode === 'custom') {
+                    const targetMB = parseFloat(document.getElementById('target-size').value);
+                    if (targetMB && targetMB > 0) {
+                        const originalMB = originalFileSize / 1024 / 1024;
+                        const ratio = targetMB / originalMB;
+                        // Rough heuristic to reach target size
+                        scale = Math.max(0.8, Math.min(2.0, ratio * 1.5));
+                        jpegQuality = Math.max(0.2, Math.min(0.9, ratio));
+                    }
+                }
+
+                const doc = pdfJsCache.doc;
+                const newPdf = await PDFDocument.create();
+
+                for (let i = 1; i <= doc.numPages; i++) {
+                    const page = await doc.getPage(i);
+                    const viewport = page.getViewport({ scale: scale });
+                    
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    
+                    // Render PDF page to canvas
+                    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+                    
+                    // Convert to compressed JPEG data URI
+                    const imgDataUri = canvas.toDataURL('image/jpeg', jpegQuality);
+                    
+                    // Embed into new PDF
+                    const img = await newPdf.embedJpg(imgDataUri);
+                    const newPage = newPdf.addPage([viewport.width, viewport.height]);
+                    newPage.drawImage(img, { x: 0, y: 0, width: viewport.width, height: viewport.height });
+                }
+
+                const bytes = await newPdf.save();
+                triggerDownload(bytes, "compressed-loves-me.pdf");
+
+            } catch (e) {
+                console.error(e);
+                alert("Error during compression process.");
+            } finally {
+                btn.innerHTML = "Compress PDF <span>➔</span>";
+                btn.disabled = false;
+            }
+        }
+
+        /* ==========================================
+           UTILITIES
+           ========================================== */
+        function triggerDownload(data, filename, isBlob = false) {
+            const blob = isBlob ? data : new Blob([data], { type: "application/pdf" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = filename;
