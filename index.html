@@ -9,12 +9,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <style>
         :root { --primary: #e5322d; --bg: #f3f3f5; --text: #333; --sidebar-bg: #f8f9fa; }
@@ -31,8 +25,8 @@
         
         /* Dropdown Menu */
         .dropdown { height: 100%; }
-        .dropdown-content { visibility: hidden; opacity: 0; position: absolute; top: 70px; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 8px 24px rgba(0,0,0,0.15); border-radius: 8px; display: flex; padding: 20px; z-index: 200; transition: all 0.2s; margin-top: 10px; border: 1px solid #eee; pointer-events: none; }
-        .dropdown:hover .dropdown-content { visibility: visible; opacity: 1; margin-top: 0; pointer-events: auto; }
+        .dropdown-content { display: none; position: absolute; top: 70px; left: 50%; transform: translateX(-50%); background-color: white; box-shadow: 0 8px 24px rgba(0,0,0,0.15); border-radius: 8px; padding: 20px; z-index: 200; border: 1px solid #eee; }
+        .dropdown:hover .dropdown-content { display: flex; }
         .drop-column { width: 220px; padding: 0 15px; }
         .drop-column:first-child { border-right: 1px solid #eee; }
         .drop-column h4 { color: #999; font-size: 0.75rem; text-transform: uppercase; margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; }
@@ -60,13 +54,16 @@
         .workspace-main { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
         .sidebar { width: 350px; background: var(--sidebar-bg); border-left: 1px solid #ddd; display: flex; flex-direction: column; box-shadow: -2px 0 10px rgba(0,0,0,0.05); }
         
+        .back-btn { position: absolute; top: 20px; left: 20px; background: white; border: 1px solid #ccc; color: #333; cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 5px; transition: background 0.2s; z-index: 50; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .back-btn:hover { background: #eee; }
+
         #upload-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 20px; transition: 0.3s; pointer-events: none; }
         .upload-btn { background: var(--primary); color: white; padding: 15px 40px; font-size: 1.4rem; border-radius: 8px; cursor: pointer; font-weight: bold; display: inline-block; margin-bottom: 15px; pointer-events: auto; display: flex; align-items: center; gap: 10px;}
         .upload-btn:hover { background: #c82320; }
         input[type="file"] { display: none; }
 
         /* Editors */
-        #editor-area-merge { display: none; padding: 20px; padding-bottom: 120px; }
+        #editor-area-merge { display: none; padding: 70px 20px 120px 20px; }
         #pages-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
         .page-thumb { background: #fff; padding: 10px; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); position: relative; cursor: grab; display: flex; flex-direction: column; align-items: center; }
         .page-thumb canvas { max-width: 150px; border: 1px solid #eee; transition: transform 0.3s ease; }
@@ -76,7 +73,7 @@
         .page-number { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.6); color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.8rem; pointer-events: none; }
         .file-label { position: absolute; bottom: 50px; left: 0; right: 0; text-align: center; background: rgba(255,255,255,0.9); font-size: 0.7rem; padding: 2px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
 
-        #editor-area-split { display: none; padding: 40px; flex-direction: column; align-items: center; gap: 30px; }
+        #editor-area-split { display: none; padding: 80px 40px 40px 40px; flex-direction: column; align-items: center; gap: 30px; }
         .split-range-block { display: flex; flex-direction: column; align-items: center; }
         .split-visual-box { border: 2px dashed #bbb; border-radius: 8px; padding: 20px; display: flex; align-items: center; gap: 20px; background: white; }
         .split-canvas-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--primary); font-weight: bold; }
@@ -112,8 +109,6 @@
         .sidebar-option.active::after { content: '✔'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #2ecc71; font-weight: bold; font-size: 1.2rem; }
         .sidebar-option strong { display: block; color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
         .sidebar-option p { margin: 0; font-size: 0.85rem; color: #666; }
-        
-        .client-warning { background: #fff3cd; color: #856404; padding: 10px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #ffeeba; margin-top: 20px; }
 
         .hidden { display: none !important; }
     </style>
@@ -128,7 +123,7 @@
             <a onclick="openWorkspace('Compress PDF')">COMPRESS PDF</a>
             <div class="dropdown">
                 <a class="dropbtn">CONVERT PDF <span style="font-size:0.7em; margin-left:5px;">▼</span></a>
-                <div class="dropdown-content">
+                <div class="dropdown-content" id="nav-dropdown">
                     <div class="drop-column">
                         <h4>Convert to PDF</h4>
                         <a onclick="openWorkspace('JPG to PDF')">🖼️ JPG to PDF</a>
@@ -152,16 +147,21 @@
 
     <div id="home-view">
         <div class="hero-title">Every tool you need to work with PDFs</div>
-        <div class="hero-sub">100% Free and Client-Side. Your files never leave your browser.</div>
+        <div class="hero-sub">100% Free. Secure processing.</div>
         <div class="grid">
             <div class="card" onclick="openWorkspace('Merge PDF')"><div class="icon">🔗</div><h3>Merge PDF</h3><p>Combine, reorder, and sort visually.</p></div>
             <div class="card" onclick="openWorkspace('Split PDF')"><div class="icon">✂️</div><h3>Split PDF</h3><p>Extract specific pages or ranges.</p></div>
             <div class="card" onclick="openWorkspace('Compress PDF')"><div class="icon">📉</div><h3>Compress PDF</h3><p>Reduce file size client-side.</p></div>
+            <div class="card" onclick="openWorkspace('PDF to WORD')"><div class="icon">📄</div><h3>PDF to Word</h3><p>Convert PDF to editable DOCX.</p></div>
+            <div class="card" onclick="openWorkspace('WORD to PDF')"><div class="icon">📝</div><h3>Word to PDF</h3><p>Convert Word docs into PDFs.</p></div>
+            <div class="card" onclick="openWorkspace('PDF to EXCEL')"><div class="icon">📈</div><h3>PDF to Excel</h3><p>Extract data to spreadsheets.</p></div>
         </div>
     </div>
 
     <div id="workspace-view" class="hidden">
         <div class="workspace-main">
+            <button class="back-btn" onclick="goHome()">⬅️ Back</button>
+
             <div id="upload-area">
                 <h2 id="tool-title" style="margin-bottom: 20px; font-size: 2.5rem; color:#333;">Tool</h2>
                 <label class="upload-btn">
@@ -169,7 +169,6 @@
                     <input type="file" id="file-input" multiple>
                 </label>
                 <p style="color: #666;">or drop files anywhere here</p>
-                <button onclick="goHome()" style="margin-top:20px; background: transparent; border: none; color: #666; cursor: pointer; text-decoration: underline;">Go back</button>
             </div>
 
             <div id="editor-area-merge">
@@ -214,7 +213,9 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         const { PDFDocument, degrees } = PDFLib;
-        const { jsPDF } = window.jspdf;
+
+        // Your API Key
+        const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
 
         let currentTool = "";
         let loadedFiles = []; 
@@ -232,6 +233,7 @@
         function goHome() {
             homeView.classList.remove('hidden');
             workspaceView.classList.add('hidden');
+            workspaceView.style.display = 'none'; // Force layout reset
             resetWorkspace();
         }
 
@@ -239,13 +241,20 @@
             currentTool = toolName;
             document.getElementById('tool-title').innerText = toolName;
             
+            // Fix Dropdown Bug - Forcefully hide menu when clicked
+            const dropdown = document.getElementById('nav-dropdown');
+            if (dropdown) {
+                dropdown.style.display = 'none';
+                setTimeout(() => dropdown.style.display = '', 200); // restore hover styling ability
+            }
+
             const fileInput = document.getElementById('file-input');
             const addMoreInput = document.getElementById('add-more-input');
             
             // Set Inputs based on tool
             if (toolName === 'JPG to PDF') fileInput.accept = addMoreInput.accept = "image/jpeg, image/png, image/webp";
-            else if (toolName === 'WORD to PDF') fileInput.accept = addMoreInput.accept = ".docx";
-            else if (toolName === 'EXCEL to PDF') fileInput.accept = addMoreInput.accept = ".xlsx, .xls, .csv";
+            else if (toolName === 'WORD to PDF') fileInput.accept = addMoreInput.accept = ".doc, .docx";
+            else if (toolName === 'EXCEL to PDF') fileInput.accept = addMoreInput.accept = ".xls, .xlsx, .csv";
             else fileInput.accept = addMoreInput.accept = ".pdf";
             
             const needsSidebar = ['Split PDF', 'Compress PDF', 'PDF to JPG', 'WORD to PDF', 'EXCEL to PDF', 'PDF to WORD', 'PDF to EXCEL'].includes(toolName);
@@ -292,11 +301,9 @@
                 for (let f of files) {
                     const arrayBuffer = await f.arrayBuffer();
                     const fileId = `file_${fileIdCounter++}`;
-                    // FIXED: Save the native `f` File object to prevent empty payloads later
                     loadedFiles.push({ id: fileId, file: f, bytes: arrayBuffer, name: f.name, type: f.type });
                     
                     if (currentTool === 'Merge PDF') {
-                        // FIXED: Pass a strict copy `.slice(0)` to prevent pdf.js from eating the buffer
                         const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
                         for (let p = 1; p <= pdf.numPages; p++) {
                             const page = await pdf.getPage(p);
@@ -334,7 +341,7 @@
                 updateSplitUI();
 
             } else {
-                // Generic Sidebar setups (Compress, Word/Excel conversions)
+                // Single File Generic Views (Compress, API Conversions)
                 document.getElementById('editor-area-generic').style.display = 'flex';
                 const sidebar = document.getElementById('sidebar-generic');
                 sidebar.classList.remove('hidden');
@@ -347,10 +354,9 @@
                 if (currentTool === 'Compress PDF') {
                     document.getElementById('generic-sidebar-title').innerText = "Compression";
                     optionsContent.innerHTML = `
-                        <div class="sidebar-option active" onclick="this.classList.add('active')">
+                        <div class="sidebar-option active">
                             <strong>Recommended</strong><p>Rasterize pages to reduce size.</p>
                         </div>
-                        <div class="client-warning">Client-side compression converts selectable text to images to reduce size.</div>
                     `;
                     document.getElementById('sidebar-action-btn').innerHTML = "Compress <span>➔</span>";
                     
@@ -367,45 +373,49 @@
                     `;
                 } 
                 else {
-                    // Handlers for PDF to JPG, Word/Excel tools
+                    // API Conversion Tools UI
                     if(currentTool === 'WORD to PDF') { icon = "📝"; document.getElementById('generic-sidebar-title').innerText = "Convert to PDF"; }
                     if(currentTool === 'EXCEL to PDF') { icon = "📊"; document.getElementById('generic-sidebar-title').innerText = "Convert to PDF"; }
                     
-                    if(currentTool === 'PDF to EXCEL') { 
-                        icon = "📑"; document.getElementById('generic-sidebar-title').innerText = "Extract Data"; 
+                    if(currentTool === 'PDF to EXCEL' || currentTool === 'PDF to WORD') { 
+                        icon = currentTool.includes('WORD') ? "📄" : "📈"; 
+                        document.getElementById('generic-sidebar-title').innerText = "High Quality Conversion"; 
+                        // Show thumbnail for PDFs
                         const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
                         pdfJsCache.doc = pdf;
-                    }
-                    
-                    if(currentTool === 'PDF to WORD') { 
-                        icon = "📑"; document.getElementById('generic-sidebar-title').innerText = "High Quality Conversion"; 
-                    }
-
-                    if(currentTool === 'PDF to JPG') {
+                        const page = await pdf.getPage(1);
+                        const viewport = page.getViewport({ scale: 0.8 });
+                        const canvas = document.createElement('canvas');
+                        canvas.height = viewport.height; canvas.width = viewport.width;
+                        await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+                        
+                        document.getElementById('editor-area-generic').innerHTML = `
+                            <div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
+                        `;
+                    } else if (currentTool === 'PDF to JPG') {
                         icon = "🖼️"; document.getElementById('generic-sidebar-title').innerText = "Extract Images";
                         const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
                         pdfJsCache.doc = pdf;
-                    }
-
-                    document.getElementById('editor-area-generic').innerHTML = `
-                        <div class="preview-card"><div class="icon">${icon}</div><div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
-                    `;
-                    
-                    if (currentTool === 'PDF to WORD') {
-                        optionsContent.innerHTML = `
-                            <div class="sidebar-option active">
-                                <strong>API Conversion</strong><p>Retains formatting and layout using ConvertAPI.</p>
-                            </div>
+                        const page = await pdf.getPage(1);
+                        const viewport = page.getViewport({ scale: 0.8 });
+                        const canvas = document.createElement('canvas');
+                        canvas.height = viewport.height; canvas.width = viewport.width;
+                        await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+                        document.getElementById('editor-area-generic').innerHTML = `
+                            <div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
                         `;
                     } else {
-                        optionsContent.innerHTML = `
-                            <div class="sidebar-option active">
-                                <strong>Standard Conversion</strong><p>Process document locally.</p>
-                            </div>
-                            ${currentTool === 'PDF to EXCEL' ? '<div class="client-warning"><strong>Note:</strong> Client-side JS only extracts raw text. Formatting, layout, and images will be lost.</div>' : ''}
-                            ${currentTool === 'WORD to PDF' ? '<div class="client-warning"><strong>Note:</strong> Complex styling and layout positioning may be lost during local extraction.</div>' : ''}
+                        // For Word/Excel files, just show the Icon since browsers can't render docx thumbnails easily
+                        document.getElementById('editor-area-generic').innerHTML = `
+                            <div class="preview-card"><div class="icon">${icon}</div><div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>
                         `;
                     }
+                    
+                    optionsContent.innerHTML = `
+                        <div class="sidebar-option active">
+                            <strong>Premium Conversion</strong><p>High fidelity conversion powered by ConvertAPI.</p>
+                        </div>
+                    `;
                     document.getElementById('sidebar-action-btn').innerHTML = "Convert <span>➔</span>";
                 }
             }
@@ -437,7 +447,7 @@
                 const finalPdf = await PDFDocument.create();
                 if (currentTool === 'Merge PDF') {
                     const cache = {};
-                    for (let f of loadedFiles) cache[f.id] = await PDFDocument.load(f.bytes);
+                    for (let f of loadedFiles) cache[f.id] = await PDFDocument.load(f.bytes.slice(0));
                     for (let t of thumbs) {
                         const [page] = await finalPdf.copyPages(cache[t.dataset.fileId], [parseInt(t.dataset.pageIndex)]);
                         let rot = parseInt(t.dataset.rotation); if (rot !== 0) page.setRotation(degrees(page.getRotation().angle + rot));
@@ -484,7 +494,7 @@
         async function executeSplit() {
             const btn = document.getElementById('split-btn'); btn.innerHTML = "Processing..."; btn.disabled = true;
             try {
-                const src = await PDFDocument.load(loadedFiles[0].bytes);
+                const src = await PDFDocument.load(loadedFiles[0].bytes.slice(0));
                 if (document.getElementById('merge-ranges-checkbox').checked || splitRanges.length === 1) {
                     const pdf = await PDFDocument.create();
                     for (let r of splitRanges) { const idxs = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i); const cp = await pdf.copyPages(src, idxs); cp.forEach(p => pdf.addPage(p)); }
@@ -501,7 +511,7 @@
             btn.innerHTML = "Split PDF <span>➔</span>"; btn.disabled = false;
         }
 
-        // --- GENERIC CONVERSIONS (Compress, Word, Excel, JPG) ---
+        // --- API & GENERIC CONVERSIONS ---
         async function executeSidebarAction() {
             const btn = document.getElementById('sidebar-action-btn');
             btn.innerHTML = "Processing..."; btn.disabled = true;
@@ -527,69 +537,54 @@
                     }
                     triggerDownload(await zip.generateAsync({type:"blob"}), "images.zip", true);
                 }
-                else if (currentTool === 'WORD to PDF') {
-                    const result = await mammoth.extractToRawText({ arrayBuffer: fileData.bytes });
-                    const doc = new jsPDF();
-                    const splitText = doc.splitTextToSize(result.value || "No text found", 180);
-                    doc.text(splitText, 15, 15);
-                    triggerDownload(doc.output('arraybuffer'), "word-converted.pdf");
-                }
-                else if (currentTool === 'EXCEL to PDF') {
-                    const wb = XLSX.read(fileData.bytes, {type: 'array'});
-                    const ws = wb.Sheets[wb.SheetNames[0]];
-                    const data = XLSX.utils.sheet_to_json(ws, {header: 1});
-                    const doc = new jsPDF();
-                    doc.autoTable({ body: data, startY: 15 });
-                    triggerDownload(doc.output('arraybuffer'), "excel-converted.pdf");
-                }
-                else if (currentTool === 'PDF to EXCEL') {
-                    let fullText = "";
-                    for(let i=1; i<=pdfJsCache.doc.numPages; i++) {
-                        const page = await pdfJsCache.doc.getPage(i);
-                        const content = await page.getTextContent();
-                        fullText += content.items.map(item => item.str).join(" ") + "\n";
-                    }
-                    const aoa = fullText.split('\n').filter(l=>l.trim()).map(line => line.split(/\s{2,}/)); 
-                    const ws = XLSX.utils.aoa_to_sheet(aoa);
-                    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data");
-                    const wbout = XLSX.write(wb, {bookType:'xlsx', type:'array'});
-                    triggerDownload(new Blob([wbout]), "extracted.xlsx", true);
-                }
-                else if (currentTool === 'PDF to WORD') {
-                    
-                    // ==========================================
-                    // CONVERTAPI INTEGRATION
-                    // ==========================================
-                    const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
-                    
-                    // FIXED: Upload the raw, untouched native `File` object so the API gets the real PDF
+                else {
+                    // API CONVERSIONS (Word, Excel)
                     const formData = new FormData();
                     formData.append('File', fileData.file, fileData.name);
 
-                    const response = await fetch(`https://v2.convertapi.com/convert/pdf/to/docx?Secret=${CONVERT_API_SECRET}`, {
-                        method: 'POST',
-                        body: formData
-                    });
+                    let endpoint = "";
+                    let mimeType = "";
+                    let outExt = "";
+                    const inputExt = fileData.name.split('.').pop().toLowerCase();
 
-                    if (!response.ok) throw new Error("API Request Failed. Check your usage limits or network.");
+                    if (currentTool === 'PDF to WORD') {
+                        endpoint = `https://v2.convertapi.com/convert/pdf/to/docx?Secret=${CONVERT_API_SECRET}`;
+                        mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                        outExt = ".docx";
+                    } 
+                    else if (currentTool === 'PDF to EXCEL') {
+                        endpoint = `https://v2.convertapi.com/convert/pdf/to/xlsx?Secret=${CONVERT_API_SECRET}`;
+                        mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                        outExt = ".xlsx";
+                    }
+                    else if (currentTool === 'WORD to PDF') {
+                        endpoint = `https://v2.convertapi.com/convert/${inputExt}/to/pdf?Secret=${CONVERT_API_SECRET}`;
+                        mimeType = "application/pdf";
+                        outExt = ".pdf";
+                    }
+                    else if (currentTool === 'EXCEL to PDF') {
+                        endpoint = `https://v2.convertapi.com/convert/${inputExt}/to/pdf?Secret=${CONVERT_API_SECRET}`;
+                        mimeType = "application/pdf";
+                        outExt = ".pdf";
+                    }
+
+                    const response = await fetch(endpoint, { method: 'POST', body: formData });
+                    if (!response.ok) throw new Error("API Request Failed. Please check network or limits.");
                     
                     const result = await response.json();
                     
                     if (result.Files && result.Files.length > 0) {
-                        
-                        // FIXED: Read the base64 output directly from the API response so we don't drop the connection
+                        const outFileName = fileData.name.replace(/\.[^/.]+$/, "") + outExt;
+
                         if (result.Files[0].FileData) {
                             const byteStr = atob(result.Files[0].FileData);
                             const bytes = new Uint8Array(byteStr.length);
                             for (let i = 0; i < byteStr.length; i++) bytes[i] = byteStr.charCodeAt(i);
-                            const fileBlob = new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
-                            triggerDownload(fileBlob, result.Files[0].FileName || "converted-by-api.docx", true);
+                            triggerDownload(new Blob([bytes], { type: mimeType }), outFileName, true);
                         } else if (result.Files[0].Url) {
                             const fileRes = await fetch(result.Files[0].Url);
-                            const fileBlob = await fileRes.blob();
-                            triggerDownload(fileBlob, result.Files[0].FileName || "converted-by-api.docx", true);
+                            triggerDownload(await fileRes.blob(), outFileName, true);
                         }
-                        
                     } else {
                         throw new Error("Conversion failed on the server.");
                     }
