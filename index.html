@@ -75,8 +75,8 @@
         
         .top-nav { display: flex; height: 100%; align-items: center; gap: 10px;}
         .top-nav > a, .dropbtn { 
-            text-decoration: none; color: #fff; font-weight: 700; font-size: 1rem; 
-            padding: 10px 20px; border-radius: 12px; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; 
+            text-decoration: none; color: #fff; font-weight: 700; font-size: 0.95rem; 
+            padding: 10px 15px; border-radius: 12px; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; 
         }
         .top-nav > a:hover, .dropdown:hover .dropbtn { 
             background: var(--primary); color: #000; transform: translateY(-3px) rotate(-2deg);
@@ -109,14 +109,14 @@
         .btn-login { text-decoration: none; color: #fff; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-login:hover { color: var(--secondary); }
         .btn-signup { 
-            background: var(--secondary); color: #000; padding: 10px 25px; border-radius: 30px; 
+            background: var(--secondary); color: #000; padding: 10px 20px; border-radius: 30px; 
             text-decoration: none; font-weight: 900; cursor: pointer; transition: all 0.2s;
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
         }
         .btn-signup:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(0, 255, 255, 0.8); }
         
         .user-profile { display: none; align-items: center; gap: 15px; font-size: 1rem; font-weight: bold; color: var(--secondary); }
-        .btn-logout { text-decoration: none; color: #ff4757; border: 2px solid #ff4757; padding: 8px 20px; border-radius: 30px; transition: 0.2s; font-weight: bold;}
+        .btn-logout { text-decoration: none; color: #ff4757; border: 2px solid #ff4757; padding: 8px 20px; border-radius: 30px; transition: 0.2s; font-weight: bold; cursor: pointer;}
         .btn-logout:hover { background: #ff4757; color: #fff; box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);}
 
         /* Modal Styles */
@@ -272,6 +272,7 @@
         #loading-overlay h2 {
             color: var(--secondary); font-size: 2.5rem; text-transform: uppercase; letter-spacing: 3px;
             animation: pulse 1s infinite alternate; margin-top: 20px; text-shadow: 0 0 20px var(--secondary);
+            font-weight: 900;
         }
 
         @keyframes pulse {
@@ -287,7 +288,7 @@
     <audio id="sfx-fail" src="Fail Sound Effects - Free Download • Uppbeat.mp3" preload="auto"></audio>
     <audio id="sfx-wtf" src="wtf.mp3" preload="auto"></audio>
 
-    <video autoplay muted loop class="bg-video">
+    <video autoplay muted loop playsinline class="bg-video">
         <source src="Free Motion Graphics Templates, Animations & Video Overlays • Uppbeat.ts" type="video/mp4">
     </video>
 
@@ -297,50 +298,50 @@
     </div>
 
     <header>
-        <div class="logo" onclick="goHome(); playPop();"><span>pdf</span> loves me</div>
+        <div class="logo" onclick="playPop(); goHome();"><span>pdf</span> loves me</div>
         <nav class="top-nav">
-            <a onclick="openWorkspace('Merge PDF'); playPop();">SQUISH PDF</a>
-            <a onclick="openWorkspace('Split PDF'); playPop();">CHOP PDF</a>
-            <a onclick="openWorkspace('Compress PDF'); playPop();">MAKE SMOL</a>
+            <a onclick="playPop(); openWorkspace('Merge PDF');">SQUISH PDF</a>
+            <a onclick="playPop(); openWorkspace('Split PDF');">CHOP PDF</a>
+            <a onclick="playPop(); openWorkspace('Compress PDF');">MAKE SMOL</a>
             
             <div class="dropdown">
                 <a class="dropbtn" onclick="playPop();">MORPH PDF <span>▼</span></a>
                 <div class="dropdown-content" id="nav-dropdown-pdf">
                     <div class="drop-column">
                         <h4>Make PDF</h4>
-                        <a onclick="openWorkspace('JPG to PDF'); playPop();">🖼️ JPG to PDF</a>
-                        <a onclick="openWorkspace('WORD to PDF'); playPop();">📄 WORD to PDF</a>
-                        <a onclick="openWorkspace('EXCEL to PDF'); playPop();">📈 EXCEL to PDF</a>
+                        <a onclick="playPop(); openWorkspace('JPG to PDF');">🖼️ JPG to PDF</a>
+                        <a onclick="playPop(); openWorkspace('WORD to PDF');">📄 WORD to PDF</a>
+                        <a onclick="playPop(); openWorkspace('EXCEL to PDF');">📈 EXCEL to PDF</a>
                     </div>
                     <div class="drop-column">
                         <h4>Break PDF</h4>
-                        <a onclick="openWorkspace('PDF to JPG'); playPop();">🖼️ PDF to JPG</a>
-                        <a onclick="openWorkspace('PDF to WORD'); playPop();">📄 PDF to WORD</a>
-                        <a onclick="openWorkspace('PDF to EXCEL'); playPop();">📈 PDF to EXCEL</a>
+                        <a onclick="playPop(); openWorkspace('PDF to JPG');">🖼️ PDF to JPG</a>
+                        <a onclick="playPop(); openWorkspace('PDF to WORD');">📄 PDF to WORD</a>
+                        <a onclick="playPop(); openWorkspace('PDF to EXCEL');">📈 PDF to EXCEL</a>
                     </div>
                 </div>
             </div>
 
-            <a onclick="openWorkspace('Image to Word'); playPop();">STEAL TEXT (OCR)</a>
+            <a onclick="playPop(); openWorkspace('Image to Word');">STEAL TEXT (OCR)</a>
         </nav>
         
         <div class="auth-buttons" id="auth-buttons">
-            <a class="btn-login" onclick="openAuthModal(); playPop();">Login</a>
-            <a class="btn-signup" onclick="openAuthModal(); playPop();">Sign up, no cap</a>
+            <a class="btn-login" onclick="playPop(); openAuthModal();">Login</a>
+            <a class="btn-signup" onclick="playPop(); openAuthModal();">Sign up, no cap</a>
         </div>
         <div class="user-profile" id="user-profile">
             <span id="user-display-name">👤 User</span>
-            <a class="btn-logout" onclick="logoutFirebase(); playPop();">Dip 👋</a>
+            <a class="btn-logout" onclick="playPop(); logoutFirebase();">Dip 👋</a>
         </div>
     </header>
 
     <div id="auth-modal" class="modal-overlay hidden">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeAuthModal(); playPop();">✕</span>
+            <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
             <h2>Welcome to the Vibe</h2>
             <p style="color:#aaa; font-weight:600; margin-bottom: 30px;">Login to access the god-tier tools.</p>
             
-            <button class="google-btn" onclick="loginWithGoogle(); playPop();">
+            <button class="google-btn" onclick="playPop(); loginWithGoogle();">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
                 Vibe with Google
             </button>
@@ -354,12 +355,12 @@
             <div id="phone-auth-section">
                 <input type="tel" id="phone-input" class="modal-input" placeholder="Phone (e.g. +1234567890)">
                 <div id="recaptcha-container"></div>
-                <button class="btn-process" id="send-otp-btn" onclick="sendOTP(); playPop();" style="border-radius: 12px; padding: 15px; font-size:1.1rem;">Send digits 📱</button>
+                <button class="btn-process" id="send-otp-btn" onclick="playPop(); sendOTP();" style="border-radius: 12px; padding: 15px; font-size:1.1rem;">Send digits 📱</button>
             </div>
 
             <div id="otp-section" class="hidden">
                 <input type="text" id="otp-input" class="modal-input" placeholder="Enter 6-digit code bro">
-                <button class="btn-process" onclick="verifyOTP(); playPop();" style="border-radius: 12px; padding: 15px; font-size:1.1rem;">Let me in 🚀</button>
+                <button class="btn-process" onclick="playPop(); verifyOTP();" style="border-radius: 12px; padding: 15px; font-size:1.1rem;">Let me in 🚀</button>
             </div>
         </div>
     </div>
@@ -371,30 +372,30 @@
         <div class="hero-sub">No cap, 100% free. We don't want your data fr.</div>
         
         <div class="grid">
-            <div class="card" onclick="openWorkspace('Merge PDF'); playPop();"><div class="icon">🥪</div><h3>Squish PDF</h3><p>Combine them into a mega file.</p></div>
-            <div class="card" onclick="openWorkspace('Split PDF'); playPop();"><div class="icon">🔪</div><h3>Chop PDF</h3><p>Slice specific pages right out.</p></div>
-            <div class="card" onclick="openWorkspace('Compress PDF'); playPop();"><div class="icon">🤏</div><h3>Make it Smol</h3><p>Crush file size, keep the quality.</p></div>
-            <div class="card" onclick="openConvertMenu(); playPop();"><div class="icon">🦋</div><h3>Morph PDF</h3><p>Word, Excel, JPG shape-shifting.</p></div>
-            <div class="card" onclick="openWorkspace('Image to Word'); playPop();"><div class="icon">🥷</div><h3>Steal Text</h3><p>Rip words straight off images (OCR).</p></div>
+            <div class="card" onclick="playPop(); openWorkspace('Merge PDF');"><div class="icon">🥪</div><h3>Squish PDF</h3><p>Combine them into a mega file.</p></div>
+            <div class="card" onclick="playPop(); openWorkspace('Split PDF');"><div class="icon">🔪</div><h3>Chop PDF</h3><p>Slice specific pages right out.</p></div>
+            <div class="card" onclick="playPop(); openWorkspace('Compress PDF');"><div class="icon">🤏</div><h3>Make it Smol</h3><p>Crush file size, keep the quality.</p></div>
+            <div class="card" onclick="playPop(); openConvertMenu();"><div class="icon">🦋</div><h3>Morph PDF</h3><p>Word, Excel, JPG shape-shifting.</p></div>
+            <div class="card" onclick="playPop(); openWorkspace('Image to Word');"><div class="icon">🥷</div><h3>Steal Text</h3><p>Rip words straight off images (OCR).</p></div>
         </div>
     </div>
 
     <div id="convert-menu-view" class="hidden">
-        <button class="back-btn" onclick="goHome(); playPop();" style="top: -40px;">⬅️ Back to base</button>
+        <button class="back-btn" onclick="playPop(); goHome();" style="top: -40px;">⬅️ Back to base</button>
         <div class="hero-title" style="margin-bottom: 50px;">Morph your files 🧬</div>
         <div class="grid">
-            <div class="card" onclick="openWorkspace('JPG to PDF'); playPop();"><div class="icon">🖼️➡️📄</div><h3>Pic to PDF</h3><p>Turn images into a solid doc.</p></div>
-            <div class="card" onclick="openWorkspace('WORD to PDF'); playPop();"><div class="icon">📝➡️📄</div><h3>Word to PDF</h3><p>Lock down that DOCX.</p></div>
-            <div class="card" onclick="openWorkspace('EXCEL to PDF'); playPop();"><div class="icon">📈➡️📄</div><h3>Excel to PDF</h3><p>Flatten those spreadsheets.</p></div>
-            <div class="card" onclick="openWorkspace('PDF to JPG'); playPop();"><div class="icon">📄➡️🖼️</div><h3>PDF to Pic</h3><p>Extract pages to raw images.</p></div>
-            <div class="card" onclick="openWorkspace('PDF to WORD'); playPop();"><div class="icon">📄➡️📝</div><h3>PDF to Word</h3><p>Make it editable again fr.</p></div>
-            <div class="card" onclick="openWorkspace('PDF to EXCEL'); playPop();"><div class="icon">📄➡️📈</div><h3>PDF to Excel</h3><p>Rip data back to tables.</p></div>
+            <div class="card" onclick="playPop(); openWorkspace('JPG to PDF');"><div class="icon">🖼️➡️📄</div><h3>Pic to PDF</h3><p>Turn images into a solid doc.</p></div>
+            <div class="card" onclick="playPop(); openWorkspace('WORD to PDF');"><div class="icon">📝➡️📄</div><h3>Word to PDF</h3><p>Lock down that DOCX.</p></div>
+            <div class="card" onclick="playPop(); openWorkspace('EXCEL to PDF');"><div class="icon">📈➡️📄</div><h3>Excel to PDF</h3><p>Flatten those spreadsheets.</p></div>
+            <div class="card" onclick="playPop(); openWorkspace('PDF to JPG');"><div class="icon">📄➡️🖼️</div><h3>PDF to Pic</h3><p>Extract pages to raw images.</p></div>
+            <div class="card" onclick="playPop(); openWorkspace('PDF to WORD');"><div class="icon">📄➡️📝</div><h3>PDF to Word</h3><p>Make it editable again fr.</p></div>
+            <div class="card" onclick="playPop(); openWorkspace('PDF to EXCEL');"><div class="icon">📄➡️📈</div><h3>PDF to Excel</h3><p>Rip data back to tables.</p></div>
         </div>
     </div>
 
     <div id="workspace-view" class="hidden">
         <div class="workspace-main">
-            <button class="back-btn" onclick="goHome(); playPop();">⬅️ Bail out</button>
+            <button class="back-btn" onclick="playPop(); goHome();">⬅️ Bail out</button>
 
             <div id="upload-area">
                 <h2 id="tool-title" style="margin-bottom: 10px; font-size: 3rem; color:var(--secondary); font-weight: 900; text-transform: uppercase;">Tool</h2>
@@ -417,10 +418,10 @@
                     <label class="btn-secondary" style="background: var(--primary); color: white; border: none; padding: 15px 25px; font-size:1.1rem;" onclick="playPop();">
                         + Add more vibes <input type="file" id="add-more-input" multiple>
                     </label>
-                    <button class="btn-secondary" onclick="sortPages('asc'); playPop();">A-Z ⬇️</button>
-                    <button class="btn-secondary" onclick="sortPages('desc'); playPop();">Z-A ⬆️</button>
+                    <button class="btn-secondary" onclick="playPop(); sortPages('asc');">A-Z ⬇️</button>
+                    <button class="btn-secondary" onclick="playPop(); sortPages('desc');">Z-A ⬆️</button>
                 </div>
-                <button class="btn-process" id="merge-action-btn" style="width: auto; padding: 15px 50px; font-size: 1.5rem;" onclick="executeMainAction(); playPop();">Send it 🚀</button>
+                <button class="btn-process" id="merge-action-btn" style="width: auto; padding: 15px 50px; font-size: 1.5rem;" onclick="playPop(); executeMainAction();">Send it 🚀</button>
             </div>
         </div>
 
@@ -428,11 +429,11 @@
             <div class="sidebar-header">Slice & Dice 🔪</div>
             <div class="sidebar-content">
                 <div id="ranges-list"></div>
-                <button class="btn-add-range" onclick="addSplitRange(); playPop();">+ Add another cut</button>
+                <button class="btn-add-range" onclick="playPop(); addSplitRange();">+ Add another cut</button>
             </div>
             <div class="sidebar-footer">
                 <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> Mash all cuts into one file</label>
-                <button class="btn-process" id="split-btn" onclick="executeSplit(); playPop();">Chop it up ✂️</button>
+                <button class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">Chop it up ✂️</button>
             </div>
         </div>
 
@@ -440,132 +441,52 @@
             <div class="sidebar-header" id="generic-sidebar-title">Options</div>
             <div class="sidebar-content" id="sidebar-options-content"></div>
             <div class="sidebar-footer">
-                <button class="btn-process" id="sidebar-action-btn" onclick="executeSidebarAction(); playPop();">Do the thing ✨</button>
+                <button class="btn-process" id="sidebar-action-btn" onclick="playPop(); executeSidebarAction();">Do the thing ✨</button>
             </div>
         </div>
     </div>
 
     <script>
         // ==========================================
-        // AUDIO SYNTHESIS & SFX ENGINE
+        // FAULT TOLERANT AUDIO SETUP
         // ==========================================
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
+        let audioCtx = null;
         function playPop() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = 'sine';
-            // Fun bouncy pop sound
-            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
-            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-            osc.start(audioCtx.currentTime);
-            osc.stop(audioCtx.currentTime + 0.1);
+            try {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContext) audioCtx = new AudioContext();
+                }
+                if (!audioCtx) return;
+                
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+                osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch (e) { console.warn("Audio pop suppressed:", e); }
         }
 
         function playFail() {
-            try { document.getElementById('sfx-fail').play(); } catch(e){}
+            try { const a = document.getElementById('sfx-fail'); if(a) a.play().catch(()=>{}); } catch(e){}
         }
 
         function playWtf() {
-            try { document.getElementById('sfx-wtf').play(); } catch(e){}
+            try { const a = document.getElementById('sfx-wtf'); if(a) a.play().catch(()=>{}); } catch(e){}
         }
-
 
         // ==========================================
-        // FIREBASE AUTHENTICATION SETUP
+        // GLOBAL VARIABLES (Ensures they exist even if a CDN fails)
         // ==========================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyB9jEmFFEPNT0iIUH6ro-0BZSBfvdDy9XU",
-            authDomain: "pdf-loves-me.firebaseapp.com",
-            projectId: "pdf-loves-me",
-            storageBucket: "pdf-loves-me.firebasestorage.app",
-            messagingSenderId: "397926920358",
-            appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        let recaptchaVerifier = null;
-
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                document.getElementById('auth-buttons').style.display = 'none';
-                document.getElementById('user-profile').style.display = 'flex';
-                document.getElementById('user-display-name').innerText = `😎 ${user.displayName || user.phoneNumber || "Boss"}`;
-                closeAuthModal();
-            } else {
-                document.getElementById('auth-buttons').style.display = 'flex';
-                document.getElementById('user-profile').style.display = 'none';
-            }
-        });
-
-        function openAuthModal() {
-            document.getElementById('auth-modal').classList.remove('hidden');
-            if(!recaptchaVerifier) setupRecaptcha();
-        }
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.add('hidden');
-            document.getElementById('otp-section').classList.add('hidden');
-            document.getElementById('phone-auth-section').classList.remove('hidden');
-        }
-
-        function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(err => {
-                playFail();
-                alert("Bruh, Google Sign-In failed: " + err.message);
-            });
-        }
-
-        function setupRecaptcha() {
-            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'normal' });
-            recaptchaVerifier.render();
-        }
-
-        function sendOTP() {
-            const phone = document.getElementById('phone-input').value;
-            if(!phone) { playWtf(); return alert("Bro, put a real phone number with country code."); }
-            
-            const btn = document.getElementById('send-otp-btn');
-            btn.innerText = "Sending..."; btn.disabled = true;
-
-            auth.signInWithPhoneNumber(phone, recaptchaVerifier)
-                .then((confirmationResult) => {
-                    window.confirmationResult = confirmationResult;
-                    document.getElementById('phone-auth-section').classList.add('hidden');
-                    document.getElementById('otp-section').classList.remove('hidden');
-                }).catch((error) => {
-                    playFail();
-                    alert("Yikes, failed to send OTP: " + error.message);
-                    btn.innerText = "Send digits 📱"; btn.disabled = false;
-                });
-        }
-
-        function verifyOTP() {
-            const code = document.getElementById('otp-input').value;
-            if(!code) { playWtf(); return alert("Need the code man."); }
-            
-            window.confirmationResult.confirm(code).catch((error) => {
-                playFail();
-                alert("Nah, incorrect OTP: " + error.message);
-            });
-        }
-
-        function logoutFirebase() { auth.signOut(); }
-
-        // ==========================================
-        // APP LOGIC & UI FLOW
-        // ==========================================
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-        const { PDFDocument, degrees } = PDFLib;
         const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
-
         let currentTool = "";
         let loadedFiles = []; 
         let fileIdCounter = 0;
@@ -574,6 +495,86 @@
         let splitRanges = [];
         let totalSplitPages = 0;
 
+        let PDFDocument = null;
+        let degrees = null;
+
+        // ==========================================
+        // FAULT TOLERANT FIREBASE SETUP
+        // ==========================================
+        let auth = null;
+        let recaptchaVerifier = null;
+        
+        try {
+            if (typeof firebase !== 'undefined') {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyB9jEmFFEPNT0iIUH6ro-0BZSBfvdDy9XU",
+                    authDomain: "pdf-loves-me.firebaseapp.com",
+                    projectId: "pdf-loves-me",
+                    storageBucket: "pdf-loves-me.firebasestorage.app",
+                    messagingSenderId: "397926920358",
+                    appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
+                };
+                firebase.initializeApp(firebaseConfig);
+                auth = firebase.auth();
+                
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        document.getElementById('auth-buttons').style.display = 'none';
+                        document.getElementById('user-profile').style.display = 'flex';
+                        document.getElementById('user-display-name').innerText = `😎 ${user.displayName || user.phoneNumber || "Boss"}`;
+                        closeAuthModal();
+                    } else {
+                        document.getElementById('auth-buttons').style.display = 'flex';
+                        document.getElementById('user-profile').style.display = 'none';
+                    }
+                });
+            }
+        } catch (e) { console.error("Firebase failed to load:", e); }
+
+        function openAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            try { if(!recaptchaVerifier && auth) setupRecaptcha(); } catch(e){}
+        }
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('otp-section').classList.add('hidden');
+            document.getElementById('phone-auth-section').classList.remove('hidden');
+        }
+        function loginWithGoogle() {
+            if(!auth) { playFail(); return alert("Firebase Auth is blocked by your browser/adblocker."); }
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(err => { playFail(); alert("Google Sign-In failed: " + err.message); });
+        }
+        function setupRecaptcha() {
+            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'normal' });
+            recaptchaVerifier.render();
+        }
+        function sendOTP() {
+            if(!auth) { playFail(); return alert("Auth blocked by browser."); }
+            const phone = document.getElementById('phone-input').value;
+            if(!phone) { playWtf(); return alert("Put a real phone number with country code."); }
+            const btn = document.getElementById('send-otp-btn');
+            btn.innerText = "Sending..."; btn.disabled = true;
+            auth.signInWithPhoneNumber(phone, recaptchaVerifier)
+                .then((res) => {
+                    window.confirmationResult = res;
+                    document.getElementById('phone-auth-section').classList.add('hidden');
+                    document.getElementById('otp-section').classList.remove('hidden');
+                }).catch((err) => {
+                    playFail(); alert("Failed to send OTP: " + err.message);
+                    btn.innerText = "Send digits 📱"; btn.disabled = false;
+                });
+        }
+        function verifyOTP() {
+            const code = document.getElementById('otp-input').value;
+            if(!code) { playWtf(); return alert("Need the code man."); }
+            window.confirmationResult.confirm(code).catch((err) => { playFail(); alert("Incorrect OTP: " + err.message); });
+        }
+        function logoutFirebase() { if(auth) auth.signOut(); }
+
+        // ==========================================
+        // APP UI FLOW
+        // ==========================================
         function showLoading(text) {
             document.getElementById('loading-text').innerText = text || "Cooking... 🍳";
             document.getElementById('loading-overlay').classList.remove('hidden');
@@ -581,14 +582,12 @@
         function hideLoading() {
             document.getElementById('loading-overlay').classList.add('hidden');
         }
-
         function hideDropdowns() {
             document.querySelectorAll('.dropdown-content').forEach(el => {
                 el.style.display = 'none';
                 setTimeout(() => el.style.display = '', 200); 
             });
         }
-
         function goHome() {
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('convert-menu-view').classList.add('hidden');
@@ -597,18 +596,14 @@
             resetWorkspace();
             hideDropdowns();
         }
-
         function openConvertMenu() {
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('workspace-view').classList.add('hidden');
             document.getElementById('convert-menu-view').classList.remove('hidden');
             hideDropdowns();
         }
-
         function openWorkspace(toolName) {
             currentTool = toolName;
-            
-            // Map fun names to display
             let displayTitle = toolName;
             if(toolName === 'Merge PDF') displayTitle = 'Squish PDFs 🥪';
             if(toolName === 'Split PDF') displayTitle = 'Chop PDFs 🔪';
@@ -616,7 +611,6 @@
             if(toolName === 'Image to Word') displayTitle = 'Steal Text 🥷';
             
             document.getElementById('tool-title').innerText = displayTitle;
-            
             hideDropdowns();
 
             const fileInput = document.getElementById('file-input');
@@ -629,13 +623,11 @@
             
             const needsSidebar = ['Split PDF', 'Compress PDF', 'PDF to JPG', 'WORD to PDF', 'EXCEL to PDF', 'PDF to WORD', 'PDF to EXCEL', 'Image to Word'].includes(toolName);
             document.getElementById('workspace-view').style.display = needsSidebar ? 'flex' : 'block';
-            
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('convert-menu-view').classList.add('hidden');
             document.getElementById('workspace-view').classList.remove('hidden');
             resetWorkspace();
         }
-
         function resetWorkspace() {
             loadedFiles = [];
             pdfJsCache = {};
@@ -650,21 +642,47 @@
             document.getElementById('file-input').value = '';
         }
 
-        ['file-input', 'add-more-input'].forEach(id => {
-            document.getElementById(id).addEventListener('change', (e) => { playPop(); handleFiles(e.target.files); });
+        // ==========================================
+        // FAULT TOLERANT EVENT LISTENERS
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                if (typeof pdfjsLib !== 'undefined') {
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+                }
+                if (typeof PDFLib !== 'undefined') {
+                    PDFDocument = PDFLib.PDFDocument;
+                    degrees = PDFLib.degrees;
+                }
+
+                ['file-input', 'add-more-input'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.addEventListener('change', (e) => { playPop(); handleFiles(e.target.files); });
+                });
+
+                const wv = document.getElementById('workspace-view');
+                if(wv) {
+                    wv.addEventListener('dragover', (e) => { e.preventDefault(); wv.classList.add('dragover-active'); });
+                    wv.addEventListener('dragleave', (e) => { e.preventDefault(); if (!wv.contains(e.relatedTarget)) wv.classList.remove('dragover-active'); });
+                    wv.addEventListener('drop', (e) => { e.preventDefault(); wv.classList.remove('dragover-active'); playPop(); handleFiles(e.dataTransfer.files); });
+                }
+
+                if (typeof Sortable !== 'undefined') {
+                    new Sortable(document.getElementById('pages-container'), { animation: 150, onEnd: () => { playPop(); updateMergePageNumbers(); } });
+                }
+            } catch(e) { console.error("Initialization error:", e); }
         });
 
-        const wv = document.getElementById('workspace-view');
-        wv.addEventListener('dragover', (e) => { e.preventDefault(); wv.classList.add('dragover-active'); });
-        wv.addEventListener('dragleave', (e) => { e.preventDefault(); if (!wv.contains(e.relatedTarget)) wv.classList.remove('dragover-active'); });
-        wv.addEventListener('drop', (e) => { e.preventDefault(); wv.classList.remove('dragover-active'); playPop(); handleFiles(e.dataTransfer.files); });
-        new Sortable(document.getElementById('pages-container'), { animation: 150, onEnd: () => { playPop(); updateMergePageNumbers(); } });
-
+        // ==========================================
+        // FILE PROCESSING ENGINE
+        // ==========================================
         async function handleFiles(files) {
             if (files.length === 0) return;
             showLoading("Parsing your trash... 🔍");
             
             try {
+                if(!PDFDocument && currentTool.includes('PDF')) throw new Error("PDF Library got blocked by your browser. Turn off adblocker.");
+                
                 document.getElementById('upload-area').classList.add('hidden');
                 const file = files[0];
 
@@ -781,7 +799,7 @@
                     }
                 }
             } catch(e) {
-                playWtf();
+                playFail();
                 alert("Bruh, something went wrong loading that: " + e.message);
                 resetWorkspace();
             } finally {
@@ -795,7 +813,7 @@
             const thumbDiv = document.createElement('div');
             thumbDiv.className = 'page-thumb'; thumbDiv.id = pageId;
             thumbDiv.dataset.fileId = fileId; thumbDiv.dataset.fileName = fileName; thumbDiv.dataset.pageIndex = pageIndex; thumbDiv.dataset.rotation = 0;
-            thumbDiv.innerHTML = `<div class="page-number"></div><div class="canvas-container"></div><div class="file-label" title="${fileName}">${fileName}</div><div class="page-controls"><button class="icon-btn" onclick="rotatePage('${pageId}'); playPop();">🔄</button><button class="icon-btn delete" onclick="deletePage('${pageId}'); playPop();">🗑️</button></div>`;
+            thumbDiv.innerHTML = `<div class="page-number"></div><div class="canvas-container"></div><div class="file-label" title="${fileName}">${fileName}</div><div class="page-controls"><button class="icon-btn" onclick="playPop(); rotatePage('${pageId}');">🔄</button><button class="icon-btn delete" onclick="playPop(); deletePage('${pageId}');">🗑️</button></div>`;
             thumbDiv.querySelector('.canvas-container').appendChild(canvas);
             document.getElementById('pages-container').appendChild(thumbDiv);
         }
@@ -844,7 +862,7 @@
         async function updateSplitUI() {
             const list = document.getElementById('ranges-list'); list.innerHTML = '';
             splitRanges.forEach((r, i) => {
-                list.innerHTML += `<div class="range-item"><div class="range-item-header"><span>Slice ${i + 1}</span>${splitRanges.length>1?`<span style="cursor:pointer;color:#ff4757;" onclick="removeSplitRange(${r.id}); playPop();">✕</span>`:''}</div><div class="range-inputs"><span>From</span><input type="number" value="${r.from}" onchange="handleRangeChange(${r.id}, 'from', this.value)"><span>To</span><input type="number" value="${r.to}" onchange="handleRangeChange(${r.id}, 'to', this.value)"></div></div>`;
+                list.innerHTML += `<div class="range-item"><div class="range-item-header"><span>Slice ${i + 1}</span>${splitRanges.length>1?`<span style="cursor:pointer;color:#ff4757;" onclick="playPop(); removeSplitRange(${r.id});">✕</span>`:''}</div><div class="range-inputs"><span>From</span><input type="number" value="${r.from}" onchange="handleRangeChange(${r.id}, 'from', this.value)"><span>To</span><input type="number" value="${r.to}" onchange="handleRangeChange(${r.id}, 'to', this.value)"></div></div>`;
             });
             const vis = document.getElementById('editor-area-split'); vis.innerHTML = '';
             for (let i = 0; i < splitRanges.length; i++) {
@@ -869,6 +887,7 @@
                     for (let r of splitRanges) { const idxs = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i); const cp = await pdf.copyPages(src, idxs); cp.forEach(p => pdf.addPage(p)); }
                     triggerDownload(await pdf.save(), "chopped-pdf.pdf");
                 } else {
+                    if (typeof JSZip === 'undefined') throw new Error("JSZip Library failed to load.");
                     const zip = new JSZip();
                     for (let i = 0; i < splitRanges.length; i++) {
                         const pdf = await PDFDocument.create(); const r = splitRanges[i]; const idxs = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i);
@@ -897,7 +916,62 @@
                     triggerDownload(await newPdf.save(), "smol-compressed.pdf");
                 } 
                 else if (currentTool === 'PDF to JPG') {
+                    if (typeof JSZip === 'undefined') throw new Error("JSZip Library failed to load.");
                     const zip = new JSZip();
                     for (let i = 1; i <= pdfJsCache.doc.numPages; i++) {
                         const p = await pdfJsCache.doc.getPage(i); const v = p.getViewport({ scale: 2.0 });
-                        const c = document.createElement('canvas'); c.height = v.height;
+                        const c = document.createElement('canvas'); c.height = v.height; c.width = v.width; await p.render({ canvasContext: c.getContext('2d'), viewport: v }).promise;
+                        zip.file(`page_${i}.jpg`, c.toDataURL('image/jpeg', 0.9).split(',')[1], {base64: true});
+                    }
+                    triggerDownload(await zip.generateAsync({type:"blob"}), "images_extracted.zip", true);
+                }
+                else {
+                    // API CONVERSIONS
+                    const formData = new FormData();
+                    formData.append('File', fileData.file, fileData.name);
+
+                    let endpoint = "", mimeType = "", outExt = "";
+                    const inputExt = fileData.name.split('.').pop().toLowerCase();
+
+                    if (currentTool === 'PDF to WORD') { endpoint = `https://v2.convertapi.com/convert/pdf/to/docx?Secret=${CONVERT_API_SECRET}`; mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; outExt = ".docx"; } 
+                    else if (currentTool === 'PDF to EXCEL') { endpoint = `https://v2.convertapi.com/convert/pdf/to/xlsx?Secret=${CONVERT_API_SECRET}`; mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; outExt = ".xlsx"; }
+                    else if (currentTool === 'WORD to PDF' || currentTool === 'EXCEL to PDF') { endpoint = `https://v2.convertapi.com/convert/${inputExt}/to/pdf?Secret=${CONVERT_API_SECRET}`; mimeType = "application/pdf"; outExt = ".pdf"; }
+                    else if (currentTool === 'Image to Word') {
+                        let validExt = ['jpg', 'jpeg', 'png', 'webp'].includes(inputExt) ? inputExt : 'jpg';
+                        if(validExt === 'jpeg') validExt = 'jpg'; 
+                        endpoint = `https://v2.convertapi.com/convert/${validExt}/to/docx?Secret=${CONVERT_API_SECRET}`; mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; outExt = ".docx";
+                    }
+
+                    const response = await fetch(endpoint, { method: 'POST', body: formData });
+                    if (!response.ok) throw new Error("API tripped over a wire. Try again.");
+                    
+                    const result = await response.json();
+                    if (result.Files && result.Files.length > 0) {
+                        const outFileName = fileData.name.replace(/\.[^/.]+$/, "") + outExt;
+                        if (result.Files[0].FileData) {
+                            const byteStr = atob(result.Files[0].FileData);
+                            const bytes = new Uint8Array(byteStr.length);
+                            for (let i = 0; i < byteStr.length; i++) bytes[i] = byteStr.charCodeAt(i);
+                            triggerDownload(new Blob([bytes], { type: mimeType }), outFileName, true);
+                        } else if (result.Files[0].Url) {
+                            const fileRes = await fetch(result.Files[0].Url);
+                            triggerDownload(await fileRes.blob(), outFileName, true);
+                        }
+                    } else throw new Error("Server sent back empty air.");
+                }
+            } catch (e) { 
+                playFail(); 
+                alert("RIP, error happened: " + e.message); 
+            }
+            hideLoading();
+        }
+
+        function triggerDownload(data, filename, isBlob = false) {
+            const blob = isBlob ? data : new Blob([data], { type: "application/pdf" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob); link.download = filename;
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
