@@ -438,7 +438,7 @@
                     }
                     triggerDownload(await finalPdf.save(), "images-to-pdf.pdf");
                 }
-            } catch (e) { alert("Error processing."); }
+            } catch (e) { alert("Error processing: " + (e.message || e)); }
             btn.innerText = currentTool;
         }
 
@@ -481,7 +481,7 @@
                     }
                     triggerDownload(await zip.generateAsync({type:"blob"}), "split_files.zip", true);
                 }
-            } catch (e) { alert("Error splitting."); }
+            } catch (e) { alert("Error splitting: " + (e.message || e)); }
             btn.innerHTML = "Split PDF <span>➔</span>"; btn.disabled = false;
         }
 
@@ -531,11 +531,20 @@
                     for(let i=1; i<=pdfJsCache.doc.numPages; i++) {
                         const page = await pdfJsCache.doc.getPage(i);
                         const content = await page.getTextContent();
-                        fullText += content.items.map(item => item.str).join(" ") + "\n\n";
+                        fullText += content.items.map(item => item.str).join(" ") + "\n";
                     }
-                    const docxDoc = new docx.Document({
-                        sections: [{ properties: {}, children: fullText.split("\n").map(line => new docx.Paragraph({ children: [new docx.TextRun(line)] })) }]
+                    
+                    // Fixed: docx 8+ requires object parameters for TextRun
+                    const paragraphs = fullText.split("\n").map(line => {
+                        return new docx.Paragraph({
+                            children: [new docx.TextRun({ text: line || " " })]
+                        });
                     });
+
+                    const docxDoc = new docx.Document({
+                        sections: [{ properties: {}, children: paragraphs }]
+                    });
+                    
                     triggerDownload(await docx.Packer.toBlob(docxDoc), "extracted.docx", true);
                 }
                 else if (currentTool === 'PDF to EXCEL') {
@@ -545,14 +554,16 @@
                         const content = await page.getTextContent();
                         fullText += content.items.map(item => item.str).join(" ") + "\n";
                     }
-                    // Attempt to split loose text into columns by multiple spaces
                     const aoa = fullText.split('\n').filter(l=>l.trim()).map(line => line.split(/\s{2,}/)); 
                     const ws = XLSX.utils.aoa_to_sheet(aoa);
                     const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data");
                     const wbout = XLSX.write(wb, {bookType:'xlsx', type:'array'});
                     triggerDownload(new Blob([wbout]), "extracted.xlsx", true);
                 }
-            } catch (e) { console.error(e); alert("Processing Error."); }
+            } catch (e) { 
+                console.error(e); 
+                alert("Processing Error: " + (e.message || "Unknown error occurred.")); 
+            }
             btn.innerHTML = "Process <span>➔</span>"; btn.disabled = false;
         }
 
