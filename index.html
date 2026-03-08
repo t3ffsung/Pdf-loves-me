@@ -229,7 +229,9 @@
         .page-thumb:hover { transform: translateY(-5px); border-color: var(--primary); }
         body.theme-z .page-thumb:hover { border-color: var(--secondary); }
         .page-thumb:active { cursor: grabbing; transform: scale(0.95); }
-        .page-thumb canvas { max-width: 150px; border-radius: 4px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .page-thumb canvas { max-width: 150px; border-radius: 4px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 1px solid #ccc; }
+        body.theme-z .page-thumb canvas { border: none; }
+        
         .page-controls { margin-top: 15px; display: flex; gap: 10px; }
         .icon-btn { background: rgba(128,128,128,0.2); color: var(--text-main); border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
         .icon-btn:hover { background: #ccc; }
@@ -242,7 +244,7 @@
         .file-label { margin-top: 10px; font-size: 0.8rem; color: var(--text-muted); max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;}
 
         /* Split Editor */
-        #editor-area-split { display: none; padding: 100px 40px 40px 40px; flex-direction: column; align-items: center; gap: 40px; }
+        #editor-area-split { display: none; padding: 100px 40px 100px 40px; flex-direction: column; align-items: center; gap: 40px; }
         .split-range-block { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px;}
         .split-visual-box { border: 2px dashed #ccc; border-radius: 12px; padding: 30px; display: flex; align-items: center; justify-content: center; gap: 30px; background: rgba(128,128,128,0.05); width: 100%;}
         body.theme-z .split-visual-box { border: 3px dashed var(--secondary); border-radius: 24px; background: rgba(0,255,255,0.05); }
@@ -272,7 +274,7 @@
         
         .btn-secondary { background: var(--card-bg); color: var(--text-main); padding: 12px 20px; border: var(--card-border); border-radius: var(--btn-radius); cursor: pointer; transition: 0.2s; font-weight: bold; font-family: var(--font-main); }
         .btn-secondary:hover { background: #eee; }
-        body.theme-z .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border-radius: 12px; }
+        body.theme-z .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border-radius: 12px; border-color: rgba(255,255,255,0.2);}
         body.theme-z .btn-secondary:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
 
         .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid rgba(128,128,128,0.2); font-size: 1.5rem; font-weight: bold; color: var(--text-main); }
@@ -334,13 +336,18 @@
         /* Loading Overlay */
         #loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9); z-index: 9999;
+            background: rgba(255,255,255,0.95); z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         body.theme-z #loading-overlay { background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(15px); }
         
-        #loading-overlay h2 { color: var(--primary); font-size: 1.8rem; margin-top: 20px; text-align: center; padding: 0 20px; }
-        body.theme-z #loading-overlay h2 { color: var(--secondary); font-size: 2.5rem; text-transform: uppercase; letter-spacing: 3px; animation: pulse 1s infinite alternate; text-shadow: 0 0 20px var(--secondary); font-weight: 900; }
+        #loading-overlay h2 {
+            color: var(--primary); font-size: 1.8rem; margin-top: 20px; text-align: center; padding: 0 20px;
+        }
+        body.theme-z #loading-overlay h2 {
+            color: var(--secondary); font-size: 2.5rem; text-transform: uppercase; letter-spacing: 3px;
+            animation: pulse 1s infinite alternate; text-shadow: 0 0 20px var(--secondary); font-weight: 900;
+        }
         
         /* Success Overlay */
         #success-overlay {
@@ -359,6 +366,7 @@
             transition: all 0.3s; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;
         }
         #chatbot-fab:hover { transform: scale(1.1) translateY(-5px); border-color: var(--primary); }
+        body.theme-z #chatbot-fab { box-shadow: 0 5px 20px rgba(0,255,255,0.4); }
 
         /* Auth Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;}
@@ -384,7 +392,6 @@
         body.theme-z .modal-input { padding: 15px; border-radius: 12px; }
         .modal-input:focus { border-color: var(--primary); }
         body.theme-z .modal-input:focus { border-color: var(--secondary); box-shadow: 0 0 10px rgba(0,255,255,0.3); }
-
 
         /* ==========================================
            MOBILE RESPONSIVENESS
@@ -433,12 +440,12 @@
 </head>
 <body class="theme-m">
 
-    <audio id="sfx-fail" src="Fail Sound Effects - Free Download • Uppbeat.mp3" preload="auto"></audio>
-    <audio id="sfx-fail2" src="Fail Sound Effects - Free Download • Uppbeat2.mp3" preload="auto"></audio>
+    <audio id="sfx-fail" src="Fail%20Sound%20Effects%20-%20Free%20Download%20%E2%80%A2%20Uppbeat.mp3" preload="auto"></audio>
+    <audio id="sfx-fail2" src="Fail%20Sound%20Effects%20-%20Free%20Download%20%E2%80%A2%20Uppbeat2.mp3" preload="auto"></audio>
     <audio id="sfx-wtf" src="wtf.mp3" preload="auto"></audio>
 
     <video autoplay muted loop playsinline class="bg-video show-z">
-        <source src="Free Motion Graphics Templates, Animations & Video Overlays • Uppbeat.ts" type="video/mp4">
+        <source src="Free%20Motion%20Graphics%20Templates,%20Animations%20&%20Video%20Overlays%20%E2%80%A2%20Uppbeat.ts">
     </video>
 
     <div id="theme-selector">
@@ -456,13 +463,13 @@
 
     <div id="app-container" class="hidden">
 
-        <div id="chatbot-fab" onclick="playPop(); alert('Chatbot coming soon! 🤖');">
-            <dotlottie-player src="Live chatbot.lottie" background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
+        <div id="chatbot-fab" onclick="playPop(); alert(currentTheme === 'z' ? 'Chatbot coming soon! 🤖' : 'Support Chatbot coming soon.');">
+            <dotlottie-player src="Live%20chatbot.lottie" background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
         </div>
 
         <div id="loading-overlay" class="hidden">
             <div class="show-z" style="width: 100%; display: flex; justify-content: center;">
-                <dotlottie-player src="Loading cat.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="Loading%20cat.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
             </div>
             <div class="show-m" style="width: 100%; display: flex; justify-content: center;">
                 <dotlottie-player src="loading.lottie" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></dotlottie-player>
@@ -476,7 +483,7 @@
 
         <div id="success-overlay" class="hidden">
             <div class="show-z" style="display:flex; flex-direction:column; align-items:center;">
-                <dotlottie-player src="Fist Bump.lottie" background="transparent" speed="1" style="width: 300px; height: 300px;" autoplay></dotlottie-player>
+                <dotlottie-player src="Fist%20Bump.lottie" background="transparent" speed="1" style="width: 300px; height: 300px;" autoplay></dotlottie-player>
                 <h2>Nailed it! 💥</h2>
             </div>
         </div>
@@ -538,7 +545,7 @@
                 <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
                 
                 <div class="show-z" style="display:flex; justify-content:center;">
-                    <dotlottie-player src="Businessman flies up with rocket.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
+                    <dotlottie-player src="Businessman%20flies%20up%20with%20rocket.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
                 </div>
 
                 <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
@@ -577,7 +584,7 @@
 
         <div id="home-view">
             <div class="show-z" style="display:flex; justify-content:center;">
-                <dotlottie-player src="Valentine's Day Love Dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="Valentine's%20Day%20Love%20Dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
             </div>
             
             <div class="hero-title">
@@ -622,7 +629,7 @@
             <button class="back-btn" onclick="playPop(); goHome();" style="top: -40px;">⬅️ <span class="tz">Back to base</span><span class="tm">Go Back</span></button>
             
             <div class="show-z" style="display:flex; justify-content:center;">
-                <dotlottie-player src="Cat feeling love emotionsexpression. Emojisticker animation.lottie" background="transparent" speed="1" style="width: 180px; height: 180px; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="Cat%20feeling%20love%20emotionsexpression.%20Emojisticker%20animation.lottie" background="transparent" speed="1" style="width: 180px; height: 180px; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
             </div>
 
             <div class="hero-title" style="margin-bottom: 50px;">
@@ -645,7 +652,7 @@
                 <div id="upload-area">
                     <h2 id="tool-title" style="margin-bottom: 10px; font-size: 2.5rem; color:var(--text-main); font-weight: bold;">Tool</h2>
                     <div class="show-z" style="display:flex; justify-content:center;">
-                        <dotlottie-player src="Dancing Box.lottie" background="transparent" speed="1" style="width: 200px; height: 200px; max-width: 100%; margin-bottom: 20px;" loop autoplay></dotlottie-player>
+                        <dotlottie-player src="Dancing%20Box.lottie" background="transparent" speed="1" style="width: 200px; height: 200px; max-width: 100%; margin-bottom: 20px;" loop autoplay></dotlottie-player>
                     </div>
                     <label class="upload-btn" onclick="playPop();">
                         <span class="tz">Select your trash 🗑️</span><span class="tm">Select files</span>
@@ -681,7 +688,7 @@
                     <button class="btn-add-range" onclick="playPop(); addSplitRange();">+ <span class="tz">Add another cut</span><span class="tm">Add Range</span></button>
                 </div>
                 <div class="sidebar-footer">
-                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges</span></label>
+                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges in one</span></label>
                     <button class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">
                         <span class="tz">Chop it up ✂️</span><span class="tm">Split PDF ➔</span>
                     </button>
@@ -840,7 +847,7 @@
         function sendOTP() {
             if(!auth) { playFail(); return alert("Auth blocked by browser."); }
             const phone = document.getElementById('phone-input').value;
-            if(!phone) { playWtf(); return alert("Put a real phone number with country code."); }
+            if(!phone) { playWtf(); return alert("Please enter a valid phone number."); }
             const btn = document.getElementById('send-otp-btn');
             btn.innerText = "Sending..."; btn.disabled = true;
             auth.signInWithPhoneNumber(phone, recaptchaVerifier)
@@ -855,7 +862,7 @@
         }
         function verifyOTP() {
             const code = document.getElementById('otp-input').value;
-            if(!code) { playWtf(); return alert("Need the code man."); }
+            if(!code) { playWtf(); return alert("Please enter the code."); }
             window.confirmationResult.confirm(code).catch((err) => { playFail(); alert("Incorrect OTP: " + err.message); });
         }
         function logoutFirebase() { if(auth) auth.signOut(); }
@@ -891,6 +898,7 @@
         }
         function openWorkspace(toolName) {
             currentTool = toolName;
+            
             let displayTitle = toolName;
             if(currentTheme === 'z') {
                 if(toolName === 'Merge PDF') displayTitle = 'Squish PDFs 🥪';
@@ -932,7 +940,7 @@
         }
 
         // ==========================================
-        // EVENT LISTENERS
+        // FAULT TOLERANT EVENT LISTENERS
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
             try {
@@ -980,12 +988,17 @@
                     document.getElementById('action-bar-merge').classList.remove('hidden');
                     
                     for (let f of files) {
-                        const arrayBuffer = await f.arrayBuffer();
                         const fileId = `file_${fileIdCounter++}`;
-                        loadedFiles.push({ id: fileId, file: f, bytes: arrayBuffer, name: f.name, type: f.type });
                         
                         if (currentTool === 'Merge PDF') {
-                            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+                            // Using Object URL prevents WebWorker buffer detachment issues!
+                            const fileUrl = URL.createObjectURL(f);
+                            const pdf = await pdfjsLib.getDocument(fileUrl).promise;
+                            
+                            // Store ArrayBuffer for generation later
+                            const arrayBuffer = await f.arrayBuffer();
+                            loadedFiles.push({ id: fileId, file: f, bytes: arrayBuffer, name: f.name, type: f.type });
+
                             for (let p = 1; p <= pdf.numPages; p++) {
                                 const page = await pdf.getPage(p);
                                 const viewport = page.getViewport({ scale: 0.5 }); 
@@ -995,6 +1008,9 @@
                                 createThumbElement(canvas, fileId, f.name, p - 1);
                             }
                         } else {
+                            const arrayBuffer = await f.arrayBuffer();
+                            loadedFiles.push({ id: fileId, file: f, bytes: arrayBuffer, name: f.name, type: f.type });
+                            
                             const url = URL.createObjectURL(f);
                             const img = new Image();
                             await new Promise(r => {
@@ -1017,8 +1033,12 @@
                 } else if (currentTool === 'Split PDF') {
                     document.getElementById('editor-area-split').style.display = 'flex';
                     document.getElementById('sidebar-split').classList.remove('hidden');
+                    
                     loadedFiles = [{ id: 'split_file', file: file, bytes: await file.arrayBuffer(), name: file.name }];
-                    const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
+                    
+                    // Fixed: Use Object URL for stability
+                    const fileUrl = URL.createObjectURL(file);
+                    const pdf = await pdfjsLib.getDocument(fileUrl).promise;
                     pdfJsCache.doc = pdf;
                     totalSplitPages = pdf.numPages;
                     splitRanges = [{ id: 1, from: 1, to: totalSplitPages }];
@@ -1037,13 +1057,15 @@
                     if (currentTool === 'Compress PDF') {
                         optionsContent.innerHTML = `
                             <div class="show-z" style="display:flex; justify-content:center;">
-                                <dotlottie-player src="Loader Ball with Physical Interaction.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                                <dotlottie-player src="Loader%20Ball%20with%20Physical%20Interaction.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
                             </div>
                             <div class="sidebar-option active">
                                 <strong><span class="tz">Super Squish</span><span class="tm">Recommended</span></strong>
                                 <p><span class="tz">Rasterize pages to make it tiny.</span><span class="tm">Standard client-side compression.</span></p>
                             </div>`;
-                        const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
+                        
+                        const fileUrl = URL.createObjectURL(file);
+                        const pdf = await pdfjsLib.getDocument(fileUrl).promise;
                         pdfJsCache.doc = pdf;
                         const page = await pdf.getPage(1);
                         const viewport = page.getViewport({ scale: 0.8 });
@@ -1055,7 +1077,7 @@
                     else if (currentTool === 'Image to Word') {
                         optionsContent.innerHTML = `
                             <div class="show-z" style="display:flex; justify-content:center;">
-                                <dotlottie-player src="Cat playing animation.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                                <dotlottie-player src="Cat%20playing%20animation.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
                             </div>
                             <div class="sidebar-option active">
                                 <strong><span class="tz">Big Brain AI</span><span class="tm">OCR Engine</span></strong>
@@ -1083,7 +1105,9 @@
                         
                         if(currentTool === 'PDF to EXCEL' || currentTool === 'PDF to WORD' || currentTool === 'PDF to JPG') { 
                             if(currentTool === 'PDF to JPG') icon = "🖼️"; else icon = currentTool.includes('WORD') ? "📄" : "📈"; 
-                            const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
+                            
+                            const fileUrl = URL.createObjectURL(file);
+                            const pdf = await pdfjsLib.getDocument(fileUrl).promise;
                             pdfJsCache.doc = pdf;
                             const page = await pdf.getPage(1);
                             const viewport = page.getViewport({ scale: 0.8 });
@@ -1096,7 +1120,7 @@
                         }
                         optionsContent.innerHTML = `
                             <div class="show-z" style="display:flex; justify-content:center;">
-                                <dotlottie-player src="Cat playing animation.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                                <dotlottie-player src="Cat%20playing%20animation.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
                             </div>
                             <div class="sidebar-option active">
                                 <strong><span class="tz">God Tier API</span><span class="tm">Premium Engine</span></strong>
@@ -1237,41 +1261,39 @@
                     const formData = new FormData();
                     formData.append('File', fileData.file, fileData.name);
 
+                    // Added &StoreFile=true to force URL generation, preventing Base64 binary corruption
                     let endpoint = "", mimeType = "", outExt = "";
                     const inputExt = fileData.name.split('.').pop().toLowerCase();
 
-                    if (currentTool === 'PDF to WORD') { endpoint = `https://v2.convertapi.com/convert/pdf/to/docx?Secret=${CONVERT_API_SECRET}`; mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; outExt = ".docx"; } 
-                    else if (currentTool === 'PDF to EXCEL') { endpoint = `https://v2.convertapi.com/convert/pdf/to/xlsx?Secret=${CONVERT_API_SECRET}`; mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; outExt = ".xlsx"; }
-                    else if (currentTool === 'WORD to PDF' || currentTool === 'EXCEL to PDF') { endpoint = `https://v2.convertapi.com/convert/${inputExt}/to/pdf?Secret=${CONVERT_API_SECRET}`; mimeType = "application/pdf"; outExt = ".pdf"; }
+                    if (currentTool === 'PDF to WORD') { endpoint = `https://v2.convertapi.com/convert/pdf/to/docx?Secret=${CONVERT_API_SECRET}&StoreFile=true`; mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; outExt = ".docx"; } 
+                    else if (currentTool === 'PDF to EXCEL') { endpoint = `https://v2.convertapi.com/convert/pdf/to/xlsx?Secret=${CONVERT_API_SECRET}&StoreFile=true`; mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; outExt = ".xlsx"; }
+                    else if (currentTool === 'WORD to PDF' || currentTool === 'EXCEL to PDF') { endpoint = `https://v2.convertapi.com/convert/${inputExt}/to/pdf?Secret=${CONVERT_API_SECRET}&StoreFile=true`; mimeType = "application/pdf"; outExt = ".pdf"; }
                     else if (currentTool === 'Image to Word') {
                         let validExt = ['jpg', 'jpeg', 'png', 'webp'].includes(inputExt) ? inputExt : 'jpg';
                         if(validExt === 'jpeg') validExt = 'jpg'; 
-                        endpoint = `https://v2.convertapi.com/convert/${validExt}/to/docx?Secret=${CONVERT_API_SECRET}`; mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; outExt = ".docx";
+                        endpoint = `https://v2.convertapi.com/convert/${validExt}/to/docx?Secret=${CONVERT_API_SECRET}&StoreFile=true`; mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; outExt = ".docx";
                     }
 
                     const response = await fetch(endpoint, { method: 'POST', body: formData });
                     
+                    // Fixed: Explicit Error Parsing for ConvertAPI to tell the user exactly what failed
                     if (!response.ok) {
                         let errMsg = "Unknown Server Error";
                         try {
                             const errData = await response.json();
                             errMsg = errData.Message || errData.error || errMsg;
-                        } catch(e) {}
-                        throw new Error(`API rejected request.\nStatus ${response.status}\nDetails: ${errMsg}`);
+                        } catch(e) {
+                            errMsg = await response.text();
+                        }
+                        throw new Error(`API rejected request.\nStatus: ${response.status}\nDetails: ${errMsg}`);
                     }
                     
                     const result = await response.json();
-                    if (result.Files && result.Files.length > 0) {
+                    if (result.Files && result.Files.length > 0 && result.Files[0].Url) {
                         const outFileName = fileData.name.replace(/\.[^/.]+$/, "") + outExt;
-                        if (result.Files[0].FileData) {
-                            const byteStr = atob(result.Files[0].FileData);
-                            const bytes = new Uint8Array(byteStr.length);
-                            for (let i = 0; i < byteStr.length; i++) bytes[i] = byteStr.charCodeAt(i);
-                            triggerDownload(new Blob([bytes], { type: mimeType }), outFileName, true);
-                        } else if (result.Files[0].Url) {
-                            const fileRes = await fetch(result.Files[0].Url);
-                            triggerDownload(await fileRes.blob(), outFileName, true);
-                        }
+                        // Fixed: Fetch the file URL directly as a Blob instead of unreliable Base64 mapping
+                        const fileRes = await fetch(result.Files[0].Url);
+                        triggerDownload(await fileRes.blob(), outFileName, true);
                     } else throw new Error("Server sent back an empty response.");
                 }
             } catch (e) { 
