@@ -354,7 +354,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 255, 0, 0.15); z-index: 10000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            backdrop-filter: blur(8px); pointer-events: none; transition: opacity 0.3s;
+            backdrop-filter: blur(8px); transition: opacity 0.3s;
         }
         #success-overlay h2 { color: #fff; font-size: 4rem; text-transform: uppercase; font-weight: 900; text-shadow: 0 0 30px #2ecc71; margin-top: 20px; text-align: center;}
 
@@ -442,12 +442,12 @@
 </head>
 <body class="theme-m">
 
-    <audio id="sfx-fail" src="Fail Sound Effects - Free Download • Uppbeat.mp3" preload="auto"></audio>
-    <audio id="sfx-fail2" src="Fail Sound Effects - Free Download • Uppbeat2.mp3" preload="auto"></audio>
+    <audio id="sfx-fail" src="fail.mp3" preload="auto"></audio>
+    <audio id="sfx-fail2" src="fail2.mp3" preload="auto"></audio>
     <audio id="sfx-wtf" src="wtf.mp3" preload="auto"></audio>
 
     <video autoplay muted loop playsinline class="bg-video show-z">
-        <source src="Free Motion Graphics Templates, Animations & Video Overlays • Uppbeat.ts" type="video/mp4">
+        <source src="bg-video.mp4">
     </video>
 
     <div id="theme-selector">
@@ -466,12 +466,12 @@
     <div id="app-container" class="hidden">
 
         <div id="chatbot-fab" onclick="playPop(); alert(currentTheme === 'z' ? 'Chatbot coming soon! 🤖' : 'Support Chatbot coming soon.');">
-            <dotlottie-player src="Live chatbot.lottie" background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
+            <dotlottie-player src="chatbot.lottie" background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
         </div>
 
         <div id="loading-overlay" class="hidden">
             <div class="show-z" style="width: 100%; display: flex; justify-content: center;">
-                <dotlottie-player src="Loader Ball with Physical Interaction.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="loader-ball.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
             </div>
             <div class="show-m" style="width: 100%; display: flex; justify-content: center;">
                 <dotlottie-player src="loading.lottie" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></dotlottie-player>
@@ -547,7 +547,7 @@
                 <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
                 
                 <div class="show-z" style="display:flex; justify-content:center;">
-                    <dotlottie-player src="Businessman flies up with rocket.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
+                    <dotlottie-player src="rocket-man.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
                 </div>
 
                 <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
@@ -586,7 +586,7 @@
 
         <div id="home-view">
             <div class="show-z" style="display:flex; justify-content:center;">
-                <dotlottie-player src="Valentine's Day Love Dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="love-dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
             </div>
             
             <div class="hero-title">
@@ -631,7 +631,7 @@
             <button class="back-btn" onclick="playPop(); goHome();" style="top: -40px;">⬅️ <span class="tz">Back to base</span><span class="tm">Go Back</span></button>
             
             <div class="show-z" style="display:flex; justify-content:center;">
-                <dotlottie-player src="Cat feeling love emotionsexpression. Emojisticker animation.lottie" background="transparent" speed="1" style="width: 180px; height: 180px; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="cat-love.lottie" background="transparent" speed="1" style="width: 180px; height: 180px; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
             </div>
 
             <div class="hero-title" style="margin-bottom: 50px;">
@@ -654,7 +654,7 @@
                 <div id="upload-area">
                     <h2 id="tool-title" style="margin-bottom: 10px; font-size: 2.5rem; color:var(--text-main); font-weight: bold;">Tool</h2>
                     <div class="show-z" style="display:flex; justify-content:center;">
-                        <dotlottie-player src="Dancing Box.lottie" background="transparent" speed="1" style="width: 200px; height: 200px; max-width: 100%; margin-bottom: 20px;" loop autoplay></dotlottie-player>
+                        <dotlottie-player src="dancing-box.lottie" background="transparent" speed="1" style="width: 200px; height: 200px; max-width: 100%; margin-bottom: 20px;" loop autoplay></dotlottie-player>
                     </div>
                     <label class="upload-btn" onclick="playPop();">
                         <span class="tz">Select your trash 🗑️</span><span class="tm">Select files</span>
@@ -775,9 +775,9 @@
         // ==========================================
         // RANDOM SUCCESS ANIMATION LOGIC
         // ==========================================
-        // EXACT filenames as you uploaded them to Netlify
+        // EXACT filenames based on the GitHub repository screenshot
         const successAnimations = [
-            'Fist Bump.lottie',
+            'fist-bump.lottie',
             'dancing-bug.lottie',
             'savage-cat.lottie',
             'dancing-monkey.lottie',
@@ -792,11 +792,21 @@
                 // Pick a random animation
                 const randomAnim = successAnimations[Math.floor(Math.random() * successAnimations.length)];
                 
-                // Completely rebuild the player to force it to load the new file
-                container.innerHTML = `<dotlottie-player src="${randomAnim}" background="transparent" speed="1" style="width: 300px; height: 300px;" autoplay></dotlottie-player>`;
+                // COMPLETELY destroy and rebuild the player to force it to load the new file (Fixes the loop bug)
+                container.innerHTML = ''; // Clear out the old one
+                
+                const newPlayer = document.createElement('dotlottie-player');
+                newPlayer.setAttribute('src', randomAnim);
+                newPlayer.setAttribute('background', 'transparent');
+                newPlayer.setAttribute('speed', '1');
+                newPlayer.setAttribute('style', 'width: 300px; height: 300px;');
+                newPlayer.setAttribute('autoplay', 'true');
+                
+                container.appendChild(newPlayer); // Inject the new one
 
                 overlay.classList.remove('hidden');
-                // Give it 3.5 seconds to play before hiding
+                
+                // Hide after 3.5 seconds
                 setTimeout(() => { overlay.classList.add('hidden'); }, 3500);
             }
         }
@@ -1077,7 +1087,7 @@
                     if (currentTool === 'Compress PDF') {
                         optionsContent.innerHTML = `
                             <div class="show-z" style="display:flex; justify-content:center;">
-                                <dotlottie-player src="Loader Ball with Physical Interaction.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                                <dotlottie-player src="loading-cat.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
                             </div>
                             <div class="sidebar-option active">
                                 <strong><span class="tz">Super Squish</span><span class="tm">Recommended</span></strong>
@@ -1097,7 +1107,7 @@
                     else if (currentTool === 'Image to Word') {
                         optionsContent.innerHTML = `
                             <div class="show-z" style="display:flex; justify-content:center;">
-                                <dotlottie-player src="Cat playing animation.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                                <dotlottie-player src="cat-playing.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
                             </div>
                             <div class="sidebar-option active">
                                 <strong><span class="tz">Big Brain AI</span><span class="tm">OCR Engine</span></strong>
@@ -1140,7 +1150,7 @@
                         }
                         optionsContent.innerHTML = `
                             <div class="show-z" style="display:flex; justify-content:center;">
-                                <dotlottie-player src="Cat playing animation.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                                <dotlottie-player src="cat-playing.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
                             </div>
                             <div class="sidebar-option active">
                                 <strong><span class="tz">God Tier API</span><span class="tm">Premium Engine</span></strong>
@@ -1296,7 +1306,6 @@
 
                     const response = await fetch(endpoint, { method: 'POST', body: formData });
                     
-                    // Fixed: Explicit Error Parsing for ConvertAPI to tell the user exactly what failed
                     if (!response.ok) {
                         let errMsg = "Unknown Server Error";
                         try {
@@ -1311,7 +1320,6 @@
                     const result = await response.json();
                     if (result.Files && result.Files.length > 0 && result.Files[0].Url) {
                         const outFileName = fileData.name.replace(/\.[^/.]+$/, "") + outExt;
-                        // Fixed: Fetch the file URL directly as a Blob instead of unreliable Base64 mapping
                         const fileRes = await fetch(result.Files[0].Url);
                         triggerDownload(await fileRes.blob(), outFileName, true);
                     } else throw new Error("Server sent back an empty response.");
