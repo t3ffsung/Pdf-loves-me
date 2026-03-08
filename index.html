@@ -184,6 +184,25 @@
         body.theme-z .card h3 { font-weight: 900; }
         .card p { margin: 0; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; font-weight: 500;}
 
+        /* ==========================================
+           GEN-Z ANIMATED MORPH ICONS (NEW!)
+           ========================================== */
+        .z-icon-group {
+            display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 3.5rem; height: 80px;
+        }
+        .z-left { animation: floatUp 3s ease-in-out infinite; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .z-right { animation: floatDown 3s ease-in-out infinite; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .z-zap { font-size: 1.8rem; animation: pulseGlow 1.5s infinite; color: var(--secondary); transition: all 0.2s;}
+
+        @keyframes floatUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes floatDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+        @keyframes pulseGlow { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px var(--secondary)); } 50% { transform: scale(1.3); filter: drop-shadow(0 0 15px var(--secondary)); } }
+
+        /* The "Smash/Suck" Hover Effect */
+        body.theme-z .card:hover .z-left { transform: translateX(50px) scale(0.3) rotate(45deg); opacity: 0; animation: none; z-index: 1;}
+        body.theme-z .card:hover .z-zap { opacity: 0; transform: scale(0); animation: none;}
+        body.theme-z .card:hover .z-right { transform: translateX(-20px) scale(1.3); animation: none; z-index: 2; filter: drop-shadow(0 0 20px var(--primary)); }
+
         /* Workspace View */
         #workspace-view { display: none; height: calc(100vh - 80px); transition: background 0.2s; box-sizing: border-box; }
         #workspace-view.dragover-active { background: rgba(128, 128, 128, 0.1); border: 4px dashed var(--primary); border-radius: 20px; margin: 10px;}
@@ -442,12 +461,12 @@
 </head>
 <body class="theme-m">
 
-    <audio id="sfx-fail" src="fail.mp3" preload="auto"></audio>
-    <audio id="sfx-fail2" src="fail2.mp3" preload="auto"></audio>
+    <audio id="sfx-fail" src="Fail Sound Effects - Free Download • Uppbeat.mp3" preload="auto"></audio>
+    <audio id="sfx-fail2" src="Fail Sound Effects - Free Download • Uppbeat2.mp3" preload="auto"></audio>
     <audio id="sfx-wtf" src="wtf.mp3" preload="auto"></audio>
 
     <video autoplay muted loop playsinline class="bg-video show-z">
-        <source src="bg-video.mp4">
+        <source src="Free Motion Graphics Templates, Animations & Video Overlays • Uppbeat.ts" type="video/mp4">
     </video>
 
     <div id="theme-selector">
@@ -466,12 +485,12 @@
     <div id="app-container" class="hidden">
 
         <div id="chatbot-fab" onclick="playPop(); alert(currentTheme === 'z' ? 'Chatbot coming soon! 🤖' : 'Support Chatbot coming soon.');">
-            <dotlottie-player src="chatbot.lottie" background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
+            <dotlottie-player src="Live chatbot.lottie" background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
         </div>
 
         <div id="loading-overlay" class="hidden">
             <div class="show-z" style="width: 100%; display: flex; justify-content: center;">
-                <dotlottie-player src="loader-ball.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="Loader Ball with Physical Interaction.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
             </div>
             <div class="show-m" style="width: 100%; display: flex; justify-content: center;">
                 <dotlottie-player src="loading.lottie" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></dotlottie-player>
@@ -547,7 +566,7 @@
                 <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
                 
                 <div class="show-z" style="display:flex; justify-content:center;">
-                    <dotlottie-player src="rocket-man.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
+                    <dotlottie-player src="Businessman flies up with rocket.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
                 </div>
 
                 <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
@@ -586,7 +605,7 @@
 
         <div id="home-view">
             <div class="show-z" style="display:flex; justify-content:center;">
-                <dotlottie-player src="love-dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="Valentine's Day Love Dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
             </div>
             
             <div class="hero-title">
@@ -631,19 +650,83 @@
             <button class="back-btn" onclick="playPop(); goHome();" style="top: -40px;">⬅️ <span class="tz">Back to base</span><span class="tm">Go Back</span></button>
             
             <div class="show-z" style="display:flex; justify-content:center;">
-                <dotlottie-player src="cat-love.lottie" background="transparent" speed="1" style="width: 180px; height: 180px; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="Cat feeling love emotionsexpression. Emojisticker animation.lottie" background="transparent" speed="1" style="width: 180px; height: 180px; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
             </div>
 
             <div class="hero-title" style="margin-bottom: 50px;">
                 <span class="tz">Morph your files 🧬</span><span class="tm">Convert PDF Tools</span>
             </div>
+            
+            <style>
+                .z-icon-group { display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 3.5rem; height: 80px; }
+                .z-left { animation: floatUp 3s ease-in-out infinite; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+                .z-right { animation: floatDown 3s ease-in-out infinite; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+                .z-zap { font-size: 1.8rem; animation: pulseGlow 1.5s infinite; color: var(--secondary); transition: all 0.2s;}
+        
+                @keyframes floatUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+                @keyframes floatDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+                @keyframes pulseGlow { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px var(--secondary)); } 50% { transform: scale(1.3); filter: drop-shadow(0 0 15px var(--secondary)); } }
+        
+                /* Hover Smash Effect */
+                body.theme-z .card:hover .z-left { transform: translateX(50px) scale(0.3) rotate(45deg); opacity: 0; animation: none; z-index: 1;}
+                body.theme-z .card:hover .z-zap { opacity: 0; transform: scale(0); animation: none;}
+                body.theme-z .card:hover .z-right { transform: translateX(-20px) scale(1.3); animation: none; z-index: 2; filter: drop-shadow(0 0 20px var(--primary)); }
+            </style>
+
             <div class="grid">
-                <div class="card" onclick="playPop(); openWorkspace('JPG to PDF');"><div class="icon">🖼️➡️📄</div><h3>JPG to PDF</h3><p>Turn images into a solid doc.</p></div>
-                <div class="card" onclick="playPop(); openWorkspace('WORD to PDF');"><div class="icon">📝➡️📄</div><h3>WORD to PDF</h3><p>Lock down that DOCX.</p></div>
-                <div class="card" onclick="playPop(); openWorkspace('EXCEL to PDF');"><div class="icon">📈➡️📄</div><h3>EXCEL to PDF</h3><p>Flatten those spreadsheets.</p></div>
-                <div class="card" onclick="playPop(); openWorkspace('PDF to JPG');"><div class="icon">📄➡️🖼️</div><h3>PDF to JPG</h3><p>Extract pages to raw images.</p></div>
-                <div class="card" onclick="playPop(); openWorkspace('PDF to WORD');"><div class="icon">📄➡️📝</div><h3>PDF to WORD</h3><p>Make it editable again.</p></div>
-                <div class="card" onclick="playPop(); openWorkspace('PDF to EXCEL');"><div class="icon">📄➡️📈</div><h3>PDF to EXCEL</h3><p>Rip data back to tables.</p></div>
+                <div class="card" onclick="playPop(); openWorkspace('JPG to PDF');">
+                    <div class="icon">
+                        <span class="tm">🖼️➡️📄</span>
+                        <div class="tz z-icon-group"><span class="z-left">📸</span><span class="z-zap">✨</span><span class="z-right">📕</span></div>
+                    </div>
+                    <h3><span class="tz">Pic to PDF</span><span class="tm">JPG to PDF</span></h3>
+                    <p><span class="tz">Turn images into a solid doc.</span><span class="tm">Turn images into a solid doc.</span></p>
+                </div>
+                
+                <div class="card" onclick="playPop(); openWorkspace('WORD to PDF');">
+                    <div class="icon">
+                        <span class="tm">📝➡️📄</span>
+                        <div class="tz z-icon-group"><span class="z-left">✍️</span><span class="z-zap">✨</span><span class="z-right">📕</span></div>
+                    </div>
+                    <h3><span class="tz">Word to PDF</span><span class="tm">WORD to PDF</span></h3>
+                    <p><span class="tz">Lock down that DOCX.</span><span class="tm">Convert Word to PDF.</span></p>
+                </div>
+                
+                <div class="card" onclick="playPop(); openWorkspace('EXCEL to PDF');">
+                    <div class="icon">
+                        <span class="tm">📈➡️📄</span>
+                        <div class="tz z-icon-group"><span class="z-left">📊</span><span class="z-zap">✨</span><span class="z-right">📕</span></div>
+                    </div>
+                    <h3><span class="tz">Excel to PDF</span><span class="tm">EXCEL to PDF</span></h3>
+                    <p><span class="tz">Flatten those spreadsheets.</span><span class="tm">Convert Excel to PDF.</span></p>
+                </div>
+                
+                <div class="card" onclick="playPop(); openWorkspace('PDF to JPG');">
+                    <div class="icon">
+                        <span class="tm">📄➡️🖼️</span>
+                        <div class="tz z-icon-group"><span class="z-left">📕</span><span class="z-zap">✨</span><span class="z-right">📸</span></div>
+                    </div>
+                    <h3><span class="tz">PDF to Pic</span><span class="tm">PDF to JPG</span></h3>
+                    <p><span class="tz">Extract pages to raw images.</span><span class="tm">Convert PDF pages to JPG.</span></p>
+                </div>
+                
+                <div class="card" onclick="playPop(); openWorkspace('PDF to WORD');">
+                    <div class="icon">
+                        <span class="tm">📄➡️📝</span>
+                        <div class="tz z-icon-group"><span class="z-left">📕</span><span class="z-zap">✨</span><span class="z-right">✍️</span></div>
+                    </div>
+                    <h3><span class="tz">PDF to Word</span><span class="tm">PDF to WORD</span></h3>
+                    <p><span class="tz">Make it editable again fr.</span><span class="tm">Convert PDF to Word.</span></p>
+                </div>
+                
+                <div class="card" onclick="playPop(); openWorkspace('PDF to EXCEL');">
+                    <div class="icon">
+                        <span class="tm">📄➡️📈</span>
+                        <div class="tz z-icon-group"><span class="z-left">📕</span><span class="z-zap">✨</span><span class="z-right">📊</span></div>
+                    </div>
+                    <h3><span class="tz">PDF to Excel</span><span class="tm">PDF to EXCEL</span></h3>
+                    <p><span class="tz">Rip data back to tables.</span><span class="tm">Convert PDF to Excel.</span></p>
+                </div>
             </div>
         </div>
 
@@ -654,7 +737,7 @@
                 <div id="upload-area">
                     <h2 id="tool-title" style="margin-bottom: 10px; font-size: 2.5rem; color:var(--text-main); font-weight: bold;">Tool</h2>
                     <div class="show-z" style="display:flex; justify-content:center;">
-                        <dotlottie-player src="dancing-box.lottie" background="transparent" speed="1" style="width: 200px; height: 200px; max-width: 100%; margin-bottom: 20px;" loop autoplay></dotlottie-player>
+                        <dotlottie-player src="Dancing Box.lottie" background="transparent" speed="1" style="width: 200px; height: 200px; max-width: 100%; margin-bottom: 20px;" loop autoplay></dotlottie-player>
                     </div>
                     <label class="upload-btn" onclick="playPop();">
                         <span class="tz">Select your trash 🗑️</span><span class="tm">Select files</span>
@@ -690,7 +773,7 @@
                     <button class="btn-add-range" onclick="playPop(); addSplitRange();">+ <span class="tz">Add another cut</span><span class="tm">Add Range</span></button>
                 </div>
                 <div class="sidebar-footer">
-                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges</span></label>
+                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges in one</span></label>
                     <button class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">
                         <span class="tz">Chop it up ✂️</span><span class="tm">Split PDF ➔</span>
                     </button>
@@ -775,7 +858,7 @@
         // ==========================================
         // RANDOM SUCCESS ANIMATION LOGIC
         // ==========================================
-        // EXACT filenames based on the GitHub repository screenshot
+        // Using exactly what is in your repo
         const successAnimations = [
             'fist-bump.lottie',
             'dancing-bug.lottie',
@@ -792,8 +875,8 @@
                 // Pick a random animation
                 const randomAnim = successAnimations[Math.floor(Math.random() * successAnimations.length)];
                 
-                // COMPLETELY destroy and rebuild the player to force it to load the new file (Fixes the loop bug)
-                container.innerHTML = ''; // Clear out the old one
+                // Destroy and rebuild player to fix the cache loop bug
+                container.innerHTML = ''; 
                 
                 const newPlayer = document.createElement('dotlottie-player');
                 newPlayer.setAttribute('src', randomAnim);
@@ -802,7 +885,7 @@
                 newPlayer.setAttribute('style', 'width: 300px; height: 300px;');
                 newPlayer.setAttribute('autoplay', 'true');
                 
-                container.appendChild(newPlayer); // Inject the new one
+                container.appendChild(newPlayer);
 
                 overlay.classList.remove('hidden');
                 
@@ -1087,7 +1170,7 @@
                     if (currentTool === 'Compress PDF') {
                         optionsContent.innerHTML = `
                             <div class="show-z" style="display:flex; justify-content:center;">
-                                <dotlottie-player src="loading-cat.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                                <dotlottie-player src="loader-ball.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
                             </div>
                             <div class="sidebar-option active">
                                 <strong><span class="tz">Super Squish</span><span class="tm">Recommended</span></strong>
@@ -1291,7 +1374,6 @@
                     const formData = new FormData();
                     formData.append('File', fileData.file, fileData.name);
 
-                    // Added &StoreFile=true to force URL generation, preventing Base64 binary corruption
                     let endpoint = "", mimeType = "", outExt = "";
                     const inputExt = fileData.name.split('.').pop().toLowerCase();
 
