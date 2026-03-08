@@ -469,7 +469,7 @@
 
         <div id="loading-overlay" class="hidden">
             <div class="show-z" style="width: 100%; display: flex; justify-content: center;">
-                <dotlottie-player src="loading-cat.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="loader-ball.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
             </div>
             <div class="show-m" style="width: 100%; display: flex; justify-content: center;">
                 <dotlottie-player src="loading.lottie" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></dotlottie-player>
@@ -688,7 +688,7 @@
                     <button class="btn-add-range" onclick="playPop(); addSplitRange();">+ <span class="tz">Add another cut</span><span class="tm">Add Range</span></button>
                 </div>
                 <div class="sidebar-footer">
-                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges</span></label>
+                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges in one</span></label>
                     <button class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">
                         <span class="tz">Chop it up ✂️</span><span class="tm">Split PDF ➔</span>
                     </button>
@@ -991,11 +991,9 @@
                         const fileId = `file_${fileIdCounter++}`;
                         
                         if (currentTool === 'Merge PDF') {
-                            // Using Object URL prevents WebWorker buffer detachment issues!
                             const fileUrl = URL.createObjectURL(f);
                             const pdf = await pdfjsLib.getDocument(fileUrl).promise;
                             
-                            // Store ArrayBuffer for generation later
                             const arrayBuffer = await f.arrayBuffer();
                             loadedFiles.push({ id: fileId, file: f, bytes: arrayBuffer, name: f.name, type: f.type });
 
@@ -1036,7 +1034,6 @@
                     
                     loadedFiles = [{ id: 'split_file', file: file, bytes: await file.arrayBuffer(), name: file.name }];
                     
-                    // Fixed: Use Object URL for stability
                     const fileUrl = URL.createObjectURL(file);
                     const pdf = await pdfjsLib.getDocument(fileUrl).promise;
                     pdfJsCache.doc = pdf;
