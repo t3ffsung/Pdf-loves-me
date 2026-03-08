@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Loves Me</title>
+    <title>PDF Loves Me ✨</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,11 +83,10 @@
             --input-border: 2px solid rgba(255,255,255,0.2);
         }
 
-        /* Animated Gen-Z Background */
         body.theme-z { background-size: 400% 400%; animation: gradientBG 15s ease infinite; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* Theme Toggle Logic (Pure CSS hiding) */
+        /* Theme Toggle Logic */
         body.theme-m .tz, body.theme-m .show-z { display: none !important; }
         body.theme-z .tm, body.theme-z .show-m { display: none !important; }
 
@@ -98,10 +97,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 99999;
             display: flex; flex-direction: row; font-family: 'Inter', sans-serif;
         }
-        .theme-half {
-            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            cursor: pointer; transition: all 0.3s; padding: 40px; text-align: center;
-        }
+        .theme-half { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s; padding: 40px; text-align: center; }
         .theme-m-btn { background: #f3f3f5; color: #333; }
         .theme-m-btn:hover { background: #e1e1e1; }
         .theme-m-btn h1 { font-size: 3rem; margin: 0; font-weight: 800; color: #e5322d; }
@@ -112,11 +108,10 @@
 
         @media (max-width: 768px) { #theme-selector { flex-direction: column; } .theme-half h1 { font-size: 2.2rem;} }
 
-        /* Video Background Overlay */
         .bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 0.15; mix-blend-mode: screen; pointer-events: none; }
 
         /* ==========================================
-           GLOBAL UI STYLES (Adapt to CSS Variables)
+           GLOBAL UI STYLES
            ========================================== */
         header { 
             background: var(--bg-header); backdrop-filter: var(--glass-backdrop);
@@ -344,16 +339,26 @@
         }
         body.theme-z #loading-overlay { background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(15px); }
         
-        #loading-overlay h2 {
-            color: var(--primary); font-size: 1.8rem; margin-top: 20px; text-align: center; padding: 0 20px;
-        }
-        body.theme-z #loading-overlay h2 {
-            color: var(--secondary); font-size: 2.5rem; text-transform: uppercase; letter-spacing: 3px;
-            animation: pulse 1s infinite alternate; text-shadow: 0 0 20px var(--secondary); font-weight: 900;
-        }
+        #loading-overlay h2 { color: var(--primary); font-size: 1.8rem; margin-top: 20px; text-align: center; padding: 0 20px; }
+        body.theme-z #loading-overlay h2 { color: var(--secondary); font-size: 2.5rem; text-transform: uppercase; letter-spacing: 3px; animation: pulse 1s infinite alternate; text-shadow: 0 0 20px var(--secondary); font-weight: 900; }
         
-        .spinner { border: 6px solid #f3f3f3; border-top: 6px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Success Overlay */
+        #success-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 255, 0, 0.15); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            backdrop-filter: blur(8px); pointer-events: none; transition: opacity 0.3s;
+        }
+        #success-overlay h2 { color: #fff; font-size: 4rem; text-transform: uppercase; font-weight: 900; text-shadow: 0 0 30px #2ecc71; margin-top: 20px; text-align: center;}
+
+        /* Chatbot FAB */
+        #chatbot-fab {
+            position: fixed; bottom: 30px; right: 30px; z-index: 1000; cursor: pointer;
+            background: var(--card-bg); border: var(--card-border); border-radius: 50%;
+            box-shadow: var(--card-shadow); backdrop-filter: var(--glass-backdrop);
+            transition: all 0.3s; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;
+        }
+        #chatbot-fab:hover { transform: scale(1.1) translateY(-5px); border-color: var(--primary); }
 
         /* Auth Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;}
@@ -385,7 +390,6 @@
            MOBILE RESPONSIVENESS
            ========================================== */
         @media (max-width: 768px) {
-            /* Header & Nav */
             header { flex-direction: column; height: auto; padding: 15px; text-align: center;}
             .logo { font-size: 1.5rem; justify-content: center; margin-bottom: 15px;}
             .logo span { font-size: 1.8rem; }
@@ -397,18 +401,15 @@
             .auth-buttons, .user-profile { width: 100%; justify-content: center; margin-top: 10px; flex-wrap: wrap;}
             .btn-signup { font-size: 0.85rem; padding: 8px 15px;}
 
-            /* Hero Section */
             .hero-title { font-size: 2.2rem; line-height: 1.2; margin-top: 20px;}
             body.theme-z .hero-title { font-size: 2.8rem; }
             .hero-sub { font-size: 1rem; margin-bottom: 30px;}
             .card { max-width: 100%; padding: 25px 20px; }
             
-            /* Workspace Layout Fix */
             #workspace-view { flex-direction: column; overflow-y: auto; height: auto; min-height: 100vh;}
             .workspace-main { min-height: auto; padding-bottom: 0; }
             .sidebar { width: 100%; border-left: none; border-top: 2px solid var(--primary); height: auto; padding-bottom: 50px;}
             
-            /* Specific Tool Fixes */
             #editor-area-merge { padding-bottom: 180px; }
             .action-bar-merge { position: fixed; bottom: 0; padding: 15px; flex-direction: column; gap: 10px; align-items: stretch; border-radius: 20px 20px 0 0; }
             .action-bar-merge > div { justify-content: space-between; width: 100%; flex-wrap: wrap;}
@@ -424,12 +425,16 @@
 
             #loading-overlay h2 { font-size: 1.5rem; }
             body.theme-z #loading-overlay h2 { font-size: 1.8rem; }
+            #chatbot-fab { bottom: 15px; right: 15px; width: 60px; height: 60px; }
         }
 
         .hidden { display: none !important; }
     </style>
 </head>
-<body class="theme-m"> <audio id="sfx-fail" src="Fail Sound Effects - Free Download • Uppbeat.mp3" preload="auto"></audio>
+<body class="theme-m">
+
+    <audio id="sfx-fail" src="Fail Sound Effects - Free Download • Uppbeat.mp3" preload="auto"></audio>
+    <audio id="sfx-fail2" src="Fail Sound Effects - Free Download • Uppbeat2.mp3" preload="auto"></audio>
     <audio id="sfx-wtf" src="wtf.mp3" preload="auto"></audio>
 
     <video autoplay muted loop playsinline class="bg-video show-z">
@@ -451,16 +456,29 @@
 
     <div id="app-container" class="hidden">
 
+        <div id="chatbot-fab" onclick="playPop(); alert('Chatbot coming soon! 🤖');">
+            <dotlottie-player src="Live chatbot.lottie" background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
+        </div>
+
         <div id="loading-overlay" class="hidden">
             <div class="show-z" style="width: 100%; display: flex; justify-content: center;">
-                <dotlottie-player src="Loader Ball with Physical Interaction.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
+                <dotlottie-player src="Loading cat.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
             </div>
-            <div class="show-m spinner"></div>
+            <div class="show-m" style="width: 100%; display: flex; justify-content: center;">
+                <dotlottie-player src="loading.lottie" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></dotlottie-player>
+            </div>
             
             <h2 id="loading-text">
                 <span class="tz">Cooking... 🍳</span>
                 <span class="tm">Processing...</span>
             </h2>
+        </div>
+
+        <div id="success-overlay" class="hidden">
+            <div class="show-z" style="display:flex; flex-direction:column; align-items:center;">
+                <dotlottie-player src="Fist Bump.lottie" background="transparent" speed="1" style="width: 300px; height: 300px;" autoplay></dotlottie-player>
+                <h2>Nailed it! 💥</h2>
+            </div>
         </div>
 
         <header>
@@ -478,7 +496,7 @@
                 
                 <div class="dropdown">
                     <a class="dropbtn" onclick="playPop(); openConvertMenu();">
-                        <span class="tz">MORPH PDF</span><span class="tm">CONVERT PDF</span> <span>▼</span>
+                        <span class="tz">MORPH PDF</span><span class="tm">CONVERT PDF</span> <span style="font-size:0.7em; margin-left:5px;">▼</span>
                     </a>
                     <div class="dropdown-content" id="nav-dropdown-pdf">
                         <div class="drop-column">
@@ -518,6 +536,11 @@
         <div id="auth-modal" class="modal-overlay hidden">
             <div class="modal-content">
                 <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
+                
+                <div class="show-z" style="display:flex; justify-content:center;">
+                    <dotlottie-player src="Businessman flies up with rocket.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
+                </div>
+
                 <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
                 <p style="color:var(--text-muted); font-weight:600; margin-bottom: 30px;">
                     <span class="tz">Login to access the god-tier tools.</span>
@@ -597,6 +620,11 @@
 
         <div id="convert-menu-view" class="hidden">
             <button class="back-btn" onclick="playPop(); goHome();" style="top: -40px;">⬅️ <span class="tz">Back to base</span><span class="tm">Go Back</span></button>
+            
+            <div class="show-z" style="display:flex; justify-content:center;">
+                <dotlottie-player src="Cat feeling love emotionsexpression. Emojisticker animation.lottie" background="transparent" speed="1" style="width: 180px; height: 180px; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
+            </div>
+
             <div class="hero-title" style="margin-bottom: 50px;">
                 <span class="tz">Morph your files 🧬</span><span class="tm">Convert PDF Tools</span>
             </div>
@@ -620,7 +648,7 @@
                         <dotlottie-player src="Dancing Box.lottie" background="transparent" speed="1" style="width: 200px; height: 200px; max-width: 100%; margin-bottom: 20px;" loop autoplay></dotlottie-player>
                     </div>
                     <label class="upload-btn" onclick="playPop();">
-                        <span class="tz">Select your trash 🗑️</span><span class="tm">Select PDF files</span>
+                        <span class="tz">Select your trash 🗑️</span><span class="tm">Select files</span>
                         <input type="file" id="file-input" multiple>
                     </label>
                     <p style="color: var(--text-muted); font-weight: 600; font-size: 1.1rem; margin-top:20px;">or drop files anywhere here</p>
@@ -653,7 +681,7 @@
                     <button class="btn-add-range" onclick="playPop(); addSplitRange();">+ <span class="tz">Add another cut</span><span class="tm">Add Range</span></button>
                 </div>
                 <div class="sidebar-footer">
-                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges in one</span></label>
+                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges</span></label>
                     <button class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">
                         <span class="tz">Chop it up ✂️</span><span class="tm">Split PDF ➔</span>
                     </button>
@@ -675,7 +703,7 @@
         // ==========================================
         // THEME MANAGEMENT
         // ==========================================
-        let currentTheme = 'm'; // default millennial
+        let currentTheme = 'm'; 
 
         function setTheme(theme) {
             currentTheme = theme;
@@ -683,29 +711,26 @@
             document.getElementById('theme-selector').style.display = 'none';
             document.getElementById('app-container').classList.remove('hidden');
             
-            // Only Gen-Z gets the crazy gradient background size rules
             if(theme === 'z') {
                 document.body.style.backgroundSize = '400% 400%';
+                playPop();
             } else {
                 document.body.style.backgroundSize = 'auto';
             }
-            
-            if(theme === 'z') playPop(); // Test audio right away
         }
 
         // ==========================================
-        // FAULT TOLERANT AUDIO SETUP (Gen-Z Only)
+        // AUDIO SETUP
         // ==========================================
         let audioCtx = null;
         function playPop() {
-            if (currentTheme !== 'z') return; // Silence for millennials
+            if (currentTheme !== 'z') return; 
             try {
                 if (!audioCtx) {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     if (AudioContext) audioCtx = new AudioContext();
                 }
                 if (!audioCtx) return;
-                
                 if (audioCtx.state === 'suspended') audioCtx.resume();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -724,12 +749,26 @@
 
         function playFail() {
             if (currentTheme !== 'z') return;
-            try { const a = document.getElementById('sfx-fail'); if(a) a.play().catch(()=>{}); } catch(e){}
+            try { 
+                const a1 = document.getElementById('sfx-fail');
+                const a2 = document.getElementById('sfx-fail2');
+                const choices = [a1, a2].filter(Boolean);
+                const choice = choices[Math.floor(Math.random() * choices.length)];
+                if(choice) choice.play().catch(()=>{}); 
+            } catch(e){}
         }
 
         function playWtf() {
             if (currentTheme !== 'z') return;
             try { const a = document.getElementById('sfx-wtf'); if(a) a.play().catch(()=>{}); } catch(e){}
+        }
+        
+        function showSuccess() {
+            if (currentTheme === 'z') {
+                const overlay = document.getElementById('success-overlay');
+                overlay.classList.remove('hidden');
+                setTimeout(() => { overlay.classList.add('hidden'); }, 2500);
+            }
         }
 
         // ==========================================
@@ -748,7 +787,7 @@
         let degrees = null;
 
         // ==========================================
-        // FAULT TOLERANT FIREBASE SETUP
+        // FIREBASE SETUP
         // ==========================================
         let auth = null;
         let recaptchaVerifier = null;
@@ -852,8 +891,6 @@
         }
         function openWorkspace(toolName) {
             currentTool = toolName;
-            
-            // Map fun names to display for GenZ, normal for Millennial
             let displayTitle = toolName;
             if(currentTheme === 'z') {
                 if(toolName === 'Merge PDF') displayTitle = 'Squish PDFs 🥪';
@@ -895,7 +932,7 @@
         }
 
         // ==========================================
-        // FAULT TOLERANT EVENT LISTENERS
+        // EVENT LISTENERS
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
             try {
@@ -999,6 +1036,9 @@
                     
                     if (currentTool === 'Compress PDF') {
                         optionsContent.innerHTML = `
+                            <div class="show-z" style="display:flex; justify-content:center;">
+                                <dotlottie-player src="Loader Ball with Physical Interaction.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                            </div>
                             <div class="sidebar-option active">
                                 <strong><span class="tz">Super Squish</span><span class="tm">Recommended</span></strong>
                                 <p><span class="tz">Rasterize pages to make it tiny.</span><span class="tm">Standard client-side compression.</span></p>
@@ -1014,6 +1054,9 @@
                     } 
                     else if (currentTool === 'Image to Word') {
                         optionsContent.innerHTML = `
+                            <div class="show-z" style="display:flex; justify-content:center;">
+                                <dotlottie-player src="Cat playing animation.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                            </div>
                             <div class="sidebar-option active">
                                 <strong><span class="tz">Big Brain AI</span><span class="tm">OCR Engine</span></strong>
                                 <p>Extracts text directly from the image.</p>
@@ -1052,6 +1095,9 @@
                             document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card"><div class="icon">${icon}</div><div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
                         }
                         optionsContent.innerHTML = `
+                            <div class="show-z" style="display:flex; justify-content:center;">
+                                <dotlottie-player src="Cat playing animation.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                            </div>
                             <div class="sidebar-option active">
                                 <strong><span class="tz">God Tier API</span><span class="tm">Premium Engine</span></strong>
                                 <p>100% perfect formatting conversion.</p>
@@ -1205,7 +1251,6 @@
 
                     const response = await fetch(endpoint, { method: 'POST', body: formData });
                     
-                    // PROPER ERROR PARSING FOR CONVERT API
                     if (!response.ok) {
                         let errMsg = "Unknown Server Error";
                         try {
@@ -1241,6 +1286,7 @@
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob); link.download = filename;
             document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            showSuccess();
         }
     </script>
 </body>
