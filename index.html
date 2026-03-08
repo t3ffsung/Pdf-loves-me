@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Loves Me ✨</title>
+    <title>PDF Loves Me</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
@@ -20,170 +20,204 @@
     <script type="module" src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"></script>
 
     <style>
-        :root { 
-            --primary: #ff00ff; 
-            --secondary: #00ffff;
-            --bg-dark: #0f0c29; 
-            --text-light: #ffffff; 
-            --card-bg: rgba(20, 20, 40, 0.6);
-            --font-main: 'Space Grotesk', sans-serif;
-        }
-        
-        body { 
-            font-family: var(--font-main); 
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: var(--text-light); 
-            margin: 0; 
-            padding: 0; 
-            overflow-x: hidden; 
-            min-height: 100vh;
+        /* ==========================================
+           DUAL THEME CSS VARIABLES
+           ========================================== */
+        body {
+            margin: 0; padding: 0; overflow-x: hidden; min-height: 100vh;
+            font-family: var(--font-main);
+            background: var(--bg-main);
+            color: var(--text-main);
+            transition: background 0.5s, color 0.5s;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* 1. MILLENNIAL THEME (iLovePDF Style) */
+        body.theme-m {
+            --primary: #e5322d;
+            --secondary: #333333;
+            --bg-main: #f3f3f5;
+            --bg-header: #ffffff;
+            --bg-sidebar: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --font-main: 'Inter', 'Segoe UI', sans-serif;
+            --border-radius: 8px;
+            --card-border: 1px solid #e1e1e1;
+            --card-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            --card-hover-transform: translateY(-3px);
+            --card-hover-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            --btn-bg: #e5322d;
+            --btn-text: #ffffff;
+            --btn-radius: 6px;
+            --btn-shadow: none;
+            --btn-hover-transform: translateY(0);
+            --glass-backdrop: none;
+            --input-bg: #ffffff;
+            --input-border: 1px solid #cccccc;
         }
+
+        /* 2. GEN-Z THEME (Neon Vibes) */
+        body.theme-z {
+            --primary: #ff00ff;
+            --secondary: #00ffff;
+            --bg-main: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
+            --bg-header: rgba(15, 12, 41, 0.8);
+            --bg-sidebar: rgba(15, 12, 41, 0.95);
+            --card-bg: rgba(20, 20, 40, 0.6);
+            --text-main: #ffffff;
+            --text-muted: #b0b0c0;
+            --font-main: 'Space Grotesk', sans-serif;
+            --border-radius: 24px;
+            --card-border: 2px solid rgba(255,255,255,0.1);
+            --card-shadow: none;
+            --card-hover-transform: translateY(-15px) scale(1.03) rotate(1deg);
+            --card-hover-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+            --btn-bg: linear-gradient(45deg, var(--primary), #ff6b6b);
+            --btn-text: #ffffff;
+            --btn-radius: 30px;
+            --btn-shadow: 0 5px 20px rgba(255, 0, 255, 0.4);
+            --btn-hover-transform: scale(1.05) translateY(-3px);
+            --glass-backdrop: blur(15px);
+            --input-bg: rgba(0,0,0,0.5);
+            --input-border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        /* Animated Gen-Z Background */
+        body.theme-z { background-size: 400% 400%; animation: gradientBG 15s ease infinite; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* Theme Toggle Logic (Pure CSS hiding) */
+        body.theme-m .tz, body.theme-m .show-z { display: none !important; }
+        body.theme-z .tm, body.theme-z .show-m { display: none !important; }
+
+        /* ==========================================
+           THEME SELECTOR SCREEN
+           ========================================== */
+        #theme-selector {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 99999;
+            display: flex; flex-direction: row; font-family: 'Inter', sans-serif;
+        }
+        .theme-half {
+            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; transition: all 0.3s; padding: 40px; text-align: center;
+        }
+        .theme-m-btn { background: #f3f3f5; color: #333; }
+        .theme-m-btn:hover { background: #e1e1e1; }
+        .theme-m-btn h1 { font-size: 3rem; margin: 0; font-weight: 800; color: #e5322d; }
+        
+        .theme-z-btn { background: #0f0c29; color: #fff; font-family: 'Space Grotesk', sans-serif;}
+        .theme-z-btn:hover { background: #1a1a2e; box-shadow: inset 0 0 50px rgba(255,0,255,0.2);}
+        .theme-z-btn h1 { font-size: 3rem; margin: 0; font-weight: 900; background: -webkit-linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        @media (max-width: 768px) { #theme-selector { flex-direction: column; } .theme-half h1 { font-size: 2.2rem;} }
 
         /* Video Background Overlay */
-        .bg-video {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            z-index: -1;
-            object-fit: cover;
-            opacity: 0.15;
-            mix-blend-mode: screen;
-            pointer-events: none;
-        }
+        .bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 0.15; mix-blend-mode: screen; pointer-events: none; }
 
-        /* Navbar - Neo Brutalism */
+        /* ==========================================
+           GLOBAL UI STYLES (Adapt to CSS Variables)
+           ========================================== */
         header { 
-            background: rgba(15, 12, 41, 0.8); 
-            backdrop-filter: blur(15px);
-            border-bottom: 2px solid var(--primary); 
-            display: flex; align-items: center; justify-content: space-between; 
+            background: var(--bg-header); backdrop-filter: var(--glass-backdrop);
+            border-bottom: 2px solid var(--primary); display: flex; align-items: center; justify-content: space-between; 
             padding: 0 30px; height: 80px; z-index: 100; position: relative; 
-            box-shadow: 0 4px 30px rgba(255, 0, 255, 0.2);
         }
-        .logo { font-size: 1.8rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; text-transform: lowercase; letter-spacing: -1px;}
-        .logo span { color: var(--primary); margin-right: 5px; font-size: 2.2rem; text-shadow: 2px 2px 0px var(--secondary); }
+        body.theme-z header { box-shadow: 0 4px 30px rgba(255, 0, 255, 0.2); border-bottom-color: var(--primary); }
+        body.theme-m header { border-bottom: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+        .logo { font-size: 1.8rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; letter-spacing: -0.5px;}
+        body.theme-z .logo { text-transform: lowercase; }
+        .logo span { color: var(--primary); margin-right: 5px; font-size: 2.2rem; }
+        body.theme-z .logo span { text-shadow: 2px 2px 0px var(--secondary); }
         
         .top-nav { display: flex; height: 100%; align-items: center; gap: 10px;}
-        .top-nav > a, .dropbtn { 
-            text-decoration: none; color: #fff; font-weight: 700; font-size: 0.95rem; 
-            padding: 10px 15px; border-radius: 12px; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; 
-        }
-        .top-nav > a:hover, .dropdown:hover .dropbtn { 
-            background: var(--primary); color: #000; transform: translateY(-3px) rotate(-2deg);
-            box-shadow: 4px 4px 0px var(--secondary);
-        }
+        .top-nav > a, .dropbtn { text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 0.95rem; padding: 10px 15px; border-radius: var(--border-radius); transition: all 0.2s; cursor: pointer; }
+        .top-nav > a:hover, .dropdown:hover .dropbtn { color: var(--primary); }
+        body.theme-z .top-nav > a:hover, body.theme-z .dropdown:hover .dropbtn { background: var(--primary); color: #000; transform: translateY(-3px) rotate(-2deg); box-shadow: 4px 4px 0px var(--secondary); }
         
-        /* Dropdown Menu */
         .dropdown { height: 100%; display: flex; align-items: center;}
-        .dropdown-content { 
-            display: none; position: absolute; top: 70px; left: 50%; transform: translateX(-50%); 
-            background: rgba(20, 20, 40, 0.95); backdrop-filter: blur(20px);
-            border: 2px solid var(--secondary); border-radius: 16px; padding: 20px; z-index: 200; 
-            box-shadow: 8px 8px 0px rgba(0, 255, 255, 0.3);
-        }
-        .dropdown:hover .dropdown-content { display: flex; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .dropdown-content { display: none; position: absolute; top: 70px; left: 50%; transform: translateX(-50%); background: var(--bg-sidebar); backdrop-filter: var(--glass-backdrop); border: 1px solid var(--primary); border-radius: var(--border-radius); padding: 20px; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+        body.theme-z .dropdown-content { border: 2px solid var(--secondary); box-shadow: 8px 8px 0px rgba(0, 255, 255, 0.3); }
+        .dropdown:hover .dropdown-content { display: flex; }
         
-        @keyframes popIn {
-            0% { opacity: 0; transform: translate(-50%, 20px) scale(0.9); }
-            100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
-        }
-
         .drop-column { width: 220px; padding: 0 15px; }
-        .drop-column:first-child { border-right: 1px solid rgba(255,255,255,0.1); }
-        .drop-column h4 { color: var(--secondary); font-size: 0.85rem; text-transform: uppercase; margin-top: 0; margin-bottom: 15px; letter-spacing: 2px; }
-        .drop-column a { color: #fff; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 12px 10px; font-size: 1rem; font-weight: 600; border-radius: 8px; transition: all 0.2s; cursor: pointer; }
-        .drop-column a:hover { background: rgba(255, 0, 255, 0.2); transform: translateX(5px); }
+        .drop-column:first-child { border-right: 1px solid rgba(128,128,128,0.2); }
+        .drop-column h4 { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; }
+        .drop-column a { color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 12px 10px; font-size: 1rem; font-weight: 600; border-radius: 8px; transition: all 0.2s; cursor: pointer; }
+        .drop-column a:hover { color: var(--primary); }
+        body.theme-z .drop-column a:hover { background: rgba(255, 0, 255, 0.2); transform: translateX(5px); color: #fff;}
         
-        /* Auth Buttons */
         .auth-buttons { display: flex; gap: 15px; align-items: center; }
-        .btn-login { text-decoration: none; color: #fff; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn-login:hover { color: var(--secondary); }
-        .btn-signup { 
-            background: var(--secondary); color: #000; padding: 10px 20px; border-radius: 30px; 
-            text-decoration: none; font-weight: 900; cursor: pointer; transition: all 0.2s;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-            white-space: nowrap;
-        }
-        .btn-signup:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(0, 255, 255, 0.8); }
+        .btn-login { text-decoration: none; color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-login:hover { color: var(--primary); }
+        .btn-signup { background: var(--primary); color: var(--btn-text); padding: 10px 20px; border-radius: var(--btn-radius); text-decoration: none; font-weight: bold; cursor: pointer; transition: all 0.2s; box-shadow: var(--btn-shadow); white-space: nowrap;}
+        body.theme-z .btn-signup { background: var(--secondary); color: #000; font-weight: 900;}
+        .btn-signup:hover { transform: scale(1.05); }
+        body.theme-z .btn-signup:hover { box-shadow: 0 0 25px rgba(0, 255, 255, 0.8); }
         
-        .user-profile { display: none; align-items: center; gap: 15px; font-size: 1rem; font-weight: bold; color: var(--secondary); }
-        .btn-logout { text-decoration: none; color: #ff4757; border: 2px solid #ff4757; padding: 8px 20px; border-radius: 30px; transition: 0.2s; font-weight: bold; cursor: pointer;}
-        .btn-logout:hover { background: #ff4757; color: #fff; box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);}
-
-        /* Modal Styles */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(8px); padding: 20px;}
-        .modal-content { background: #1a1a2e; padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; border: 2px solid var(--primary); box-shadow: 10px 10px 0px rgba(255,0,255,0.3); position: relative; text-align: center; }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #fff; transition: 0.2s; }
-        .close-modal:hover { color: var(--primary); transform: rotate(90deg); }
-        .modal-content h2 { margin-top: 0; font-weight: 900; color: var(--secondary); }
-        
-        .google-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; font-size: 1.1rem; font-weight: 900; color: #000; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: 0.2s; font-family: var(--font-main); }
-        .google-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
-        .google-btn img { width: 24px; }
-        
-        .modal-input { width: 100%; padding: 15px; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: #fff; border-radius: 12px; font-size: 1rem; box-sizing: border-box; font-family: var(--font-main); outline: none; transition: 0.3s; }
-        .modal-input:focus { border-color: var(--secondary); box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+        .user-profile { display: none; align-items: center; gap: 15px; font-size: 1rem; font-weight: bold; color: var(--text-main); }
+        body.theme-z .user-profile { color: var(--secondary); }
+        .btn-logout { text-decoration: none; color: #e5322d; border: 2px solid #e5322d; padding: 8px 20px; border-radius: var(--btn-radius); transition: 0.2s; font-weight: bold; cursor: pointer;}
+        .btn-logout:hover { background: #e5322d; color: #fff;}
+        body.theme-z .btn-logout { border-radius: 30px; color: #ff4757; border-color: #ff4757; }
+        body.theme-z .btn-logout:hover { background: #ff4757; box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);}
 
         /* Views */
         #home-view, #convert-menu-view { max-width: 1200px; margin: 40px auto; padding: 0 20px; text-align: center; position: relative; }
-        .hero-title { font-size: 4rem; font-weight: 900; margin-bottom: 10px; background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2;}
-        .hero-sub { color: #a0a0b0; margin-bottom: 50px; font-size: 1.2rem; font-weight: 600; }
+        .hero-title { font-size: 3rem; font-weight: 900; margin-bottom: 10px; line-height: 1.2; color: var(--text-main);}
+        body.theme-z .hero-title { font-size: 4rem; background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-sub { color: var(--text-muted); margin-bottom: 50px; font-size: 1.2rem; font-weight: 600; }
         
         .grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; padding-bottom: 50px;}
         
-        /* Gen-Z Interactive Cards */
         .card { 
-            background: var(--card-bg); backdrop-filter: blur(12px);
-            padding: 40px 30px; border-radius: 24px; cursor: pointer; 
-            border: 2px solid rgba(255,255,255,0.1); border-bottom: 6px solid var(--primary);
+            background: var(--card-bg); backdrop-filter: var(--glass-backdrop);
+            padding: 40px 30px; border-radius: var(--border-radius); cursor: pointer; 
+            border: var(--card-border); box-shadow: var(--card-shadow);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            max-width: 260px; width: 100%; 
-            display: flex; flex-direction: column; align-items: center; 
+            max-width: 260px; width: 100%; display: flex; flex-direction: column; align-items: center; 
         }
-        .card:hover { 
-            border-color: var(--secondary); border-bottom-color: var(--secondary);
-            transform: translateY(-15px) scale(1.03) rotate(1deg); 
-            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2); 
-        }
+        body.theme-z .card { border-bottom: 6px solid var(--primary); }
+        body.theme-m .card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: var(--card-hover-shadow); }
+        body.theme-z .card:hover { border-color: var(--secondary); border-bottom-color: var(--secondary); transform: var(--card-hover-transform); box-shadow: var(--card-hover-shadow); }
         .card:active { transform: scale(0.95); }
-        .card .icon { font-size: 4rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
-        .card h3 { margin: 0 0 10px 0; font-size: 1.6rem; font-weight: 900; }
-        .card p { margin: 0; font-size: 0.95rem; color: #b0b0c0; line-height: 1.5; font-weight: 600;}
+        
+        .card .icon { font-size: 4rem; margin-bottom: 15px; }
+        body.theme-z .card .icon { filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
+        .card h3 { margin: 0 0 10px 0; font-size: 1.6rem; font-weight: bold; color: var(--text-main);}
+        body.theme-z .card h3 { font-weight: 900; }
+        .card p { margin: 0; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; font-weight: 500;}
 
         /* Workspace View */
         #workspace-view { display: none; height: calc(100vh - 80px); transition: background 0.2s; box-sizing: border-box; }
-        #workspace-view.dragover-active { background: rgba(255, 0, 255, 0.1); border: 4px dashed var(--primary); border-radius: 20px; margin: 10px;}
+        #workspace-view.dragover-active { background: rgba(128, 128, 128, 0.1); border: 4px dashed var(--primary); border-radius: 20px; margin: 10px;}
         
         .workspace-main { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
-        .sidebar { width: 380px; background: rgba(15,12,41,0.95); border-left: 2px solid var(--primary); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px); z-index: 10;}
+        .sidebar { width: 380px; background: var(--bg-sidebar); border-left: 1px solid rgba(128,128,128,0.2); display: flex; flex-direction: column; box-shadow: -5px 0 15px rgba(0,0,0,0.05); backdrop-filter: var(--glass-backdrop); z-index: 10;}
+        body.theme-z .sidebar { border-left: 2px solid var(--primary); box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
         
-        /* Back Button */
         .back-btn { 
-            position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); 
-            color: #fff; cursor: pointer; font-size: 1rem; font-weight: 900; display: flex; align-items: center; gap: 8px; 
-            padding: 10px 20px; border-radius: 30px; transition: all 0.2s; z-index: 50; backdrop-filter: blur(5px);
+            position: absolute; top: 20px; left: 20px; background: var(--card-bg); border: var(--card-border); 
+            color: var(--text-main); cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; gap: 8px; 
+            padding: 10px 20px; border-radius: var(--btn-radius); transition: all 0.2s; z-index: 50; backdrop-filter: var(--glass-backdrop);
         }
-        .back-btn:hover { background: var(--primary); border-color: var(--primary); transform: translateX(-5px); }
+        .back-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+        body.theme-z .back-btn:hover { transform: translateX(-5px); }
 
-        #upload-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 40px; border: 4px dashed rgba(0,255,255,0.3); border-radius: 40px; transition: 0.3s; background: rgba(0,0,0,0.2);}
+        #upload-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 40px; border: 4px dashed rgba(128,128,128,0.3); border-radius: var(--border-radius); transition: 0.3s; background: rgba(128,128,128,0.05);}
+        body.theme-z #upload-area { border-color: rgba(0,255,255,0.3); border-radius: 40px; background: rgba(0,0,0,0.2); }
+        
         .upload-btn { 
-            background: linear-gradient(45deg, var(--primary), #ff6b6b); color: white; 
-            padding: 20px 50px; font-size: 1.6rem; border-radius: 50px; cursor: pointer; 
-            font-weight: 900; display: inline-flex; align-items: center; gap: 15px;
-            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.4); transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: auto; text-transform: uppercase; letter-spacing: 1px;
+            background: var(--btn-bg); color: var(--btn-text); 
+            padding: 15px 40px; font-size: 1.4rem; border-radius: var(--btn-radius); cursor: pointer; 
+            font-weight: bold; display: inline-flex; align-items: center; gap: 15px;
+            box-shadow: var(--btn-shadow); transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto;
         }
-        .upload-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(255, 0, 255, 0.6); }
+        body.theme-z .upload-btn { font-weight: 900; text-transform: uppercase; letter-spacing: 1px; padding: 20px 50px; font-size: 1.6rem; }
+        .upload-btn:hover { transform: var(--btn-hover-transform); }
+        body.theme-z .upload-btn:hover { box-shadow: 0 15px 40px rgba(255, 0, 255, 0.6); }
         .upload-btn:active { transform: scale(0.95); }
         input[type="file"] { display: none; }
 
@@ -191,98 +225,164 @@
         #editor-area-merge { display: none; padding: 100px 20px 120px 20px; }
         #pages-container { display: flex; flex-wrap: wrap; gap: 25px; justify-content: center; }
         .page-thumb { 
-            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3); position: relative; cursor: grab; 
-            display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(5px); transition: transform 0.2s;
+            background: var(--card-bg); padding: 15px; border-radius: 12px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; cursor: grab; 
+            display: flex; flex-direction: column; align-items: center; border: var(--card-border);
+            backdrop-filter: var(--glass-backdrop); transition: transform 0.2s;
         }
-        .page-thumb:hover { transform: translateY(-5px); border-color: var(--secondary); }
+        body.theme-z .page-thumb { border-radius: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .page-thumb:hover { transform: translateY(-5px); border-color: var(--primary); }
+        body.theme-z .page-thumb:hover { border-color: var(--secondary); }
         .page-thumb:active { cursor: grabbing; transform: scale(0.95); }
-        .page-thumb canvas { max-width: 150px; border-radius: 8px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .page-thumb canvas { max-width: 150px; border-radius: 4px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .page-controls { margin-top: 15px; display: flex; gap: 10px; }
-        .icon-btn { background: rgba(255,255,255,0.1); color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
-        .icon-btn:hover { background: var(--secondary); color: black; transform: scale(1.1); }
+        .icon-btn { background: rgba(128,128,128,0.2); color: var(--text-main); border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+        .icon-btn:hover { background: #ccc; }
+        body.theme-z .icon-btn { color: white; }
+        body.theme-z .icon-btn:hover { background: var(--secondary); color: black; transform: scale(1.1); }
         .icon-btn.delete:hover { background: #ff4757; color: white; }
-        .page-number { position: absolute; top: -10px; left: -10px; background: var(--primary); color: white; padding: 5px 12px; border-radius: 20px; font-weight: 900; font-size: 1rem; box-shadow: 0 4px 10px rgba(255,0,255,0.4); z-index: 2;}
-        .file-label { margin-top: 10px; font-size: 0.8rem; color: #ccc; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;}
+        
+        .page-number { position: absolute; top: -10px; left: -10px; background: var(--primary); color: white; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 1rem; z-index: 2;}
+        body.theme-z .page-number { font-weight: 900; box-shadow: 0 4px 10px rgba(255,0,255,0.4); }
+        .file-label { margin-top: 10px; font-size: 0.8rem; color: var(--text-muted); max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;}
 
         /* Split Editor */
         #editor-area-split { display: none; padding: 100px 40px 40px 40px; flex-direction: column; align-items: center; gap: 40px; }
         .split-range-block { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px;}
-        .split-visual-box { border: 3px dashed var(--secondary); border-radius: 24px; padding: 30px; display: flex; align-items: center; justify-content: center; gap: 30px; background: rgba(0,255,255,0.05); width: 100%;}
-        .split-canvas-wrapper { display: flex; flex-direction: column; align-items: center; gap: 15px; color: var(--secondary); font-weight: 900; font-size: 1.2rem;}
-        .split-canvas-wrapper canvas { max-width: 160px; border-radius: 8px; background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.2);}
-        .split-dots { font-size: 3rem; color: var(--primary); font-weight: 900; letter-spacing: 5px; animation: pulse 1.5s infinite;}
+        .split-visual-box { border: 2px dashed #ccc; border-radius: 12px; padding: 30px; display: flex; align-items: center; justify-content: center; gap: 30px; background: rgba(128,128,128,0.05); width: 100%;}
+        body.theme-z .split-visual-box { border: 3px dashed var(--secondary); border-radius: 24px; background: rgba(0,255,255,0.05); }
+        .split-canvas-wrapper { display: flex; flex-direction: column; align-items: center; gap: 15px; color: var(--primary); font-weight: bold; font-size: 1.2rem;}
+        body.theme-z .split-canvas-wrapper { color: var(--secondary); font-weight: 900; }
+        .split-canvas-wrapper canvas { max-width: 160px; border-radius: 4px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #ccc;}
+        body.theme-z .split-canvas-wrapper canvas { border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.2);}
+        .split-dots { font-size: 3rem; color: #999; font-weight: bold; letter-spacing: 5px; }
+        body.theme-z .split-dots { color: var(--primary); font-weight: 900; animation: pulse 1.5s infinite; }
 
-        /* Generic Editor (Compress, API) */
+        /* Generic Editor */
         #editor-area-generic { display: none; padding: 40px; display: flex; justify-content: center; align-items: center; height: 100%; flex-direction: column; }
-        .preview-card { background: rgba(255,255,255,0.05); border: 2px solid var(--primary); padding: 40px; border-radius: 24px; box-shadow: 0 15px 40px rgba(255,0,255,0.2); text-align: center; position: relative; max-width: 350px; backdrop-filter: blur(10px);}
-        .preview-card .icon { font-size: 6rem; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));}
-        .preview-card canvas { max-width: 250px; border-radius: 12px; background: white; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .preview-filename { font-size: 1.2rem; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 900; }
-        .preview-meta { font-size: 1rem; color: var(--secondary); margin-top: 10px; font-weight: 600;}
+        .preview-card { background: var(--card-bg); border: var(--card-border); padding: 40px; border-radius: var(--border-radius); box-shadow: var(--card-shadow); text-align: center; position: relative; max-width: 350px; backdrop-filter: var(--glass-backdrop);}
+        body.theme-z .preview-card { border: 2px solid var(--primary); box-shadow: 0 15px 40px rgba(255,0,255,0.2); }
+        .preview-card .icon { font-size: 6rem; margin-bottom: 20px; }
+        body.theme-z .preview-card .icon { filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));}
+        .preview-card canvas { max-width: 250px; border-radius: 4px; background: white; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #eee; }
+        body.theme-z .preview-card canvas { border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: none; }
+        .preview-filename { font-size: 1.2rem; color: var(--text-main); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: bold; }
+        body.theme-z .preview-filename { font-weight: 900; }
+        .preview-meta { font-size: 1rem; color: var(--text-muted); margin-top: 10px; font-weight: 500;}
+        body.theme-z .preview-meta { color: var(--secondary); font-weight: 600; }
 
         /* Action Bars & Sidebars */
-        .action-bar-merge { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15,12,41,0.95); backdrop-filter: blur(15px); border-top: 2px solid var(--secondary); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 -10px 30px rgba(0,0,0,0.5);}
-        .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; padding: 12px 20px; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; cursor: pointer; transition: 0.2s; font-weight: 700; font-family: var(--font-main); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .action-bar-merge { position: absolute; bottom: 0; left: 0; right: 0; background: var(--bg-header); backdrop-filter: var(--glass-backdrop); border-top: 1px solid rgba(128,128,128,0.2); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 -5px 15px rgba(0,0,0,0.05);}
+        body.theme-z .action-bar-merge { border-top: 2px solid var(--secondary); box-shadow: 0 -10px 30px rgba(0,0,0,0.5);}
+        
+        .btn-secondary { background: var(--card-bg); color: var(--text-main); padding: 12px 20px; border: var(--card-border); border-radius: var(--btn-radius); cursor: pointer; transition: 0.2s; font-weight: bold; font-family: var(--font-main); }
+        .btn-secondary:hover { background: #eee; }
+        body.theme-z .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border-radius: 12px; }
+        body.theme-z .btn-secondary:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
 
-        .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1.8rem; font-weight: 900; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px;}
+        .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid rgba(128,128,128,0.2); font-size: 1.5rem; font-weight: bold; color: var(--text-main); }
+        body.theme-z .sidebar-header { font-size: 1.8rem; font-weight: 900; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px;}
         .sidebar-content { padding: 30px; flex-grow: 1; overflow-y: auto; }
-        .sidebar-footer { padding: 30px; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); }
+        .sidebar-footer { padding: 30px; border-top: 1px solid rgba(128,128,128,0.2); background: rgba(128,128,128,0.05); }
         
         .btn-process { 
-            background: linear-gradient(45deg, var(--primary), var(--secondary)); color: #000; 
-            padding: 18px; width: 100%; border: none; border-radius: 16px; font-size: 1.4rem; 
-            font-weight: 900; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; 
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-transform: uppercase; font-family: var(--font-main);
-            box-shadow: 0 5px 20px rgba(255,0,255,0.4);
+            background: var(--btn-bg); color: var(--btn-text); 
+            padding: 15px; width: 100%; border: none; border-radius: var(--btn-radius); font-size: 1.2rem; 
+            font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-family: var(--font-main);
+            box-shadow: var(--btn-shadow);
         }
-        .btn-process:hover { transform: scale(1.05) translateY(-3px); box-shadow: 0 10px 30px rgba(0,255,255,0.6); filter: hue-rotate(45deg);}
+        body.theme-z .btn-process { padding: 18px; font-size: 1.4rem; font-weight: 900; text-transform: uppercase; border-radius: 16px;}
+        .btn-process:hover { transform: translateY(-2px); background: #c82320; }
+        body.theme-z .btn-process:hover { background: var(--btn-bg); transform: scale(1.05) translateY(-3px); box-shadow: 0 10px 30px rgba(0,255,255,0.6); filter: hue-rotate(45deg);}
         .btn-process:active { transform: scale(0.95); }
-        .btn-process:disabled { background: #555; color: #888; cursor: not-allowed; box-shadow: none; transform: none; filter: none;}
+        .btn-process:disabled { background: #ccc; color: #666; cursor: not-allowed; box-shadow: none; transform: none; filter: none;}
 
         /* Sidebar Elements */
-        .range-item { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; }
-        .range-item-header { display: flex; justify-content: space-between; margin-bottom: 15px; color: var(--secondary); font-size: 1.1rem; font-weight: 900;}
-        .range-inputs { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .range-inputs input { width: 70px; padding: 10px; background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; text-align: center; font-family: var(--font-main); font-weight: bold; font-size: 1.1rem; outline: none; transition: 0.2s;}
+        .range-item { background: var(--card-bg); border: var(--card-border); border-radius: 8px; padding: 20px; margin-bottom: 20px; position: relative; }
+        body.theme-z .range-item { background: rgba(0,0,0,0.3); border-radius: 12px; }
+        .range-item-header { display: flex; justify-content: space-between; margin-bottom: 15px; color: var(--text-main); font-size: 1rem; font-weight: bold;}
+        body.theme-z .range-item-header { color: var(--secondary); font-size: 1.1rem; font-weight: 900;}
+        .range-inputs { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--text-muted); }
+        .range-inputs input { width: 70px; padding: 8px; background: var(--input-bg); color: var(--text-main); border: var(--input-border); border-radius: 6px; text-align: center; font-family: var(--font-main); font-weight: bold; font-size: 1rem; outline: none; transition: 0.2s;}
         .range-inputs input:focus { border-color: var(--primary); }
         
-        .btn-add-range { background: transparent; border: 2px dashed var(--secondary); color: var(--secondary); padding: 15px; width: 100%; border-radius: 12px; cursor: pointer; font-weight: 900; font-size: 1.1rem; margin-bottom: 20px; transition: 0.2s; font-family: var(--font-main); text-transform: uppercase;}
-        .btn-add-range:hover { background: rgba(0,255,255,0.1); transform: translateY(-2px); }
-        .checkbox-group { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; font-size: 1rem; color: #ccc; cursor: pointer; font-weight: 600;}
-        .checkbox-group input { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary);}
-
-        .sidebar-option { border: 2px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); padding: 20px; border-radius: 16px; margin-bottom: 15px; cursor: pointer; transition: 0.2s; position: relative; }
-        .sidebar-option:hover { background: rgba(255,255,255,0.05); transform: translateY(-2px);}
-        .sidebar-option.active { border-color: var(--secondary); background: rgba(0,255,255,0.1); box-shadow: 0 0 15px rgba(0,255,255,0.2);}
-        .sidebar-option.active::after { content: '🔥'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 1.5rem; }
-        .sidebar-option strong { display: block; color: var(--primary); font-size: 1.2rem; margin-bottom: 8px; font-weight: 900; text-transform: uppercase;}
-        .sidebar-option p { margin: 0; font-size: 0.95rem; color: #bbb; line-height: 1.4;}
+        .btn-add-range { background: transparent; border: 1px dashed var(--primary); color: var(--primary); padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; margin-bottom: 20px; transition: 0.2s; font-family: var(--font-main); }
+        body.theme-z .btn-add-range { border: 2px dashed var(--secondary); color: var(--secondary); border-radius: 12px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase;}
+        .btn-add-range:hover { background: rgba(229, 50, 45, 0.05); }
+        body.theme-z .btn-add-range:hover { background: rgba(0,255,255,0.1); transform: translateY(-2px); }
         
-        .client-warning { background: rgba(255, 193, 7, 0.1); color: #ffdca8; padding: 15px; border-radius: 12px; font-size: 0.9rem; border: 1px solid rgba(255, 193, 7, 0.3); margin-top: 20px; font-weight: 600; line-height: 1.5;}
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-size: 0.95rem; color: var(--text-muted); cursor: pointer; }
+        body.theme-z .checkbox-group { font-size: 1rem; font-weight: 600; color: #ccc;}
+        .checkbox-group input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);}
+        body.theme-z .checkbox-group input { width: 20px; height: 20px; }
 
-        /* Loading Overlay Fullscreen */
+        .sidebar-option { border: var(--card-border); background: var(--card-bg); padding: 15px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; transition: 0.2s; position: relative; }
+        body.theme-z .sidebar-option { border-radius: 16px; background: rgba(0,0,0,0.3); padding: 20px;}
+        .sidebar-option:hover { border-color: var(--primary); }
+        body.theme-z .sidebar-option:hover { background: rgba(255,255,255,0.05); transform: translateY(-2px); border-color: rgba(255,255,255,0.2);}
+        
+        .sidebar-option.active { border-color: #2ecc71; background: #f2fcf6; }
+        body.theme-z .sidebar-option.active { border-color: var(--secondary); background: rgba(0,255,255,0.1); box-shadow: 0 0 15px rgba(0,255,255,0.2);}
+        
+        .sidebar-option.active::after { content: '✔'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #2ecc71; font-weight: bold; font-size: 1.2rem; }
+        body.theme-z .sidebar-option.active::after { content: '🔥'; right: 20px; font-size: 1.5rem; color: initial;}
+        
+        .sidebar-option strong { display: block; color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; font-weight: bold; }
+        body.theme-z .sidebar-option strong { font-size: 1.2rem; margin-bottom: 8px; font-weight: 900; text-transform: uppercase;}
+        .sidebar-option p { margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;}
+        body.theme-z .sidebar-option p { font-size: 0.95rem; }
+        
+        .client-warning { background: #fff3cd; color: #856404; padding: 12px; border-radius: 6px; font-size: 0.85rem; border: 1px solid #ffeeba; margin-top: 20px; line-height: 1.4;}
+        body.theme-z .client-warning { background: rgba(255, 193, 7, 0.1); color: #ffdca8; padding: 15px; border-radius: 12px; font-size: 0.9rem; border: 1px solid rgba(255, 193, 7, 0.3); font-weight: 600; }
+
+        /* Loading Overlay */
         #loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 12, 41, 0.95); z-index: 9999;
+            background: rgba(255,255,255,0.9); z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            backdrop-filter: blur(15px);
         }
+        body.theme-z #loading-overlay { background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(15px); }
+        
         #loading-overlay h2 {
+            color: var(--primary); font-size: 1.8rem; margin-top: 20px; text-align: center; padding: 0 20px;
+        }
+        body.theme-z #loading-overlay h2 {
             color: var(--secondary); font-size: 2.5rem; text-transform: uppercase; letter-spacing: 3px;
-            animation: pulse 1s infinite alternate; margin-top: 20px; text-shadow: 0 0 20px var(--secondary);
-            font-weight: 900; text-align: center; padding: 0 20px;
+            animation: pulse 1s infinite alternate; text-shadow: 0 0 20px var(--secondary); font-weight: 900;
         }
+        
+        .spinner { border: 6px solid #f3f3f3; border-top: 6px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.05); opacity: 1; }
-        }
+        /* Auth Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;}
+        body.theme-z .modal-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
+        
+        .modal-content { background: var(--bg-header); padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: relative; text-align: center; }
+        body.theme-z .modal-content { border-radius: 24px; border: 2px solid var(--primary); box-shadow: 10px 10px 0px rgba(255,0,255,0.3); }
+        
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
+        .close-modal:hover { color: var(--primary); }
+        body.theme-z .close-modal:hover { transform: rotate(90deg); }
+        
+        .modal-content h2 { margin-top: 0; color: var(--text-main); font-weight: bold;}
+        body.theme-z .modal-content h2 { font-weight: 900; color: var(--secondary); }
+        
+        .google-btn { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; background: #fff; font-size: 1rem; font-weight: bold; color: #333; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: 0.2s; font-family: var(--font-main); }
+        .google-btn:hover { background: #f9f9f9; }
+        body.theme-z .google-btn { padding: 15px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 900; color: #000; }
+        body.theme-z .google-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
+        .google-btn img { width: 24px; }
+        
+        .modal-input { width: 100%; padding: 12px; margin-bottom: 15px; border: var(--input-border); background: var(--input-bg); color: var(--text-main); border-radius: 6px; font-size: 1rem; box-sizing: border-box; font-family: var(--font-main); outline: none; transition: 0.3s; }
+        body.theme-z .modal-input { padding: 15px; border-radius: 12px; }
+        .modal-input:focus { border-color: var(--primary); }
+        body.theme-z .modal-input:focus { border-color: var(--secondary); box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+
 
         /* ==========================================
-           MOBILE RESPONSIVENESS (Magic Happens Here)
+           MOBILE RESPONSIVENESS
            ========================================== */
         @media (max-width: 768px) {
             /* Header & Nav */
@@ -290,30 +390,26 @@
             .logo { font-size: 1.5rem; justify-content: center; margin-bottom: 15px;}
             .logo span { font-size: 1.8rem; }
             
-            .top-nav { 
-                width: 100%; overflow-x: auto; padding-bottom: 10px; 
-                justify-content: flex-start; scroll-behavior: smooth;
-            }
-            .top-nav::-webkit-scrollbar { display: none; } /* Hide scrollbar for a clean pill menu */
-            .top-nav > a, .dropbtn { font-size: 0.85rem; padding: 8px 12px; white-space: nowrap; border: 1px solid rgba(255,255,255,0.2);}
+            .top-nav { width: 100%; overflow-x: auto; padding-bottom: 10px; justify-content: flex-start; scroll-behavior: smooth; }
+            .top-nav::-webkit-scrollbar { display: none; }
+            .top-nav > a, .dropbtn { font-size: 0.85rem; padding: 8px 12px; white-space: nowrap; border: 1px solid rgba(128,128,128,0.2);}
             
             .auth-buttons, .user-profile { width: 100%; justify-content: center; margin-top: 10px; flex-wrap: wrap;}
             .btn-signup { font-size: 0.85rem; padding: 8px 15px;}
 
             /* Hero Section */
-            .hero-title { font-size: 2.5rem; line-height: 1.1; margin-top: 20px;}
+            .hero-title { font-size: 2.2rem; line-height: 1.2; margin-top: 20px;}
+            body.theme-z .hero-title { font-size: 2.8rem; }
             .hero-sub { font-size: 1rem; margin-bottom: 30px;}
             .card { max-width: 100%; padding: 25px 20px; }
             
             /* Workspace Layout Fix */
             #workspace-view { flex-direction: column; overflow-y: auto; height: auto; min-height: 100vh;}
-            
-            /* Put Editor above Sidebar on mobile */
             .workspace-main { min-height: auto; padding-bottom: 0; }
             .sidebar { width: 100%; border-left: none; border-top: 2px solid var(--primary); height: auto; padding-bottom: 50px;}
             
             /* Specific Tool Fixes */
-            #editor-area-merge { padding-bottom: 180px; } /* Room for fixed bottom bar */
+            #editor-area-merge { padding-bottom: 180px; }
             .action-bar-merge { position: fixed; bottom: 0; padding: 15px; flex-direction: column; gap: 10px; align-items: stretch; border-radius: 20px 20px 0 0; }
             .action-bar-merge > div { justify-content: space-between; width: 100%; flex-wrap: wrap;}
             .action-bar-merge button, .action-bar-merge label { width: 100%; text-align: center; justify-content: center; font-size: 1rem; padding: 12px; }
@@ -324,183 +420,285 @@
             .preview-card { max-width: 90%; padding: 20px; }
             .preview-card canvas { max-width: 100%; }
             #upload-area { margin: 20px 10px; padding: 20px; }
-            .upload-btn { font-size: 1.2rem; padding: 15px; flex-direction: column; text-align: center; }
+            .upload-btn { font-size: 1.1rem; padding: 15px; flex-direction: column; text-align: center; }
 
-            #loading-overlay h2 { font-size: 1.8rem; }
+            #loading-overlay h2 { font-size: 1.5rem; }
+            body.theme-z #loading-overlay h2 { font-size: 1.8rem; }
         }
 
         .hidden { display: none !important; }
     </style>
 </head>
-<body>
-
-    <audio id="sfx-fail" src="Fail Sound Effects - Free Download • Uppbeat.mp3" preload="auto"></audio>
+<body class="theme-m"> <audio id="sfx-fail" src="Fail Sound Effects - Free Download • Uppbeat.mp3" preload="auto"></audio>
     <audio id="sfx-wtf" src="wtf.mp3" preload="auto"></audio>
 
-    <video autoplay muted loop playsinline class="bg-video">
+    <video autoplay muted loop playsinline class="bg-video show-z">
         <source src="Free Motion Graphics Templates, Animations & Video Overlays • Uppbeat.ts" type="video/mp4">
     </video>
 
-    <div id="loading-overlay" class="hidden">
-        <dotlottie-player src="Loader Ball with Physical Interaction.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
-        <h2 id="loading-text">Cooking... 🍳</h2>
+    <div id="theme-selector">
+        <div class="theme-half theme-m-btn" onclick="setTheme('m')">
+            <h1 style="font-size:4rem; margin-bottom:10px;">☕</h1>
+            <h1>Millennial</h1>
+            <p style="font-size: 1.2rem; color: #666; margin-top: 15px;">Clean, professional, get it done.</p>
+        </div>
+        <div class="theme-half theme-z-btn" onclick="setTheme('z')">
+            <h1 style="font-size:4rem; margin-bottom:10px;">🚀</h1>
+            <h1>Gen-Z</h1>
+            <p style="font-size: 1.2rem; color: #aaa; margin-top: 15px;">Animations, sounds, pure vibes.</p>
+        </div>
     </div>
 
-    <header>
-        <div class="logo" onclick="playPop(); goHome();"><span>pdf</span> loves me</div>
-        <nav class="top-nav">
-            <a onclick="playPop(); openWorkspace('Merge PDF');">SQUISH PDF</a>
-            <a onclick="playPop(); openWorkspace('Split PDF');">CHOP PDF</a>
-            <a onclick="playPop(); openWorkspace('Compress PDF');">MAKE SMOL</a>
+    <div id="app-container" class="hidden">
+
+        <div id="loading-overlay" class="hidden">
+            <div class="show-z" style="width: 100%; display: flex; justify-content: center;">
+                <dotlottie-player src="Loader Ball with Physical Interaction.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
+            </div>
+            <div class="show-m spinner"></div>
             
-            <div class="dropdown">
-                <a class="dropbtn" onclick="playPop(); openConvertMenu();">MORPH PDF <span>▼</span></a>
-                <div class="dropdown-content" id="nav-dropdown-pdf">
-                    <div class="drop-column">
-                        <h4>Make PDF</h4>
-                        <a onclick="playPop(); openWorkspace('JPG to PDF');">🖼️ JPG to PDF</a>
-                        <a onclick="playPop(); openWorkspace('WORD to PDF');">📄 WORD to PDF</a>
-                        <a onclick="playPop(); openWorkspace('EXCEL to PDF');">📈 EXCEL to PDF</a>
-                    </div>
-                    <div class="drop-column">
-                        <h4>Break PDF</h4>
-                        <a onclick="playPop(); openWorkspace('PDF to JPG');">🖼️ PDF to JPG</a>
-                        <a onclick="playPop(); openWorkspace('PDF to WORD');">📄 PDF to WORD</a>
-                        <a onclick="playPop(); openWorkspace('PDF to EXCEL');">📈 PDF to EXCEL</a>
+            <h2 id="loading-text">
+                <span class="tz">Cooking... 🍳</span>
+                <span class="tm">Processing...</span>
+            </h2>
+        </div>
+
+        <header>
+            <div class="logo" onclick="playPop(); goHome();"><span>pdf</span> loves me</div>
+            <nav class="top-nav">
+                <a onclick="playPop(); openWorkspace('Merge PDF');">
+                    <span class="tz">SQUISH PDF</span><span class="tm">MERGE PDF</span>
+                </a>
+                <a onclick="playPop(); openWorkspace('Split PDF');">
+                    <span class="tz">CHOP PDF</span><span class="tm">SPLIT PDF</span>
+                </a>
+                <a onclick="playPop(); openWorkspace('Compress PDF');">
+                    <span class="tz">MAKE SMOL</span><span class="tm">COMPRESS PDF</span>
+                </a>
+                
+                <div class="dropdown">
+                    <a class="dropbtn" onclick="playPop(); openConvertMenu();">
+                        <span class="tz">MORPH PDF</span><span class="tm">CONVERT PDF</span> <span>▼</span>
+                    </a>
+                    <div class="dropdown-content" id="nav-dropdown-pdf">
+                        <div class="drop-column">
+                            <h4>Convert to PDF</h4>
+                            <a onclick="playPop(); openWorkspace('JPG to PDF');">🖼️ JPG to PDF</a>
+                            <a onclick="playPop(); openWorkspace('WORD to PDF');">📄 WORD to PDF</a>
+                            <a onclick="playPop(); openWorkspace('EXCEL to PDF');">📈 EXCEL to PDF</a>
+                        </div>
+                        <div class="drop-column">
+                            <h4>Convert from PDF</h4>
+                            <a onclick="playPop(); openWorkspace('PDF to JPG');">🖼️ PDF to JPG</a>
+                            <a onclick="playPop(); openWorkspace('PDF to WORD');">📄 PDF to WORD</a>
+                            <a onclick="playPop(); openWorkspace('PDF to EXCEL');">📈 PDF to EXCEL</a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <a onclick="playPop(); openWorkspace('Image to Word');">STEAL TEXT (OCR)</a>
-        </nav>
-        
-        <div class="auth-buttons" id="auth-buttons">
-            <a class="btn-login" onclick="playPop(); openAuthModal();">Login</a>
-            <a class="btn-signup" onclick="playPop(); openAuthModal();">Sign up, no cap</a>
-        </div>
-        <div class="user-profile" id="user-profile">
-            <span id="user-display-name">👤 User</span>
-            <a class="btn-logout" onclick="playPop(); logoutFirebase();">Dip 👋</a>
-        </div>
-    </header>
-
-    <div id="auth-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
-            <h2>Welcome to the Vibe</h2>
-            <p style="color:#aaa; font-weight:600; margin-bottom: 30px;">Login to access the god-tier tools.</p>
+                <a onclick="playPop(); openWorkspace('Image to Word');">
+                    <span class="tz">STEAL TEXT (OCR)</span><span class="tm">IMAGE TO WORD</span>
+                </a>
+            </nav>
             
-            <button class="google-btn" onclick="playPop(); loginWithGoogle();">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
-                Vibe with Google
-            </button>
-
-            <div style="display: flex; align-items: center; margin: 25px 0; color: #888; font-weight: 800;">
-                <span style="flex: 1; height: 2px; background: rgba(255,255,255,0.1);"></span>
-                <span style="padding: 0 15px;">OR</span>
-                <span style="flex: 1; height: 2px; background: rgba(255,255,255,0.1);"></span>
+            <div class="auth-buttons" id="auth-buttons">
+                <a class="btn-login" onclick="playPop(); openAuthModal();">Login</a>
+                <a class="btn-signup" onclick="playPop(); openAuthModal();">
+                    <span class="tz">Sign up, no cap</span><span class="tm">Sign up</span>
+                </a>
             </div>
-
-            <div id="phone-auth-section">
-                <input type="tel" id="phone-input" class="modal-input" placeholder="Phone (+1234567890)">
-                <div id="recaptcha-container"></div>
-                <button class="btn-process" id="send-otp-btn" onclick="playPop(); sendOTP();" style="border-radius: 12px; padding: 15px; font-size:1.1rem;">Send digits 📱</button>
+            <div class="user-profile" id="user-profile">
+                <span id="user-display-name">👤 User</span>
+                <a class="btn-logout" onclick="playPop(); logoutFirebase();">
+                    <span class="tz">Dip 👋</span><span class="tm">Logout</span>
+                </a>
             </div>
+        </header>
 
-            <div id="otp-section" class="hidden">
-                <input type="text" id="otp-input" class="modal-input" placeholder="Enter 6-digit code bro">
-                <button class="btn-process" onclick="playPop(); verifyOTP();" style="border-radius: 12px; padding: 15px; font-size:1.1rem;">Let me in 🚀</button>
+        <div id="auth-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
+                <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
+                <p style="color:var(--text-muted); font-weight:600; margin-bottom: 30px;">
+                    <span class="tz">Login to access the god-tier tools.</span>
+                    <span class="tm">Log in to your account to continue.</span>
+                </p>
+                
+                <button class="google-btn" onclick="playPop(); loginWithGoogle();">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
+                    <span class="tz">Vibe with Google</span><span class="tm">Continue with Google</span>
+                </button>
+
+                <div style="display: flex; align-items: center; margin: 25px 0; color: var(--text-muted); font-weight: 800;">
+                    <span style="flex: 1; height: 1px; background: rgba(128,128,128,0.2);"></span>
+                    <span style="padding: 0 15px;">OR</span>
+                    <span style="flex: 1; height: 1px; background: rgba(128,128,128,0.2);"></span>
+                </div>
+
+                <div id="phone-auth-section">
+                    <input type="tel" id="phone-input" class="modal-input" placeholder="Phone (+1234567890)">
+                    <div id="recaptcha-container"></div>
+                    <button class="btn-process" id="send-otp-btn" onclick="playPop(); sendOTP();" style="border-radius: var(--btn-radius); padding: 15px; font-size:1.1rem;">
+                        <span class="tz">Send digits 📱</span><span class="tm">Send OTP</span>
+                    </button>
+                </div>
+
+                <div id="otp-section" class="hidden">
+                    <input type="text" id="otp-input" class="modal-input" placeholder="Enter 6-digit code">
+                    <button class="btn-process" onclick="playPop(); verifyOTP();" style="border-radius: var(--btn-radius); padding: 15px; font-size:1.1rem;">
+                        <span class="tz">Let me in 🚀</span><span class="tm">Verify & Login</span>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="home-view">
-        <dotlottie-player src="Valentine's Day Love Dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
-        
-        <div class="hero-title">PDF tools that actually slap ✨</div>
-        <div class="hero-sub">No cap, 100% free. We don't want your data fr.</div>
-        
-        <div class="grid">
-            <div class="card" onclick="playPop(); openWorkspace('Merge PDF');"><div class="icon">🥪</div><h3>Squish PDF</h3><p>Combine them into a mega file.</p></div>
-            <div class="card" onclick="playPop(); openWorkspace('Split PDF');"><div class="icon">🔪</div><h3>Chop PDF</h3><p>Slice specific pages right out.</p></div>
-            <div class="card" onclick="playPop(); openWorkspace('Compress PDF');"><div class="icon">🤏</div><h3>Make it Smol</h3><p>Crush file size, keep the quality.</p></div>
-            <div class="card" onclick="playPop(); openConvertMenu();"><div class="icon">🦋</div><h3>Morph PDF</h3><p>Word, Excel, JPG shape-shifting.</p></div>
-            <div class="card" onclick="playPop(); openWorkspace('Image to Word');"><div class="icon">🥷</div><h3>Steal Text</h3><p>Rip words straight off images (OCR).</p></div>
-        </div>
-    </div>
-
-    <div id="convert-menu-view" class="hidden">
-        <button class="back-btn" onclick="playPop(); goHome();" style="top: -40px;">⬅️ Back to base</button>
-        <div class="hero-title" style="margin-bottom: 50px;">Morph your files 🧬</div>
-        <div class="grid">
-            <div class="card" onclick="playPop(); openWorkspace('JPG to PDF');"><div class="icon">🖼️➡️📄</div><h3>Pic to PDF</h3><p>Turn images into a solid doc.</p></div>
-            <div class="card" onclick="playPop(); openWorkspace('WORD to PDF');"><div class="icon">📝➡️📄</div><h3>Word to PDF</h3><p>Lock down that DOCX.</p></div>
-            <div class="card" onclick="playPop(); openWorkspace('EXCEL to PDF');"><div class="icon">📈➡️📄</div><h3>Excel to PDF</h3><p>Flatten those spreadsheets.</p></div>
-            <div class="card" onclick="playPop(); openWorkspace('PDF to JPG');"><div class="icon">📄➡️🖼️</div><h3>PDF to Pic</h3><p>Extract pages to raw images.</p></div>
-            <div class="card" onclick="playPop(); openWorkspace('PDF to WORD');"><div class="icon">📄➡️📝</div><h3>PDF to Word</h3><p>Make it editable again fr.</p></div>
-            <div class="card" onclick="playPop(); openWorkspace('PDF to EXCEL');"><div class="icon">📄➡️📈</div><h3>PDF to Excel</h3><p>Rip data back to tables.</p></div>
-        </div>
-    </div>
-
-    <div id="workspace-view" class="hidden">
-        <div class="workspace-main">
-            <button class="back-btn" onclick="playPop(); goHome();">⬅️ Bail out</button>
-
-            <div id="upload-area">
-                <h2 id="tool-title" style="margin-bottom: 10px; font-size: 3rem; color:var(--secondary); font-weight: 900; text-transform: uppercase;">Tool</h2>
-                <dotlottie-player src="Dancing Box.lottie" background="transparent" speed="1" style="width: 200px; height: 200px; max-width: 100%; margin-bottom: 20px;" loop autoplay></dotlottie-player>
-                <label class="upload-btn" onclick="playPop();">
-                    Select your trash 🗑️
-                    <input type="file" id="file-input" multiple>
-                </label>
-                <p style="color: #bbb; font-weight: 600; font-size: 1.1rem; margin-top:20px;">(jk, drop valid files anywhere here)</p>
+        <div id="home-view">
+            <div class="show-z" style="display:flex; justify-content:center;">
+                <dotlottie-player src="Valentine's Day Love Dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
             </div>
-
-            <div id="editor-area-merge">
-                <div id="pages-container"></div>
+            
+            <div class="hero-title">
+                <span class="tz">PDF tools that actually slap ✨</span>
+                <span class="tm">Every tool you need to work with PDFs</span>
             </div>
-            <div id="editor-area-split"></div>
-            <div id="editor-area-generic"></div>
+            <div class="hero-sub">
+                <span class="tz">No cap, 100% free. We don't want your data fr.</span>
+                <span class="tm">100% Free and Secure. Your files are processed safely.</span>
+            </div>
+            
+            <div class="grid">
+                <div class="card" onclick="playPop(); openWorkspace('Merge PDF');">
+                    <div class="icon"><span class="tz">🥪</span><span class="tm">🔗</span></div>
+                    <h3><span class="tz">Squish PDF</span><span class="tm">Merge PDF</span></h3>
+                    <p><span class="tz">Combine them into a mega file.</span><span class="tm">Combine, reorder, and sort visually.</span></p>
+                </div>
+                <div class="card" onclick="playPop(); openWorkspace('Split PDF');">
+                    <div class="icon">✂️</div>
+                    <h3><span class="tz">Chop PDF</span><span class="tm">Split PDF</span></h3>
+                    <p><span class="tz">Slice specific pages right out.</span><span class="tm">Extract specific pages or ranges.</span></p>
+                </div>
+                <div class="card" onclick="playPop(); openWorkspace('Compress PDF');">
+                    <div class="icon"><span class="tz">🤏</span><span class="tm">📉</span></div>
+                    <h3><span class="tz">Make it Smol</span><span class="tm">Compress PDF</span></h3>
+                    <p><span class="tz">Crush file size, keep the quality.</span><span class="tm">Reduce file size client-side.</span></p>
+                </div>
+                <div class="card" onclick="playPop(); openConvertMenu();">
+                    <div class="icon"><span class="tz">🦋</span><span class="tm">🔄</span></div>
+                    <h3><span class="tz">Morph PDF</span><span class="tm">Convert PDF</span></h3>
+                    <p><span class="tz">Word, Excel, JPG shape-shifting.</span><span class="tm">Convert Word, Excel, Images to/from PDF.</span></p>
+                </div>
+                <div class="card" onclick="playPop(); openWorkspace('Image to Word');">
+                    <div class="icon">🔍</div>
+                    <h3><span class="tz">Steal Text</span><span class="tm">Image to Word</span></h3>
+                    <p><span class="tz">Rip words straight off images (OCR).</span><span class="tm">Extract editable text from images (OCR).</span></p>
+                </div>
+            </div>
+        </div>
 
-            <div class="action-bar-merge hidden" id="action-bar-merge">
-                <div style="display: flex; gap: 15px;">
-                    <label class="btn-secondary" style="background: var(--primary); color: white; border: none; padding: 15px 25px; font-size:1.1rem;" onclick="playPop();">
-                        + Add more vibes <input type="file" id="add-more-input" multiple>
+        <div id="convert-menu-view" class="hidden">
+            <button class="back-btn" onclick="playPop(); goHome();" style="top: -40px;">⬅️ <span class="tz">Back to base</span><span class="tm">Go Back</span></button>
+            <div class="hero-title" style="margin-bottom: 50px;">
+                <span class="tz">Morph your files 🧬</span><span class="tm">Convert PDF Tools</span>
+            </div>
+            <div class="grid">
+                <div class="card" onclick="playPop(); openWorkspace('JPG to PDF');"><div class="icon">🖼️➡️📄</div><h3>JPG to PDF</h3><p>Turn images into a solid doc.</p></div>
+                <div class="card" onclick="playPop(); openWorkspace('WORD to PDF');"><div class="icon">📝➡️📄</div><h3>WORD to PDF</h3><p>Lock down that DOCX.</p></div>
+                <div class="card" onclick="playPop(); openWorkspace('EXCEL to PDF');"><div class="icon">📈➡️📄</div><h3>EXCEL to PDF</h3><p>Flatten those spreadsheets.</p></div>
+                <div class="card" onclick="playPop(); openWorkspace('PDF to JPG');"><div class="icon">📄➡️🖼️</div><h3>PDF to JPG</h3><p>Extract pages to raw images.</p></div>
+                <div class="card" onclick="playPop(); openWorkspace('PDF to WORD');"><div class="icon">📄➡️📝</div><h3>PDF to WORD</h3><p>Make it editable again.</p></div>
+                <div class="card" onclick="playPop(); openWorkspace('PDF to EXCEL');"><div class="icon">📄➡️📈</div><h3>PDF to EXCEL</h3><p>Rip data back to tables.</p></div>
+            </div>
+        </div>
+
+        <div id="workspace-view" class="hidden">
+            <div class="workspace-main">
+                <button class="back-btn" onclick="playPop(); goHome();">⬅️ <span class="tz">Bail out</span><span class="tm">Go Back</span></button>
+
+                <div id="upload-area">
+                    <h2 id="tool-title" style="margin-bottom: 10px; font-size: 2.5rem; color:var(--text-main); font-weight: bold;">Tool</h2>
+                    <div class="show-z" style="display:flex; justify-content:center;">
+                        <dotlottie-player src="Dancing Box.lottie" background="transparent" speed="1" style="width: 200px; height: 200px; max-width: 100%; margin-bottom: 20px;" loop autoplay></dotlottie-player>
+                    </div>
+                    <label class="upload-btn" onclick="playPop();">
+                        <span class="tz">Select your trash 🗑️</span><span class="tm">Select PDF files</span>
+                        <input type="file" id="file-input" multiple>
                     </label>
-                    <button class="btn-secondary" onclick="playPop(); sortPages('asc');">A-Z ⬇️</button>
-                    <button class="btn-secondary" onclick="playPop(); sortPages('desc');">Z-A ⬆️</button>
+                    <p style="color: var(--text-muted); font-weight: 600; font-size: 1.1rem; margin-top:20px;">or drop files anywhere here</p>
                 </div>
-                <button class="btn-process" id="merge-action-btn" style="width: auto; padding: 15px 50px; font-size: 1.5rem;" onclick="playPop(); executeMainAction();">Send it 🚀</button>
+
+                <div id="editor-area-merge">
+                    <div id="pages-container"></div>
+                </div>
+                <div id="editor-area-split"></div>
+                <div id="editor-area-generic"></div>
+
+                <div class="action-bar-merge hidden" id="action-bar-merge">
+                    <div style="display: flex; gap: 15px;">
+                        <label class="btn-secondary" style="background: var(--primary); color: var(--btn-text); border: none;" onclick="playPop();">
+                            + Add more <input type="file" id="add-more-input" multiple>
+                        </label>
+                        <button class="btn-secondary" onclick="playPop(); sortPages('asc');">A-Z ⬇️</button>
+                        <button class="btn-secondary" onclick="playPop(); sortPages('desc');">Z-A ⬆️</button>
+                    </div>
+                    <button class="btn-process" id="merge-action-btn" style="width: auto; padding: 15px 40px;" onclick="playPop(); executeMainAction();">
+                        <span class="tz">Send it 🚀</span><span class="tm">Process PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar hidden" id="sidebar-split">
+                <div class="sidebar-header"><span class="tz">Slice & Dice 🔪</span><span class="tm">Split PDF</span></div>
+                <div class="sidebar-content">
+                    <div id="ranges-list"></div>
+                    <button class="btn-add-range" onclick="playPop(); addSplitRange();">+ <span class="tz">Add another cut</span><span class="tm">Add Range</span></button>
+                </div>
+                <div class="sidebar-footer">
+                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges in one</span></label>
+                    <button class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">
+                        <span class="tz">Chop it up ✂️</span><span class="tm">Split PDF ➔</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar hidden" id="sidebar-generic">
+                <div class="sidebar-header" id="generic-sidebar-title">Options</div>
+                <div class="sidebar-content" id="sidebar-options-content"></div>
+                <div class="sidebar-footer">
+                    <button class="btn-process" id="sidebar-action-btn" onclick="playPop(); executeSidebarAction();">
+                        <span class="tz">Do the thing ✨</span><span class="tm">Process ➔</span>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="sidebar hidden" id="sidebar-split">
-            <div class="sidebar-header">Slice & Dice 🔪</div>
-            <div class="sidebar-content">
-                <div id="ranges-list"></div>
-                <button class="btn-add-range" onclick="playPop(); addSplitRange();">+ Add another cut</button>
-            </div>
-            <div class="sidebar-footer">
-                <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> Mash all cuts into one</label>
-                <button class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">Chop it up ✂️</button>
-            </div>
-        </div>
-
-        <div class="sidebar hidden" id="sidebar-generic">
-            <div class="sidebar-header" id="generic-sidebar-title">Options</div>
-            <div class="sidebar-content" id="sidebar-options-content"></div>
-            <div class="sidebar-footer">
-                <button class="btn-process" id="sidebar-action-btn" onclick="playPop(); executeSidebarAction();">Do the thing ✨</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
+    </div> <script>
         // ==========================================
-        // FAULT TOLERANT AUDIO SETUP
+        // THEME MANAGEMENT
+        // ==========================================
+        let currentTheme = 'm'; // default millennial
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.body.className = `theme-${theme}`;
+            document.getElementById('theme-selector').style.display = 'none';
+            document.getElementById('app-container').classList.remove('hidden');
+            
+            // Only Gen-Z gets the crazy gradient background size rules
+            if(theme === 'z') {
+                document.body.style.backgroundSize = '400% 400%';
+            } else {
+                document.body.style.backgroundSize = 'auto';
+            }
+            
+            if(theme === 'z') playPop(); // Test audio right away
+        }
+
+        // ==========================================
+        // FAULT TOLERANT AUDIO SETUP (Gen-Z Only)
         // ==========================================
         let audioCtx = null;
         function playPop() {
+            if (currentTheme !== 'z') return; // Silence for millennials
             try {
                 if (!audioCtx) {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -525,10 +723,12 @@
         }
 
         function playFail() {
+            if (currentTheme !== 'z') return;
             try { const a = document.getElementById('sfx-fail'); if(a) a.play().catch(()=>{}); } catch(e){}
         }
 
         function playWtf() {
+            if (currentTheme !== 'z') return;
             try { const a = document.getElementById('sfx-wtf'); if(a) a.play().catch(()=>{}); } catch(e){}
         }
 
@@ -570,7 +770,7 @@
                     if (user) {
                         document.getElementById('auth-buttons').style.display = 'none';
                         document.getElementById('user-profile').style.display = 'flex';
-                        document.getElementById('user-display-name').innerText = `😎 ${user.displayName || user.phoneNumber || "Boss"}`;
+                        document.getElementById('user-display-name').innerText = `👤 ${user.displayName || user.phoneNumber || "User"}`;
                         closeAuthModal();
                     } else {
                         document.getElementById('auth-buttons').style.display = 'flex';
@@ -611,7 +811,7 @@
                     document.getElementById('otp-section').classList.remove('hidden');
                 }).catch((err) => {
                     playFail(); alert("Failed to send OTP: " + err.message);
-                    btn.innerText = "Send digits 📱"; btn.disabled = false;
+                    btn.innerText = currentTheme === 'z' ? "Send digits 📱" : "Send OTP"; btn.disabled = false;
                 });
         }
         function verifyOTP() {
@@ -624,8 +824,7 @@
         // ==========================================
         // APP UI FLOW
         // ==========================================
-        function showLoading(text) {
-            document.getElementById('loading-text').innerText = text || "Cooking... 🍳";
+        function showLoading() {
             document.getElementById('loading-overlay').classList.remove('hidden');
         }
         function hideLoading() {
@@ -653,11 +852,15 @@
         }
         function openWorkspace(toolName) {
             currentTool = toolName;
+            
+            // Map fun names to display for GenZ, normal for Millennial
             let displayTitle = toolName;
-            if(toolName === 'Merge PDF') displayTitle = 'Squish PDFs 🥪';
-            if(toolName === 'Split PDF') displayTitle = 'Chop PDFs 🔪';
-            if(toolName === 'Compress PDF') displayTitle = 'Make Smol 🤏';
-            if(toolName === 'Image to Word') displayTitle = 'Steal Text 🥷';
+            if(currentTheme === 'z') {
+                if(toolName === 'Merge PDF') displayTitle = 'Squish PDFs 🥪';
+                if(toolName === 'Split PDF') displayTitle = 'Chop PDFs 🔪';
+                if(toolName === 'Compress PDF') displayTitle = 'Make Smol 🤏';
+                if(toolName === 'Image to Word') displayTitle = 'Steal Text 🥷';
+            }
             
             document.getElementById('tool-title').innerText = displayTitle;
             hideDropdowns();
@@ -727,7 +930,7 @@
         // ==========================================
         async function handleFiles(files) {
             if (files.length === 0) return;
-            showLoading("Parsing your trash... 🔍");
+            showLoading();
             
             try {
                 if(!PDFDocument && currentTool.includes('PDF')) throw new Error("PDF Library got blocked by your browser. Turn off adblocker.");
@@ -738,7 +941,6 @@
                 if (currentTool === 'Merge PDF' || currentTool === 'JPG to PDF') {
                     document.getElementById('editor-area-merge').style.display = 'block';
                     document.getElementById('action-bar-merge').classList.remove('hidden');
-                    document.getElementById('merge-action-btn').innerText = "Send it 🚀";
                     
                     for (let f of files) {
                         const arrayBuffer = await f.arrayBuffer();
@@ -796,8 +998,11 @@
                     const optionsContent = document.getElementById('sidebar-options-content');
                     
                     if (currentTool === 'Compress PDF') {
-                        optionsContent.innerHTML = `<div class="sidebar-option active"><strong>Super Squish</strong><p>Rasterize pages to make it tiny.</p></div>`;
-                        document.getElementById('sidebar-action-btn').innerHTML = "Make it smol 🪄";
+                        optionsContent.innerHTML = `
+                            <div class="sidebar-option active">
+                                <strong><span class="tz">Super Squish</span><span class="tm">Recommended</span></strong>
+                                <p><span class="tz">Rasterize pages to make it tiny.</span><span class="tm">Standard client-side compression.</span></p>
+                            </div>`;
                         const pdf = await pdfjsLib.getDocument({ data: loadedFiles[0].bytes.slice(0) }).promise;
                         pdfJsCache.doc = pdf;
                         const page = await pdf.getPage(1);
@@ -808,8 +1013,11 @@
                         document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
                     } 
                     else if (currentTool === 'Image to Word') {
-                        optionsContent.innerHTML = `<div class="sidebar-option active"><strong>Big Brain AI</strong><p>Extracts text from the image.</p></div>`;
-                        document.getElementById('sidebar-action-btn').innerHTML = "Extract Text 🥷";
+                        optionsContent.innerHTML = `
+                            <div class="sidebar-option active">
+                                <strong><span class="tz">Big Brain AI</span><span class="tm">OCR Engine</span></strong>
+                                <p>Extracts text directly from the image.</p>
+                            </div>`;
                         const url = URL.createObjectURL(file);
                         const img = new Image();
                         await new Promise(r => {
@@ -843,13 +1051,16 @@
                         } else {
                             document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card"><div class="icon">${icon}</div><div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
                         }
-                        optionsContent.innerHTML = `<div class="sidebar-option active"><strong>God Tier API</strong><p>100% perfect formatting conversion.</p></div>`;
-                        document.getElementById('sidebar-action-btn').innerHTML = "Shape Shift 🦋";
+                        optionsContent.innerHTML = `
+                            <div class="sidebar-option active">
+                                <strong><span class="tz">God Tier API</span><span class="tm">Premium Engine</span></strong>
+                                <p>100% perfect formatting conversion.</p>
+                            </div>`;
                     }
                 }
             } catch(e) {
                 playWtf();
-                alert("Bruh, something went wrong loading that: " + e.message);
+                alert((currentTheme === 'z' ? "Bruh, error: " : "Error loading file: ") + e.message);
                 resetWorkspace();
             } finally {
                 hideLoading();
@@ -875,9 +1086,9 @@
         // --- MERGE / JPG TO PDF ACTIONS ---
         async function executeMainAction() {
             const thumbs = document.querySelectorAll('#pages-container .page-thumb');
-            if (!thumbs.length) { playWtf(); return alert("Where are the files bro? 💀"); }
+            if (!thumbs.length) { playWtf(); return alert(currentTheme === 'z' ? "Where are the files bro? 💀" : "Please upload files."); }
             
-            showLoading("Squishing it together... 🥪");
+            showLoading();
             try {
                 const finalPdf = await PDFDocument.create();
                 if (currentTool === 'Merge PDF') {
@@ -888,7 +1099,7 @@
                         let rot = parseInt(t.dataset.rotation); if (rot !== 0) page.setRotation(degrees(page.getRotation().angle + rot));
                         finalPdf.addPage(page);
                     }
-                    triggerDownload(await finalPdf.save(), "mega-squished-doc.pdf");
+                    triggerDownload(await finalPdf.save(), currentTheme === 'z' ? "mega-squished-doc.pdf" : "merged.pdf");
                 } else {
                     for (let t of thumbs) {
                         const f = loadedFiles.find(x => x.id === t.dataset.fileId);
@@ -897,9 +1108,9 @@
                         let rot = parseInt(t.dataset.rotation); if (rot !== 0) page.setRotation(degrees(rot));
                         page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
                     }
-                    triggerDownload(await finalPdf.save(), "pic-to-pdf-vibes.pdf");
+                    triggerDownload(await finalPdf.save(), currentTheme === 'z' ? "pic-to-pdf-vibes.pdf" : "images.pdf");
                 }
-            } catch (e) { playFail(); alert("Big yikes, error: " + e.message); }
+            } catch (e) { playFail(); alert("Error: " + e.message); }
             hideLoading();
         }
 
@@ -911,11 +1122,12 @@
         async function updateSplitUI() {
             const list = document.getElementById('ranges-list'); list.innerHTML = '';
             splitRanges.forEach((r, i) => {
-                list.innerHTML += `<div class="range-item"><div class="range-item-header"><span>Slice ${i + 1}</span>${splitRanges.length>1?`<span style="cursor:pointer;color:#ff4757;" onclick="playPop(); removeSplitRange(${r.id});">✕</span>`:''}</div><div class="range-inputs"><span>From</span><input type="number" value="${r.from}" onchange="handleRangeChange(${r.id}, 'from', this.value)"><span>To</span><input type="number" value="${r.to}" onchange="handleRangeChange(${r.id}, 'to', this.value)"></div></div>`;
+                list.innerHTML += `<div class="range-item"><div class="range-item-header"><span>Range ${i + 1}</span>${splitRanges.length>1?`<span style="cursor:pointer;color:#ff4757;" onclick="playPop(); removeSplitRange(${r.id});">✕</span>`:''}</div><div class="range-inputs"><span>From</span><input type="number" value="${r.from}" onchange="handleRangeChange(${r.id}, 'from', this.value)"><span>To</span><input type="number" value="${r.to}" onchange="handleRangeChange(${r.id}, 'to', this.value)"></div></div>`;
             });
             const vis = document.getElementById('editor-area-split'); vis.innerHTML = '';
             for (let i = 0; i < splitRanges.length; i++) {
-                const r = splitRanges[i]; const b = document.createElement('div'); b.className = 'split-range-block'; b.innerHTML = `<div style="color:var(--secondary);font-weight:900;margin-bottom:10px;text-transform:uppercase;">Slice ${i+1}</div>`;
+                const r = splitRanges[i]; const b = document.createElement('div'); b.className = 'split-range-block'; 
+                b.innerHTML = `<div style="color:var(--text-muted);font-weight:bold;margin-bottom:10px;">Range ${i+1}</div>`;
                 const vb = document.createElement('div'); vb.className = 'split-visual-box';
                 const fw = document.createElement('div'); fw.className = 'split-canvas-wrapper'; fw.appendChild(await getSplitCanvas(r.from)); const sf = document.createElement('span'); sf.innerText = r.from; fw.appendChild(sf); vb.appendChild(fw);
                 if (r.from !== r.to) {
@@ -928,29 +1140,29 @@
         async function getSplitCanvas(num) { const p = await pdfJsCache.doc.getPage(num); const v = p.getViewport({ scale: 0.6 }); const c = document.createElement('canvas'); c.height = v.height; c.width = v.width; await p.render({ canvasContext: c.getContext('2d'), viewport: v }).promise; return c; }
         
         async function executeSplit() {
-            showLoading("Chopping it up... 🔪");
+            showLoading();
             try {
                 const src = await PDFDocument.load(loadedFiles[0].bytes.slice(0));
                 if (document.getElementById('merge-ranges-checkbox').checked || splitRanges.length === 1) {
                     const pdf = await PDFDocument.create();
                     for (let r of splitRanges) { const idxs = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i); const cp = await pdf.copyPages(src, idxs); cp.forEach(p => pdf.addPage(p)); }
-                    triggerDownload(await pdf.save(), "chopped-pdf.pdf");
+                    triggerDownload(await pdf.save(), "split-pdf.pdf");
                 } else {
                     if (typeof JSZip === 'undefined') throw new Error("JSZip Library failed to load.");
                     const zip = new JSZip();
                     for (let i = 0; i < splitRanges.length; i++) {
                         const pdf = await PDFDocument.create(); const r = splitRanges[i]; const idxs = Array.from({length: r.to - r.from + 1}, (_, i) => (r.from - 1) + i);
-                        const cp = await pdf.copyPages(src, idxs); cp.forEach(p => pdf.addPage(p)); zip.file(`slice_${i+1}.pdf`, await pdf.save());
+                        const cp = await pdf.copyPages(src, idxs); cp.forEach(p => pdf.addPage(p)); zip.file(`range_${i+1}.pdf`, await pdf.save());
                     }
-                    triggerDownload(await zip.generateAsync({type:"blob"}), "chopped_files.zip", true);
+                    triggerDownload(await zip.generateAsync({type:"blob"}), "split_files.zip", true);
                 }
-            } catch (e) { playFail(); alert("Failed to chop: " + e.message); }
+            } catch (e) { playFail(); alert("Failed to split: " + e.message); }
             hideLoading();
         }
 
         // --- API & GENERIC CONVERSIONS ---
         async function executeSidebarAction() {
-            showLoading("Doing magic API stuff... ✨");
+            showLoading();
             const fileData = loadedFiles[0];
 
             try {
@@ -962,7 +1174,7 @@
                         const img = await newPdf.embedJpg(c.toDataURL('image/jpeg', 0.6));
                         const np = newPdf.addPage([v.width, v.height]); np.drawImage(img, { x: 0, y: 0, width: v.width, height: v.height });
                     }
-                    triggerDownload(await newPdf.save(), "smol-compressed.pdf");
+                    triggerDownload(await newPdf.save(), "compressed.pdf");
                 } 
                 else if (currentTool === 'PDF to JPG') {
                     if (typeof JSZip === 'undefined') throw new Error("JSZip Library failed to load.");
@@ -992,13 +1204,15 @@
                     }
 
                     const response = await fetch(endpoint, { method: 'POST', body: formData });
+                    
+                    // PROPER ERROR PARSING FOR CONVERT API
                     if (!response.ok) {
-                        let errMsg = "API tripped over a wire.";
+                        let errMsg = "Unknown Server Error";
                         try {
                             const errData = await response.json();
                             errMsg = errData.Message || errData.error || errMsg;
-                        } catch(err) {}
-                        throw new Error(`Code ${response.status}: ${errMsg}`);
+                        } catch(e) {}
+                        throw new Error(`API rejected request.\nStatus ${response.status}\nDetails: ${errMsg}`);
                     }
                     
                     const result = await response.json();
@@ -1013,11 +1227,11 @@
                             const fileRes = await fetch(result.Files[0].Url);
                             triggerDownload(await fileRes.blob(), outFileName, true);
                         }
-                    } else throw new Error("Server sent back empty air.");
+                    } else throw new Error("Server sent back an empty response.");
                 }
             } catch (e) { 
                 playFail(); 
-                alert("RIP, error happened:\n" + e.message); 
+                alert((currentTheme === 'z' ? "RIP, error happened:\n" : "Processing Error:\n") + e.message); 
             }
             hideLoading();
         }
