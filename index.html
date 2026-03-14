@@ -29,6 +29,7 @@
             background: var(--bg-main);
             color: var(--text-main);
             transition: background 0.5s, color 0.5s;
+            display: flex; flex-direction: column;
         }
 
         /* 1. MILLENNIAL THEME (iLovePDF Style) */
@@ -104,7 +105,7 @@
         
         .theme-z-btn { background: #0f0c29; color: #fff; font-family: 'Space Grotesk', sans-serif;}
         .theme-z-btn:hover { background: #1a1a2e; box-shadow: inset 0 0 50px rgba(255,0,255,0.2);}
-        .theme-z-btn h1 { font-size: 3rem; margin: 0; font-weight: 900; background: -webkit-linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .theme-z-btn h1 { font-size: 3rem; margin: 0; font-weight: 900; }
 
         @media (max-width: 768px) { #theme-selector { flex-direction: column; } .theme-half h1 { font-size: 2.2rem;} }
 
@@ -116,7 +117,7 @@
         header { 
             background: var(--bg-header); backdrop-filter: var(--glass-backdrop);
             border-bottom: 2px solid var(--primary); display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 30px; height: 80px; z-index: 100; position: relative; 
+            padding: 0 30px; height: 90px; z-index: 100; position: relative; 
         }
         body.theme-z header { box-shadow: 0 4px 30px rgba(255, 0, 255, 0.2); border-bottom-color: var(--primary); }
         body.theme-m header { border-bottom: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
@@ -165,6 +166,10 @@
         .btn-signup:hover { transform: scale(1.05); }
         body.theme-z .btn-signup:hover { box-shadow: 0 0 25px rgba(0, 255, 255, 0.8); }
         
+        /* SPOTS LEFT BADGE (Under Sign up) */
+        .spots-badge { font-size: 0.75rem; color: #ff4757; font-weight: bold; margin-top: 5px; animation: pulse 2s infinite alternate;}
+        body.theme-z .spots-badge { color: var(--secondary); text-shadow: 0 0 5px var(--secondary); }
+
         .user-profile { display: none; align-items: center; gap: 15px; font-size: 1rem; font-weight: bold; color: var(--text-main); }
         body.theme-z .user-profile { color: var(--secondary); }
         .btn-logout { text-decoration: none; color: #e5322d; border: 2px solid #e5322d; padding: 8px 20px; border-radius: var(--btn-radius); transition: 0.2s; font-weight: bold; cursor: pointer;}
@@ -175,7 +180,8 @@
         .text-grad { background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         /* Views */
-        #home-view, #convert-menu-view { max-width: 1200px; margin: 40px auto; padding: 0 20px; text-align: center; position: relative; }
+        #app-container { flex-grow: 1; display: flex; flex-direction: column;}
+        #home-view, #convert-menu-view { max-width: 1200px; margin: 40px auto; padding: 0 20px; text-align: center; position: relative; flex-grow: 1;}
         .hero-title { font-size: 3rem; font-weight: 900; margin-bottom: 10px; line-height: 1.2; color: var(--text-main);}
         body.theme-z .hero-title { font-size: 4rem; }
         .hero-sub { color: var(--text-muted); margin-bottom: 50px; font-size: 1.2rem; font-weight: 600; }
@@ -220,7 +226,6 @@
             animation: fadeIn 0.2s forwards;
         }
         
-        /* Specific positioning fix for navbar tooltips so they don't overlap */
         .top-nav [data-tooltip]:hover::after { bottom: -50px; transform: translateX(-50%); }
         body.theme-z .top-nav [data-tooltip]:hover::after { bottom: -60px; transform: translateX(-50%); }
 
@@ -244,7 +249,7 @@
         body.theme-z .card:hover .z-right { transform: translateX(-20px) scale(1.3); animation: none; z-index: 2; filter: drop-shadow(0 0 20px var(--primary)); }
 
         /* Workspace View */
-        #workspace-view { display: none; height: calc(100vh - 80px); transition: background 0.2s; box-sizing: border-box; }
+        #workspace-view { display: none; height: calc(100vh - 90px); transition: background 0.2s; box-sizing: border-box; flex-grow:1; }
         #workspace-view.dragover-active { background: rgba(128, 128, 128, 0.1); border: 4px dashed var(--primary); border-radius: 20px; margin: 10px;}
         
         .workspace-main { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
@@ -423,6 +428,10 @@
         .modal-content { background: var(--bg-header); padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: relative; text-align: center; }
         body.theme-z .modal-content { border-radius: 24px; border: 2px solid var(--primary); box-shadow: 10px 10px 0px rgba(255,0,255,0.3); }
         
+        /* PROMO POPUP CUSTOM THEME (BLUE & RED) */
+        .promo-box { background: linear-gradient(135deg, #090979 0%, #ff4757 100%); border: 3px solid #ff4757; color: white; box-shadow: 0 10px 40px rgba(255, 71, 87, 0.4); }
+        body.theme-z .promo-box { background: linear-gradient(135deg, #141e30 0%, #243b55 50%, #e52d27 100%); border-color: #00ffff; }
+
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
         .close-modal:hover { color: var(--primary); }
         body.theme-z .close-modal:hover { transform: rotate(90deg); }
@@ -435,6 +444,16 @@
         body.theme-z .google-btn { padding: 15px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 900; color: #000; }
         body.theme-z .google-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
         .google-btn img { width: 24px; }
+        
+        .modal-input { width: 100%; padding: 12px; margin-bottom: 15px; border: var(--input-border); background: var(--input-bg); color: var(--text-main); border-radius: 6px; font-size: 1rem; box-sizing: border-box; font-family: var(--font-main); outline: none; transition: 0.3s; }
+        body.theme-z .modal-input { padding: 15px; border-radius: 12px; }
+        .modal-input:focus { border-color: var(--primary); }
+        body.theme-z .modal-input:focus { border-color: var(--secondary); box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+
+        /* Report Bug Footer */
+        #bug-footer { text-align: center; padding: 20px; font-size: 0.95rem; margin-top: auto; }
+        #bug-footer a { color: var(--text-muted); cursor: pointer; text-decoration: underline; font-weight: bold; transition: 0.2s;}
+        #bug-footer a:hover { color: var(--primary); }
 
         /* ==========================================
            MOBILE RESPONSIVENESS
@@ -448,9 +467,9 @@
             .top-nav::-webkit-scrollbar { display: none; }
             .top-nav > a, .dropbtn { font-size: 0.85rem; padding: 8px 12px; white-space: nowrap; border: 1px solid rgba(128,128,128,0.2); margin-right: 5px;}
             
-            .auth-buttons, .user-profile { width: 100%; justify-content: center; margin-top: 10px; flex-wrap: wrap;}
+            .auth-buttons, .user-profile { width: 100%; justify-content: center; margin-top: 10px; flex-wrap: wrap; flex-direction: column; gap:10px;}
             .btn-signup { font-size: 0.85rem; padding: 8px 15px;}
-            .theme-switch-wrapper { margin-bottom: 10px; width: 100%; justify-content: center; }
+            .theme-switch-wrapper { margin-bottom: 5px; width: 100%; justify-content: center; margin-right: 0;}
 
             .hero-title { font-size: 2.2rem; line-height: 1.2; margin-top: 20px;}
             body.theme-z .hero-title { font-size: 2.8rem; }
@@ -510,29 +529,29 @@
     <div id="app-container" class="hidden">
 
         <div id="promo-modal" class="modal-overlay hidden" style="z-index: 2000;">
-            <div class="modal-content" style="border-color: #ffd700; box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);">
-                <span class="close-modal" onclick="playPop(); closePromoModal();">✕</span>
+            <div class="modal-content promo-box">
+                <span class="close-modal" onclick="playPop(); closePromoModal();" style="color: white; opacity: 0.8;">✕</span>
                 <div style="font-size: 3.5rem; margin-bottom: 10px; animation: pulseGlow 2s infinite;">🎁</div>
                 
-                <h2 style="font-size: 1.8rem; margin-bottom: 15px;">
-                    <span class="tz text-grad" style="font-weight: 900;">LIFETIME PREMIUM DROP!</span>
-                    <span class="tm" style="color: #e5322d;">Early Adopter Bonus</span>
+                <h2 style="font-size: 1.8rem; margin-bottom: 15px; color: white;">
+                    <span class="tz" style="font-weight: 900; text-shadow: 0 0 10px #00ffff;">LIFETIME PREMIUM DROP!</span>
+                    <span class="tm" style="font-weight: bold;">Early Adopter Bonus</span>
                 </h2>
                 
-                <p style="color:var(--text-muted); font-size: 1.05rem; line-height: 1.5; margin-bottom: 25px;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 25px; color: #eee;">
                     <span class="tz">Skip the ads. Get priority server speeds. We're giving away free Premium to the first 50 users.</span>
                     <span class="tm">Enjoy an ad-free experience with priority processing speeds. Free Premium for the first 50 sign-ups.</span>
                 </p>
                 
-                <div style="background: rgba(255, 71, 87, 0.1); border: 2px solid #ff4757; color: #ff4757; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.2rem; margin-bottom: 25px; animation: pulse 1s infinite alternate;">
-                    🔥 Only <span class="promo-spots-count">17</span> spots left!
+                <div style="background: rgba(255, 255, 255, 0.2); border: 2px solid white; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.2rem; margin-bottom: 25px;">
+                    🔥 Only <span class="promo-spots-count">47</span> spots left!
                 </div>
                 
                 <button class="btn-process" onclick="playPop(); claimPremium();" style="background: linear-gradient(45deg, #ffd700, #ff9f43); color: #000; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4); margin-bottom: 15px; font-size: 1.3rem;">
                     <span class="tz">Claim Premium NOW 🚀</span><span class="tm">Claim Free Premium</span>
                 </button>
                 
-                <button onclick="playPop(); closePromoModal();" style="background: transparent; border: none; color: var(--text-muted); text-decoration: underline; cursor: pointer; font-family: var(--font-main); font-weight: bold; font-size: 0.95rem; margin-top: 10px;">
+                <button onclick="playPop(); closePromoModal();" style="background: transparent; border: none; color: #ccc; text-decoration: underline; cursor: pointer; font-family: var(--font-main); font-weight: bold; font-size: 0.95rem; margin-top: 10px;">
                     <span class="tz">Nah, I love ads 💀</span><span class="tm">Continue with Free Tier</span>
                 </button>
             </div>
@@ -550,6 +569,21 @@
                 <p style="margin-top: 10px; font-size: 0.95rem;"><span class="tz">AI Support is cooking right now. Check back later bro!</span><span class="tm">Our AI support assistant is currently under development.</span></p>
                 <button class="btn-process" onclick="playPop(); document.getElementById('chatbot-modal').classList.add('hidden');" style="margin-top: 20px;">
                     <span class="tz">Got it 💯</span><span class="tm">Close</span>
+                </button>
+            </div>
+        </div>
+        
+        <div id="bug-modal" class="modal-overlay hidden">
+            <div class="modal-content" style="max-width: 450px;">
+                <span class="close-modal" onclick="playPop(); document.getElementById('bug-modal').classList.add('hidden');">✕</span>
+                <h2 style="margin-bottom: 20px;"><span class="tz">Report a Bug 🐛</span><span class="tm">Report an Issue</span></h2>
+                <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-muted);">
+                    <span class="tz">Tell the dev what's broken so he can fix it ASAP.</span>
+                    <span class="tm">Please describe the issue you encountered.</span>
+                </p>
+                <textarea id="bug-description" class="modal-input" rows="5" placeholder="Describe what went wrong..." style="resize: none;"></textarea>
+                <button class="btn-process" onclick="playPop(); submitBug();">
+                    <span class="tz">Send Report 🚀</span><span class="tm">Submit Issue</span>
                 </button>
             </div>
         </div>
@@ -624,9 +658,12 @@
                 </div>
 
                 <a class="btn-login" onclick="playPop(); openAuthModal();">Login</a>
-                <a class="btn-signup" onclick="playPop(); openAuthModal();">
-                    <span class="tz">Sign up, no cap</span><span class="tm">Sign up</span>
-                </a>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <a class="btn-signup" onclick="playPop(); openAuthModal();">
+                        <span class="tz">Sign up, no cap</span><span class="tm">Sign up</span>
+                    </a>
+                    <span class="spots-badge"><span class="promo-spots-count">47</span> spots left! 🎁</span>
+                </div>
             </div>
 
             <div class="user-profile" id="user-profile">
@@ -656,8 +693,8 @@
 
                 <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
                 <p style="color:var(--text-muted); font-weight:600; margin-bottom: 30px;">
-                    <span class="tz">Login to access the god-tier tools.</span>
-                    <span class="tm">Log in to your account to continue.</span>
+                    <span class="tz">Login to claim your Premium Account.</span>
+                    <span class="tm">Log in to claim your Premium Account.</span>
                 </p>
                 
                 <button class="google-btn" onclick="playPop(); loginWithGoogle();">
@@ -839,51 +876,82 @@
             </div>
         </div>
 
+        <div id="bug-footer">
+            <a onclick="playPop(); document.getElementById('bug-modal').classList.remove('hidden');">
+                🐛 <span class="tz">Found a bug? Snitch on it.</span><span class="tm">Report a Bug</span>
+            </a>
+        </div>
+
     </div> <script>
         // ==========================================
         // PROMO POPUP LOGIC (FOMO)
         // ==========================================
         let promoTimer;
-        let spotsLeft = 17;
+        let spotsLeft;
+
+        function updateSpotsUI() {
+            document.querySelectorAll('.promo-spots-count').forEach(el => {
+                el.innerText = spotsLeft;
+            });
+        }
 
         function showPromoModal() {
-            // Only show once per session so we don't annoy users constantly
-            if (sessionStorage.getItem('promoSeen')) return; 
+            // Check if dismissed permanently
+            if (localStorage.getItem('promoDismissed') === 'true') return; 
             
+            // Get current spots from localStorage or start fresh
+            let savedSpots = localStorage.getItem('promoSpots');
+            if(!savedSpots) {
+                spotsLeft = 47;
+                localStorage.setItem('promoSpots', spotsLeft);
+            } else {
+                spotsLeft = parseInt(savedSpots);
+            }
+
             const promo = document.getElementById('promo-modal');
             if(promo) {
                 promo.classList.remove('hidden');
+                updateSpotsUI();
                 
-                // Panic Countdown Simulator
+                // Panic Countdown Simulator - Decreases randomly, but saves the state!
                 promoTimer = setInterval(() => {
-                    if (spotsLeft > 2) {
-                        // Drop by 1, 2, or 3 randomly
-                        spotsLeft -= Math.floor(Math.random() * 3) + 1;
-                        if(spotsLeft < 2) spotsLeft = 2; // Always keep 2 left to keep hope alive
-                        
-                        document.querySelectorAll('.promo-spots-count').forEach(el => {
-                            el.innerText = spotsLeft;
-                        });
-                    } else {
+                    if (spotsLeft > 2 && Math.random() > 0.6) {
+                        spotsLeft -= Math.floor(Math.random() * 2) + 1;
+                        if(spotsLeft < 2) spotsLeft = 2; 
+                        localStorage.setItem('promoSpots', spotsLeft);
+                        updateSpotsUI();
+                    } else if (spotsLeft <= 2) {
                         clearInterval(promoTimer);
                     }
-                }, 3500); // Drops every 3.5 seconds
+                }, 4000); 
             }
         }
 
         function closePromoModal() {
             document.getElementById('promo-modal').classList.add('hidden');
             clearInterval(promoTimer);
-            sessionStorage.setItem('promoSeen', 'true');
+            localStorage.setItem('promoDismissed', 'true'); // Prevents showing on refresh
         }
 
         function claimPremium() {
             closePromoModal();
-            openAuthModal(); // Directly opens Google Login
+            openAuthModal(); 
+        }
+        
+        function submitBug() {
+            const desc = document.getElementById('bug-description').value;
+            if(!desc) {
+                playWtf();
+                return alert("Please describe the bug first!");
+            }
+            const mailtoLink = `mailto:mrsecret11118@gmail.com?subject=Bug Report: PDF Loves Me&body=${encodeURIComponent(desc)}`;
+            window.location.href = mailtoLink;
+            document.getElementById('bug-modal').classList.add('hidden');
+            document.getElementById('bug-description').value = '';
         }
 
         // ==========================================
-        // THEME MANAGEMENT & TOGGLE SWITCH
+        // THEME MANAGEMENT
         // ==========================================
         let currentTheme = 'm'; 
 
@@ -1011,13 +1079,13 @@
         let pdfJsCache = {}; 
         let splitRanges = [];
         let totalSplitPages = 0;
-        let compressMode = 'recommended'; // Default
+        let compressMode = 'recommended'; 
 
         let PDFDocument = null;
         let degrees = null;
 
         // ==========================================
-        // FIREBASE SETUP (Google Only)
+        // FIREBASE SETUP 
         // ==========================================
         let auth = null;
         
@@ -1091,7 +1159,6 @@
             hideDropdowns();
         }
         
-        // Handles setting the 3 compression levels
         function setCompressMode(mode) {
             compressMode = mode;
             document.querySelectorAll('#compress-options .sidebar-option').forEach(el => el.classList.remove('active'));
@@ -1143,40 +1210,6 @@
         }
 
         // ==========================================
-        // EVENT LISTENERS
-        // ==========================================
-        window.addEventListener('DOMContentLoaded', () => {
-            // Trigger FOMO promo
-            setTimeout(() => { showPromoModal(); }, 1500);
-
-            try {
-                if (typeof pdfjsLib !== 'undefined') {
-                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-                }
-                if (typeof PDFLib !== 'undefined') {
-                    PDFDocument = PDFLib.PDFDocument;
-                    degrees = PDFLib.degrees;
-                }
-
-                ['file-input', 'add-more-input'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) el.addEventListener('change', (e) => { playPop(); handleFiles(e.target.files); });
-                });
-
-                const wv = document.getElementById('workspace-view');
-                if(wv) {
-                    wv.addEventListener('dragover', (e) => { e.preventDefault(); wv.classList.add('dragover-active'); });
-                    wv.addEventListener('dragleave', (e) => { e.preventDefault(); if (!wv.contains(e.relatedTarget)) wv.classList.remove('dragover-active'); });
-                    wv.addEventListener('drop', (e) => { e.preventDefault(); wv.classList.remove('dragover-active'); playPop(); handleFiles(e.dataTransfer.files); });
-                }
-
-                if (typeof Sortable !== 'undefined') {
-                    new Sortable(document.getElementById('pages-container'), { animation: 150, onEnd: () => { playPop(); updateMergePageNumbers(); } });
-                }
-            } catch(e) { console.error("Init error:", e); }
-        });
-
-        // ==========================================
         // FILE PROCESSING ENGINE
         // ==========================================
         async function handleFiles(files) {
@@ -1184,7 +1217,6 @@
             
             const file = files[0];
             
-            // STRICT FILE TYPE CHECKING
             if (currentTool === 'Image to Word' && !file.type.startsWith('image/')) {
                 playWtf(); return alert(currentTheme === 'z' ? "Bro, upload an IMAGE for this, not a PDF! 🖼️" : "Please upload an Image file (JPG/PNG).");
             }
@@ -1268,7 +1300,6 @@
                     const optionsContent = document.getElementById('sidebar-options-content');
                     
                     if (currentTool === 'Compress PDF') {
-                        // 3 COMPRESSION OPTIONS RENDERED IN SIDEBAR
                         optionsContent.innerHTML = `
                             <div id="compress-options" style="display:flex; flex-direction:column; gap:10px;">
                                 <div class="sidebar-option" id="comp-extreme" onclick="playPop(); setCompressMode('extreme');">
@@ -1338,7 +1369,7 @@
                             await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
                             document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
                         } else {
-                            document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card"><div class="icon">${icon}</div><div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
+                            document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card"><div class="icon" style="background:transparent; -webkit-text-fill-color:initial;">${icon}</div><div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
                         }
                         optionsContent.innerHTML = `
                             <div class="show-z" style="display:flex; justify-content:center;">
@@ -1486,12 +1517,11 @@
                 }
                 else {
                     
-                    // FIXED IMAGE TO WORD API
                     let finalUploadBlob = new Blob([fileData.bytes], { type: fileData.type || 'application/pdf' });
                     let uploadName = fileData.name;
 
+                    // WRAP IMAGE IN PDF FIRST FOR IMAGE TO WORD API
                     if (currentTool === 'Image to Word') {
-                        // Wrapping Image to PDF locally before sending to PDF->Word API
                         const imgPdf = await PDFDocument.create();
                         let imgEmbed;
                         if(fileData.type.includes('png')) imgEmbed = await imgPdf.embedPng(fileData.bytes);
