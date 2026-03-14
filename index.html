@@ -104,7 +104,7 @@
         
         .theme-z-btn { background: #0f0c29; color: #fff; font-family: 'Space Grotesk', sans-serif;}
         .theme-z-btn:hover { background: #1a1a2e; box-shadow: inset 0 0 50px rgba(255,0,255,0.2);}
-        .theme-z-btn h1 { font-size: 3rem; margin: 0; font-weight: 900; background: -webkit-linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .theme-z-btn h1 { font-size: 3rem; margin: 0; font-weight: 900; }
 
         @media (max-width: 768px) { #theme-selector { flex-direction: column; } .theme-half h1 { font-size: 2.2rem;} }
 
@@ -145,11 +145,21 @@
         
         .auth-buttons { display: flex; gap: 15px; align-items: center; }
         
-        /* New Theme Toggle Button */
-        .theme-toggle-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; margin-right: 10px; font-family: var(--font-main); display: flex; align-items: center; gap: 5px;}
-        .theme-toggle-btn:hover { background: rgba(128,128,128,0.2); color: var(--text-main); }
-        body.theme-z .theme-toggle-btn { border-color: rgba(255,255,255,0.3); color: #fff; }
+        /* ----------------------------------
+           THEME TOGGLE SWITCH (NEW)
+           ---------------------------------- */
+        .theme-switch-wrapper { display: flex; align-items: center; gap: 10px; margin-right: 15px; }
+        .ts-label { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        body.theme-z .ts-label.z-lbl { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        body.theme-m .ts-label.m-lbl { color: var(--primary); }
         
+        .theme-switch { position: relative; display: inline-block; width: 54px; height: 28px; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .ts-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);}
+        .ts-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+        input:checked + .ts-slider { background-color: var(--primary); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        input:checked + .ts-slider:before { transform: translateX(26px); background-color: #fff; box-shadow: 0 0 10px var(--secondary); }
+
         .btn-login { text-decoration: none; color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-login:hover { color: var(--primary); }
         .btn-signup { background: var(--primary); color: var(--btn-text); padding: 10px 20px; border-radius: var(--btn-radius); text-decoration: none; font-weight: bold; cursor: pointer; transition: all 0.2s; box-shadow: var(--btn-shadow); white-space: nowrap;}
@@ -164,10 +174,13 @@
         body.theme-z .btn-logout { border-radius: 30px; color: #ff4757; border-color: #ff4757; }
         body.theme-z .btn-logout:hover { background: #ff4757; box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);}
 
+        /* Text Gradient Class (Fixed Emoji Bug) */
+        .text-grad { background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
         /* Views */
         #home-view, #convert-menu-view { max-width: 1200px; margin: 40px auto; padding: 0 20px; text-align: center; position: relative; }
         .hero-title { font-size: 3rem; font-weight: 900; margin-bottom: 10px; line-height: 1.2; color: var(--text-main);}
-        body.theme-z .hero-title { font-size: 4rem; background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body.theme-z .hero-title { font-size: 4rem; }
         .hero-sub { color: var(--text-muted); margin-bottom: 50px; font-size: 1.2rem; font-weight: 600; }
         
         .grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; padding-bottom: 50px;}
@@ -191,6 +204,33 @@
         .card p { margin: 0; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; font-weight: 500;}
 
         /* ==========================================
+           CUSTOM TOOLTIPS (Replaces title attr)
+           ========================================== */
+        [data-tooltip] { position: relative; }
+        
+        body.theme-z [data-tooltip]:hover::after {
+            content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-15px);
+            background: var(--bg-sidebar); color: var(--secondary); padding: 12px 20px; border-radius: 12px; font-size: 1.1rem;
+            font-family: var(--font-main); font-weight: 900; white-space: nowrap; box-shadow: 0 10px 25px rgba(0,255,255,0.4);
+            border: 2px solid var(--secondary); pointer-events: none; z-index: 1000;
+            animation: bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        body.theme-m [data-tooltip]:hover::after {
+            content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-8px);
+            background: #333; color: #fff; padding: 8px 14px; border-radius: 6px; font-size: 0.9rem; font-weight: bold;
+            white-space: nowrap; pointer-events: none; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            animation: fadeIn 0.2s forwards;
+        }
+        
+        /* Specific positioning fix for navbar tooltips so they don't overlap */
+        .top-nav [data-tooltip]:hover::after { bottom: -50px; transform: translateX(-50%); }
+        body.theme-z .top-nav [data-tooltip]:hover::after { bottom: -60px; transform: translateX(-50%); }
+
+        @keyframes bounceIn { 0% { opacity: 0; transform: translate(-50%, 10px) scale(0.8); } 100% { opacity: 1; transform: translate(-50%, -15px) scale(1); } }
+        @keyframes fadeIn { 0% { opacity: 0; transform: translate(-50%, 0); } 100% { opacity: 1; transform: translate(-50%, -8px); } }
+
+        /* ==========================================
            GEN-Z ANIMATED MORPH ICONS
            ========================================== */
         .z-icon-group { display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 3.5rem; height: 80px; }
@@ -202,7 +242,6 @@
         @keyframes floatDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
         @keyframes pulseGlow { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px var(--secondary)); } 50% { transform: scale(1.3); filter: drop-shadow(0 0 15px var(--secondary)); } }
 
-        /* Hover Smash Effect */
         body.theme-z .card:hover .z-left { transform: translateX(50px) scale(0.3) rotate(45deg); opacity: 0; animation: none; z-index: 1;}
         body.theme-z .card:hover .z-zap { opacity: 0; transform: scale(0); animation: none;}
         body.theme-z .card:hover .z-right { transform: translateX(-20px) scale(1.3); animation: none; z-index: 2; filter: drop-shadow(0 0 20px var(--primary)); }
@@ -391,7 +430,7 @@
         #chatbot-fab:hover { transform: scale(1.1) translateY(-5px); border-color: var(--primary); }
         body.theme-z #chatbot-fab { box-shadow: 0 5px 20px rgba(0,255,255,0.4); }
 
-        /* Auth Modal */
+        /* Modals (Auth & Chatbot) */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;}
         body.theme-z .modal-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
         
@@ -425,7 +464,7 @@
             
             .auth-buttons, .user-profile { width: 100%; justify-content: center; margin-top: 10px; flex-wrap: wrap;}
             .btn-signup { font-size: 0.85rem; padding: 8px 15px;}
-            .theme-toggle-btn { margin-bottom: 10px; }
+            .theme-switch-wrapper { margin-bottom: 10px; width: 100%; justify-content: center; }
 
             .hero-title { font-size: 2.2rem; line-height: 1.2; margin-top: 20px;}
             body.theme-z .hero-title { font-size: 2.8rem; }
@@ -477,15 +516,27 @@
         </div>
         <div class="theme-half theme-z-btn" onclick="setTheme('z')">
             <h1 style="font-size:4rem; margin-bottom:10px;">🚀</h1>
-            <h1>Gen-Z</h1>
+            <h1><span class="text-grad">Gen-Z</span></h1>
             <p style="font-size: 1.2rem; color: #aaa; margin-top: 15px;">Animations, sounds, pure vibes.</p>
         </div>
     </div>
 
     <div id="app-container" class="hidden">
 
-        <div id="chatbot-fab" onclick="playPop(); alert(currentTheme === 'z' ? 'Chatbot coming soon! 🤖' : 'Support Chatbot coming soon.');">
+        <div id="chatbot-fab" onclick="playPop(); document.getElementById('chatbot-modal').classList.remove('hidden');" data-tooltip="Need Help?">
             <dotlottie-player src="chatbot.lottie" background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
+        </div>
+
+        <div id="chatbot-modal" class="modal-overlay hidden">
+            <div class="modal-content" style="max-width: 350px;">
+                <span class="close-modal" onclick="playPop(); document.getElementById('chatbot-modal').classList.add('hidden');">✕</span>
+                <dotlottie-player src="chatbot.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: 0 auto;" loop autoplay></dotlottie-player>
+                <h2 style="margin-top: 10px;"><span class="tz">Yo! I'm learning 🧠</span><span class="tm">Coming Soon</span></h2>
+                <p style="margin-top: 10px;"><span class="tz">AI Support is cooking right now. Check back later bro!</span><span class="tm">Our AI support assistant is currently under development.</span></p>
+                <button class="btn-process" onclick="playPop(); document.getElementById('chatbot-modal').classList.add('hidden');">
+                    <span class="tz">Got it 💯</span><span class="tm">Close</span>
+                </button>
+            </div>
         </div>
 
         <div id="loading-overlay" class="hidden">
@@ -495,7 +546,6 @@
             <div class="show-m" style="width: 100%; display: flex; justify-content: center;">
                 <dotlottie-player src="loading.lottie" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></dotlottie-player>
             </div>
-            
             <h2 id="loading-text">
                 <span class="tz">Cooking... 🍳</span>
                 <span class="tm">Processing...</span>
@@ -511,19 +561,20 @@
 
         <header>
             <div class="logo" onclick="playPop(); goHome();"><span>pdf</span> loves me</div>
+            
             <nav class="top-nav">
-                <a onclick="playPop(); openWorkspace('Merge PDF');" title="Merge PDF">
+                <a onclick="playPop(); openWorkspace('Merge PDF');" data-tooltip="Merge PDF">
                     <span class="tz">SQUISH PDF</span><span class="tm">MERGE PDF</span>
                 </a>
-                <a onclick="playPop(); openWorkspace('Split PDF');" title="Split PDF">
+                <a onclick="playPop(); openWorkspace('Split PDF');" data-tooltip="Split PDF">
                     <span class="tz">CHOP PDF</span><span class="tm">SPLIT PDF</span>
                 </a>
-                <a onclick="playPop(); openWorkspace('Compress PDF');" title="Compress PDF">
+                <a onclick="playPop(); openWorkspace('Compress PDF');" data-tooltip="Compress PDF">
                     <span class="tz">MAKE SMOL</span><span class="tm">COMPRESS PDF</span>
                 </a>
                 
                 <div class="dropdown">
-                    <a class="dropbtn" onclick="playPop(); openConvertMenu();" title="Convert PDF">
+                    <a class="dropbtn" onclick="playPop(); openConvertMenu();" data-tooltip="Convert to/from PDF">
                         <span class="tz">MORPH PDF</span><span class="tm">CONVERT PDF</span> <span style="font-size:0.7em; margin-left:5px;">▼</span>
                     </a>
                     <div class="dropdown-content" id="nav-dropdown-pdf">
@@ -542,27 +593,36 @@
                     </div>
                 </div>
 
-                <a onclick="playPop(); openWorkspace('Image to Word');" title="Image to Word">
+                <a onclick="playPop(); openWorkspace('Image to Word');" data-tooltip="Image to Word">
                     <span class="tz">STEAL TEXT (OCR)</span><span class="tm">IMAGE TO WORD</span>
                 </a>
             </nav>
             
             <div class="auth-buttons" id="auth-buttons">
-                <button onclick="playPop(); toggleTheme()" class="theme-toggle-btn">
-                    <span class="tz">🔄 Go Millennial</span>
-                    <span class="tm">🔄 Go Gen-Z</span>
-                </button>
-            
+                <div class="theme-switch-wrapper">
+                    <span class="ts-label m-lbl">Millennial</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="theme-toggle-checkbox" onchange="toggleThemeSwitch(this)">
+                        <span class="ts-slider"></span>
+                    </label>
+                    <span class="ts-label z-lbl">Gen-Z</span>
+                </div>
+
                 <a class="btn-login" onclick="playPop(); openAuthModal();">Login</a>
                 <a class="btn-signup" onclick="playPop(); openAuthModal();">
                     <span class="tz">Sign up, no cap</span><span class="tm">Sign up</span>
                 </a>
             </div>
+
             <div class="user-profile" id="user-profile">
-                <button onclick="playPop(); toggleTheme()" class="theme-toggle-btn">
-                    <span class="tz">🔄 Go Millennial</span>
-                    <span class="tm">🔄 Go Gen-Z</span>
-                </button>
+                <div class="theme-switch-wrapper">
+                    <span class="ts-label m-lbl">Millennial</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="theme-toggle-checkbox-logged" onchange="toggleThemeSwitch(this)">
+                        <span class="ts-slider"></span>
+                    </label>
+                    <span class="ts-label z-lbl">Gen-Z</span>
+                </div>
 
                 <span id="user-display-name">👤 User</span>
                 <a class="btn-logout" onclick="playPop(); logoutFirebase();">
@@ -598,7 +658,7 @@
             </div>
             
             <div class="hero-title">
-                <span class="tz">PDF tools that actually slap ✨</span>
+                <span class="tz"><span class="text-grad">PDF tools that actually slap</span> ✨</span>
                 <span class="tm">Every tool you need to work with PDFs</span>
             </div>
             <div class="hero-sub">
@@ -607,27 +667,27 @@
             </div>
             
             <div class="grid">
-                <div class="card" onclick="playPop(); openWorkspace('Merge PDF');" title="Merge PDF">
+                <div class="card" onclick="playPop(); openWorkspace('Merge PDF');" data-tooltip="Merge PDF">
                     <div class="icon"><span class="tz">🥪</span><span class="tm">🔗</span></div>
                     <h3><span class="tz">Squish PDF</span><span class="tm">Merge PDF</span></h3>
                     <p><span class="tz">Combine them into a mega file.</span><span class="tm">Combine, reorder, and sort visually.</span></p>
                 </div>
-                <div class="card" onclick="playPop(); openWorkspace('Split PDF');" title="Split PDF">
+                <div class="card" onclick="playPop(); openWorkspace('Split PDF');" data-tooltip="Split PDF">
                     <div class="icon">✂️</div>
                     <h3><span class="tz">Chop PDF</span><span class="tm">Split PDF</span></h3>
                     <p><span class="tz">Slice specific pages right out.</span><span class="tm">Extract specific pages or ranges.</span></p>
                 </div>
-                <div class="card" onclick="playPop(); openWorkspace('Compress PDF');" title="Compress PDF">
+                <div class="card" onclick="playPop(); openWorkspace('Compress PDF');" data-tooltip="Compress PDF">
                     <div class="icon"><span class="tz">🤏</span><span class="tm">📉</span></div>
                     <h3><span class="tz">Make it Smol</span><span class="tm">Compress PDF</span></h3>
                     <p><span class="tz">Crush file size, keep the quality.</span><span class="tm">Reduce file size client-side.</span></p>
                 </div>
-                <div class="card" onclick="playPop(); openConvertMenu();" title="Convert PDF">
+                <div class="card" onclick="playPop(); openConvertMenu();" data-tooltip="Convert PDF">
                     <div class="icon"><span class="tz">🦋</span><span class="tm">🔄</span></div>
                     <h3><span class="tz">Morph PDF</span><span class="tm">Convert PDF</span></h3>
                     <p><span class="tz">Word, Excel, JPG shape-shifting.</span><span class="tm">Convert Word, Excel, Images to/from PDF.</span></p>
                 </div>
-                <div class="card" onclick="playPop(); openWorkspace('Image to Word');" title="Image to Word">
+                <div class="card" onclick="playPop(); openWorkspace('Image to Word');" data-tooltip="Image to Word">
                     <div class="icon">🔍</div>
                     <h3><span class="tz">Steal Text</span><span class="tm">Image to Word</span></h3>
                     <p><span class="tz">Rip words straight off images (OCR).</span><span class="tm">Extract editable text from images (OCR).</span></p>
@@ -643,11 +703,11 @@
             </div>
 
             <div class="hero-title" style="margin-bottom: 50px;">
-                <span class="tz">Morph your files 🧬</span><span class="tm">Convert PDF Tools</span>
+                <span class="tz"><span class="text-grad">Morph your files</span> 🧬</span><span class="tm">Convert PDF Tools</span>
             </div>
 
             <div class="grid">
-                <div class="card" onclick="playPop(); openWorkspace('JPG to PDF');">
+                <div class="card" onclick="playPop(); openWorkspace('JPG to PDF');" data-tooltip="JPG to PDF">
                     <div class="icon">
                         <span class="tm">🖼️➡️📄</span>
                         <div class="tz z-icon-group"><span class="z-left">📸</span><span class="z-zap">✨</span><span class="z-right">📕</span></div>
@@ -656,7 +716,7 @@
                     <p><span class="tz">Turn images into a solid doc.</span><span class="tm">Turn images into a solid doc.</span></p>
                 </div>
                 
-                <div class="card" onclick="playPop(); openWorkspace('WORD to PDF');">
+                <div class="card" onclick="playPop(); openWorkspace('WORD to PDF');" data-tooltip="WORD to PDF">
                     <div class="icon">
                         <span class="tm">📝➡️📄</span>
                         <div class="tz z-icon-group"><span class="z-left">✍️</span><span class="z-zap">✨</span><span class="z-right">📕</span></div>
@@ -665,7 +725,7 @@
                     <p><span class="tz">Lock down that DOCX.</span><span class="tm">Convert Word to PDF.</span></p>
                 </div>
                 
-                <div class="card" onclick="playPop(); openWorkspace('EXCEL to PDF');">
+                <div class="card" onclick="playPop(); openWorkspace('EXCEL to PDF');" data-tooltip="EXCEL to PDF">
                     <div class="icon">
                         <span class="tm">📈➡️📄</span>
                         <div class="tz z-icon-group"><span class="z-left">📊</span><span class="z-zap">✨</span><span class="z-right">📕</span></div>
@@ -674,7 +734,7 @@
                     <p><span class="tz">Flatten those spreadsheets.</span><span class="tm">Convert Excel to PDF.</span></p>
                 </div>
                 
-                <div class="card" onclick="playPop(); openWorkspace('PDF to JPG');">
+                <div class="card" onclick="playPop(); openWorkspace('PDF to JPG');" data-tooltip="PDF to JPG">
                     <div class="icon">
                         <span class="tm">📄➡️🖼️</span>
                         <div class="tz z-icon-group"><span class="z-left">📕</span><span class="z-zap">✨</span><span class="z-right">📸</span></div>
@@ -683,7 +743,7 @@
                     <p><span class="tz">Extract pages to raw images.</span><span class="tm">Convert PDF pages to JPG.</span></p>
                 </div>
                 
-                <div class="card" onclick="playPop(); openWorkspace('PDF to WORD');">
+                <div class="card" onclick="playPop(); openWorkspace('PDF to WORD');" data-tooltip="PDF to WORD">
                     <div class="icon">
                         <span class="tm">📄➡️📝</span>
                         <div class="tz z-icon-group"><span class="z-left">📕</span><span class="z-zap">✨</span><span class="z-right">✍️</span></div>
@@ -692,7 +752,7 @@
                     <p><span class="tz">Make it editable again fr.</span><span class="tm">Convert PDF to Word.</span></p>
                 </div>
                 
-                <div class="card" onclick="playPop(); openWorkspace('PDF to EXCEL');">
+                <div class="card" onclick="playPop(); openWorkspace('PDF to EXCEL');" data-tooltip="PDF to EXCEL">
                     <div class="icon">
                         <span class="tm">📄➡️📈</span>
                         <div class="tz z-icon-group"><span class="z-left">📕</span><span class="z-zap">✨</span><span class="z-right">📊</span></div>
@@ -766,7 +826,7 @@
 
     </div> <script>
         // ==========================================
-        // THEME MANAGEMENT
+        // THEME MANAGEMENT & TOGGLE SWITCH
         // ==========================================
         let currentTheme = 'm'; 
 
@@ -776,6 +836,8 @@
             document.getElementById('theme-selector').style.display = 'none';
             document.getElementById('app-container').classList.remove('hidden');
             
+            syncSwitches();
+
             if(theme === 'z') {
                 document.body.style.backgroundSize = '400% 400%';
                 playPop();
@@ -783,9 +845,27 @@
                 document.body.style.backgroundSize = 'auto';
             }
         }
-        
-        function toggleTheme() {
-            setTheme(currentTheme === 'm' ? 'z' : 'm');
+
+        function toggleThemeSwitch(checkbox) {
+            playPop();
+            currentTheme = checkbox.checked ? 'z' : 'm';
+            document.body.className = `theme-${currentTheme}`;
+            
+            syncSwitches();
+
+            if(currentTheme === 'z') {
+                document.body.style.backgroundSize = '400% 400%';
+            } else {
+                document.body.style.backgroundSize = 'auto';
+            }
+        }
+
+        // Keeps both navbar switches (logged in/out) synchronized
+        function syncSwitches() {
+            const cb1 = document.getElementById('theme-toggle-checkbox');
+            const cb2 = document.getElementById('theme-toggle-checkbox-logged');
+            if(cb1) cb1.checked = (currentTheme === 'z');
+            if(cb2) cb2.checked = (currentTheme === 'z');
         }
 
         // ==========================================
@@ -955,6 +1035,7 @@
             hideDropdowns();
         }
         
+        // Handles setting the 3 compression levels
         function setCompressMode(mode) {
             compressMode = mode;
             document.querySelectorAll('#compress-options .sidebar-option').forEach(el => el.classList.remove('active'));
@@ -1128,15 +1209,15 @@
                     const optionsContent = document.getElementById('sidebar-options-content');
                     
                     if (currentTool === 'Compress PDF') {
-                        // ADDED 3 COMPRESSION OPTIONS
+                        // 3 COMPRESSION OPTIONS RENDERED IN SIDEBAR
                         optionsContent.innerHTML = `
-                            <div id="compress-options">
+                            <div id="compress-options" style="display:flex; flex-direction:column; gap:10px;">
                                 <div class="sidebar-option" id="comp-extreme" onclick="playPop(); setCompressMode('extreme');">
                                     <strong><span class="tz">Max Squish</span><span class="tm">Extreme Compression</span></strong>
                                     <p><span class="tz">Looks crusty, but tiny size.</span><span class="tm">Less quality, high compression.</span></p>
                                 </div>
                                 <div class="sidebar-option active" id="comp-recommended" onclick="playPop(); setCompressMode('recommended');">
-                                    <strong><span class="tz">Vibe Check</span><span class="tm">Recommended Compression</span></strong>
+                                    <strong><span class="tz">Vibe Check</span><span class="tm">Recommended</span></strong>
                                     <p><span class="tz">Good balance of quality and size.</span><span class="tm">Good quality, good compression.</span></p>
                                 </div>
                                 <div class="sidebar-option" id="comp-less" onclick="playPop(); setCompressMode('less');">
@@ -1347,11 +1428,11 @@
                 else {
                     
                     // FIXED IMAGE TO WORD API
-                    // If Image to Word, we must first wrap it into a PDF because ConvertAPI doesn't do jpg->docx directly.
                     let finalUploadBlob = new Blob([fileData.bytes], { type: fileData.type || 'application/pdf' });
                     let uploadName = fileData.name;
 
                     if (currentTool === 'Image to Word') {
+                        // Wrapping Image to PDF locally before sending to PDF->Word API
                         const imgPdf = await PDFDocument.create();
                         let imgEmbed;
                         if(fileData.type.includes('png')) imgEmbed = await imgPdf.embedPng(fileData.bytes);
@@ -1362,7 +1443,7 @@
                         
                         const imgPdfBytes = await imgPdf.save();
                         finalUploadBlob = new Blob([imgPdfBytes], { type: 'application/pdf' });
-                        uploadName = "temp_image.pdf"; // Trick API into reading it as a PDF for OCR
+                        uploadName = "temp_image.pdf";
                     }
 
                     // API CONVERSIONS
