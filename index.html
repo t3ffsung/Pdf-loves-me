@@ -16,6 +16,7 @@
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script type="module" src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"></script>
 
@@ -167,7 +168,7 @@
         body.theme-z .btn-signup:hover { box-shadow: 0 0 25px rgba(0, 255, 255, 0.8); }
         
         /* SPOTS LEFT BADGE (Under Sign up) */
-        .spots-badge { font-size: 0.75rem; color: #ff4757; font-weight: bold; margin-top: 5px; animation: pulse 2s infinite alternate;}
+        .spots-badge { font-size: 0.75rem; color: #ff4757; font-weight: bold; margin-top: 5px; animation: pulse 2s infinite alternate; text-align: center;}
         body.theme-z .spots-badge { color: var(--secondary); text-shadow: 0 0 5px var(--secondary); }
 
         .user-profile { display: none; align-items: center; gap: 15px; font-size: 1rem; font-weight: bold; color: var(--text-main); }
@@ -435,7 +436,9 @@
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
         .close-modal:hover { color: var(--primary); }
         body.theme-z .close-modal:hover { transform: rotate(90deg); }
-        
+        .promo-box .close-modal { color: white; opacity: 0.8; }
+        .promo-box .close-modal:hover { opacity: 1; color: white; }
+
         .modal-content h2 { margin-top: 0; color: var(--text-main); font-weight: bold;}
         body.theme-z .modal-content h2 { font-weight: 900; color: var(--secondary); }
         
@@ -530,7 +533,7 @@
 
         <div id="promo-modal" class="modal-overlay hidden" style="z-index: 2000;">
             <div class="modal-content promo-box">
-                <span class="close-modal" onclick="playPop(); closePromoModal();" style="color: white; opacity: 0.8;">✕</span>
+                <span class="close-modal" onclick="playPop(); closePromoModal();">✕</span>
                 <div style="font-size: 3.5rem; margin-bottom: 10px; animation: pulseGlow 2s infinite;">🎁</div>
                 
                 <h2 style="font-size: 1.8rem; margin-bottom: 15px; color: white;">
@@ -544,7 +547,7 @@
                 </p>
                 
                 <div style="background: rgba(255, 255, 255, 0.2); border: 2px solid white; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.2rem; margin-bottom: 25px;">
-                    🔥 Only <span class="promo-spots-count">47</span> spots left!
+                    🔥 Only <span class="promo-spots-count">--</span> spots left!
                 </div>
                 
                 <button class="btn-process" onclick="playPop(); claimPremium();" style="background: linear-gradient(45deg, #ffd700, #ff9f43); color: #000; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4); margin-bottom: 15px; font-size: 1.3rem;">
@@ -579,9 +582,9 @@
                 <h2 style="margin-bottom: 20px;"><span class="tz">Report a Bug 🐛</span><span class="tm">Report an Issue</span></h2>
                 <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-muted);">
                     <span class="tz">Tell the dev what's broken so he can fix it ASAP.</span>
-                    <span class="tm">Please describe the issue you encountered.</span>
+                    <span class="tm">Please describe the issue you encountered. It will be sent securely to our database.</span>
                 </p>
-                <textarea id="bug-description" class="modal-input" rows="5" placeholder="Describe what went wrong..." style="resize: none;"></textarea>
+                <textarea id="bug-description" class="modal-input" rows="5" placeholder="Describe what went wrong..." style="resize: none; width: 100%; padding: 15px; border-radius: 8px;"></textarea>
                 <button class="btn-process" onclick="playPop(); submitBug();">
                     <span class="tz">Send Report 🚀</span><span class="tm">Submit Issue</span>
                 </button>
@@ -662,7 +665,7 @@
                     <a class="btn-signup" onclick="playPop(); openAuthModal();">
                         <span class="tz">Sign up, no cap</span><span class="tm">Sign up</span>
                     </a>
-                    <span class="spots-badge"><span class="promo-spots-count">47</span> spots left! 🎁</span>
+                    <span class="spots-badge"><span class="promo-spots-count">--</span> spots left! 🎁</span>
                 </div>
             </div>
 
@@ -884,53 +887,84 @@
 
     </div> <script>
         // ==========================================
+        // FIREBASE SETUP (Firestore Database & Auth)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9jEmFFEPNT0iIUH6ro-0BZSBfvdDy9XU",
+            authDomain: "pdf-loves-me.firebaseapp.com",
+            projectId: "pdf-loves-me",
+            storageBucket: "pdf-loves-me.firebasestorage.app",
+            messagingSenderId: "397926920358",
+            appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
+        };
+
+        // Initialize Firebase
+        let auth = null;
+        let db = null;
+        let spotsLeft = 50; // Default
+
+        try {
+            if (typeof firebase !== 'undefined') {
+                firebase.initializeApp(firebaseConfig);
+                auth = firebase.auth();
+                db = firebase.firestore();
+
+                // Listen to Auth State
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        document.getElementById('auth-buttons').style.display = 'none';
+                        document.getElementById('user-profile').style.display = 'flex';
+                        document.getElementById('user-display-name').innerText = `👤 ${user.displayName || "User"}`;
+                        closeAuthModal();
+                    } else {
+                        document.getElementById('auth-buttons').style.display = 'flex';
+                        document.getElementById('user-profile').style.display = 'none';
+                    }
+                });
+
+                // LEGIT GLOBAL PROMO COUNTER 
+                // Listens to the 'promo/stats' document in Firestore
+                const promoRef = db.collection("promo").doc("stats");
+                promoRef.onSnapshot((doc) => {
+                    if(doc.exists) {
+                        spotsLeft = doc.data().spotsLeft;
+                    } else {
+                        // If it doesn't exist yet, create it starting at 50
+                        promoRef.set({ spotsLeft: 50 });
+                        spotsLeft = 50;
+                    }
+
+                    // Update UI Numbers
+                    document.querySelectorAll('.promo-spots-count').forEach(el => {
+                        el.innerText = spotsLeft;
+                    });
+
+                    // Hide promo totally if 0 spots left
+                    if(spotsLeft <= 0) {
+                        const pModal = document.getElementById('promo-modal');
+                        if(pModal && !pModal.classList.contains('hidden')) pModal.classList.add('hidden');
+                        document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'none');
+                    }
+                });
+            }
+        } catch (e) { console.error("Firebase failed to load:", e); }
+
+        // ==========================================
         // PROMO POPUP LOGIC (FOMO)
         // ==========================================
-        let promoTimer;
-        let spotsLeft;
-
-        function updateSpotsUI() {
-            document.querySelectorAll('.promo-spots-count').forEach(el => {
-                el.innerText = spotsLeft;
-            });
-        }
-
         function showPromoModal() {
-            // Check if dismissed permanently
-            if (localStorage.getItem('promoDismissed') === 'true') return; 
+            // Updated key so it resets for you to test this new version
+            if (localStorage.getItem('promoDismissedV2') === 'true' || spotsLeft <= 0) return; 
             
-            // Get current spots from localStorage or start fresh
-            let savedSpots = localStorage.getItem('promoSpots');
-            if(!savedSpots) {
-                spotsLeft = 47;
-                localStorage.setItem('promoSpots', spotsLeft);
-            } else {
-                spotsLeft = parseInt(savedSpots);
-            }
-
             const promo = document.getElementById('promo-modal');
             if(promo) {
                 promo.classList.remove('hidden');
-                updateSpotsUI();
-                
-                // Panic Countdown Simulator - Decreases randomly, but saves the state!
-                promoTimer = setInterval(() => {
-                    if (spotsLeft > 2 && Math.random() > 0.6) {
-                        spotsLeft -= Math.floor(Math.random() * 2) + 1;
-                        if(spotsLeft < 2) spotsLeft = 2; 
-                        localStorage.setItem('promoSpots', spotsLeft);
-                        updateSpotsUI();
-                    } else if (spotsLeft <= 2) {
-                        clearInterval(promoTimer);
-                    }
-                }, 4000); 
             }
         }
 
         function closePromoModal() {
             document.getElementById('promo-modal').classList.add('hidden');
-            clearInterval(promoTimer);
-            localStorage.setItem('promoDismissed', 'true'); // Prevents showing on refresh
+            localStorage.setItem('promoDismissedV2', 'true'); // Prevents showing on refresh
         }
 
         function claimPremium() {
@@ -938,20 +972,71 @@
             openAuthModal(); 
         }
         
-        function submitBug() {
+        // ==========================================
+        // BUG REPORTING (Saves to Firestore!)
+        // ==========================================
+        async function submitBug() {
             const desc = document.getElementById('bug-description').value;
             if(!desc) {
                 playWtf();
                 return alert("Please describe the bug first!");
             }
-            const mailtoLink = `mailto:mrsecret11118@gmail.com?subject=Bug Report: PDF Loves Me&body=${encodeURIComponent(desc)}`;
-            window.location.href = mailtoLink;
-            document.getElementById('bug-modal').classList.add('hidden');
-            document.getElementById('bug-description').value = '';
+            if(!db) {
+                playFail();
+                return alert("Database not connected. Please check network.");
+            }
+
+            try {
+                // Creates a new document in the 'bugs' collection
+                await db.collection("bugs").add({
+                    description: desc,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    reporterEmail: auth.currentUser ? auth.currentUser.email : "Anonymous",
+                    reporterName: auth.currentUser ? auth.currentUser.displayName : "Anonymous",
+                    status: "new"
+                });
+                alert("Bug reported successfully! The dev will fix it ASAP.");
+                document.getElementById('bug-modal').classList.add('hidden');
+                document.getElementById('bug-description').value = '';
+            } catch(e) {
+                playFail();
+                alert("Error saving bug to database: " + e.message);
+            }
         }
 
         // ==========================================
-        // THEME MANAGEMENT
+        // AUTHENTICATION LOGIC
+        // ==========================================
+        function openAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
+        
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+        
+        function loginWithGoogle() {
+            if(!auth) { playFail(); return alert("Firebase Auth is blocked by your browser/adblocker."); }
+            const provider = new firebase.auth.GoogleAuthProvider();
+            
+            auth.signInWithPopup(provider).then((result) => {
+                // If this is a brand new user signing up, deduct 1 from the global spots!
+                if(result.additionalUserInfo && result.additionalUserInfo.isNewUser && spotsLeft > 0) {
+                    db.collection("promo").doc("stats").update({
+                        spotsLeft: firebase.firestore.FieldValue.increment(-1)
+                    });
+                    alert("Congratulations! You claimed a free Premium Account! 🎉");
+                }
+            }).catch(err => { 
+                playFail(); 
+                alert("Google Sign-In failed: " + err.message); 
+            });
+        }
+        
+        function logoutFirebase() { if(auth) auth.signOut(); }
+
+        // ==========================================
+        // THEME MANAGEMENT & TOGGLE SWITCH
         // ==========================================
         let currentTheme = 'm'; 
 
@@ -1085,51 +1170,6 @@
         let degrees = null;
 
         // ==========================================
-        // FIREBASE SETUP 
-        // ==========================================
-        let auth = null;
-        
-        try {
-            if (typeof firebase !== 'undefined') {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyB9jEmFFEPNT0iIUH6ro-0BZSBfvdDy9XU",
-                    authDomain: "pdf-loves-me.firebaseapp.com",
-                    projectId: "pdf-loves-me",
-                    storageBucket: "pdf-loves-me.firebasestorage.app",
-                    messagingSenderId: "397926920358",
-                    appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
-                };
-                firebase.initializeApp(firebaseConfig);
-                auth = firebase.auth();
-                
-                auth.onAuthStateChanged((user) => {
-                    if (user) {
-                        document.getElementById('auth-buttons').style.display = 'none';
-                        document.getElementById('user-profile').style.display = 'flex';
-                        document.getElementById('user-display-name').innerText = `👤 ${user.displayName || "User"}`;
-                        closeAuthModal();
-                    } else {
-                        document.getElementById('auth-buttons').style.display = 'flex';
-                        document.getElementById('user-profile').style.display = 'none';
-                    }
-                });
-            }
-        } catch (e) { console.error("Firebase failed to load:", e); }
-
-        function openAuthModal() {
-            document.getElementById('auth-modal').classList.remove('hidden');
-        }
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.add('hidden');
-        }
-        function loginWithGoogle() {
-            if(!auth) { playFail(); return alert("Firebase Auth is blocked by your browser/adblocker."); }
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(err => { playFail(); alert("Google Sign-In failed: " + err.message); });
-        }
-        function logoutFirebase() { if(auth) auth.signOut(); }
-
-        // ==========================================
         // APP UI FLOW
         // ==========================================
         function showLoading() {
@@ -1208,6 +1248,40 @@
             document.getElementById('upload-area').classList.remove('hidden');
             document.getElementById('file-input').value = '';
         }
+
+        // ==========================================
+        // EVENT LISTENERS
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            // Trigger FOMO promo 1.5s after load
+            setTimeout(() => { showPromoModal(); }, 1500);
+
+            try {
+                if (typeof pdfjsLib !== 'undefined') {
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+                }
+                if (typeof PDFLib !== 'undefined') {
+                    PDFDocument = PDFLib.PDFDocument;
+                    degrees = PDFLib.degrees;
+                }
+
+                ['file-input', 'add-more-input'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.addEventListener('change', (e) => { playPop(); handleFiles(e.target.files); });
+                });
+
+                const wv = document.getElementById('workspace-view');
+                if(wv) {
+                    wv.addEventListener('dragover', (e) => { e.preventDefault(); wv.classList.add('dragover-active'); });
+                    wv.addEventListener('dragleave', (e) => { e.preventDefault(); if (!wv.contains(e.relatedTarget)) wv.classList.remove('dragover-active'); });
+                    wv.addEventListener('drop', (e) => { e.preventDefault(); wv.classList.remove('dragover-active'); playPop(); handleFiles(e.dataTransfer.files); });
+                }
+
+                if (typeof Sortable !== 'undefined') {
+                    new Sortable(document.getElementById('pages-container'), { animation: 150, onEnd: () => { playPop(); updateMergePageNumbers(); } });
+                }
+            } catch(e) { console.error("Init error:", e); }
+        });
 
         // ==========================================
         // FILE PROCESSING ENGINE
@@ -1516,11 +1590,10 @@
                     triggerDownload(await zip.generateAsync({type:"blob"}), "images_extracted.zip", true);
                 }
                 else {
-                    
                     let finalUploadBlob = new Blob([fileData.bytes], { type: fileData.type || 'application/pdf' });
                     let uploadName = fileData.name;
 
-                    // WRAP IMAGE IN PDF FIRST FOR IMAGE TO WORD API
+                    // Wrap Image to PDF locally before sending to OCR
                     if (currentTool === 'Image to Word') {
                         const imgPdf = await PDFDocument.create();
                         let imgEmbed;
@@ -1535,7 +1608,6 @@
                         uploadName = "temp_image.pdf";
                     }
 
-                    // API CONVERSIONS
                     const formData = new FormData();
                     formData.append('File', finalUploadBlob, uploadName);
 
