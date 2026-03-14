@@ -30,14 +30,14 @@
 
     <style>
         /* ==========================================
-           GLOBAL SCALING (The 15% Shrink Fix)
+           GLOBAL SCALING (15% Shrink for Desktop)
            ========================================== */
         html {
             font-size: 14px; /* Scales down all rem units globally */
         }
         
         @media (max-width: 768px) {
-            html { font-size: 16px; } /* Keep normal size for mobile readability */
+            html { font-size: 16px; } /* Reset to normal size for mobile readability */
         }
 
         /* ==========================================
@@ -132,7 +132,7 @@
         .bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 0.15; mix-blend-mode: screen; pointer-events: none; }
 
         /* ==========================================
-           GLOBAL UI STYLES (Header tightened to prevent wrapping)
+           GLOBAL UI STYLES
            ========================================== */
         header { 
             background: var(--bg-header); backdrop-filter: var(--glass-backdrop);
@@ -553,7 +553,7 @@
 
     <div id="app-container" class="hidden">
 
-        <div id="notification-modal" class="modal-overlay hidden">
+        <div id="notification-modal" class="modal-overlay hidden" style="z-index: 6000;">
             <div class="modal-content" style="max-width: 350px;">
                 <span class="close-modal" onclick="playPop(); document.getElementById('notification-modal').classList.add('hidden');">✕</span>
                 <h2 id="notif-title">Notice</h2>
@@ -932,6 +932,34 @@
         </div>
 
     </div> <script>
+        // --- GLOBAL VARIABLES (Declared EXACTLY ONCE to prevent Syntax Errors) ---
+        const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9jEmFFEPNT0iIUH6ro-0BZSBfvdDy9XU",
+            authDomain: "pdf-loves-me.firebaseapp.com",
+            projectId: "pdf-loves-me",
+            storageBucket: "pdf-loves-me.firebasestorage.app",
+            messagingSenderId: "397926920358",
+            appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
+        };
+        
+        let currentTool = "";
+        let loadedFiles = []; 
+        let fileIdCounter = 0;
+        let pageIdCounter = 0;
+        let pdfJsCache = {}; 
+        let splitRanges = [];
+        let totalSplitPages = 0;
+        let compressMode = 'recommended'; 
+        let currentTheme = 'm'; 
+        let audioCtx = null;
+        let auth = null;
+        let db = null;
+        let spotsLeft = 50; 
+        let PDFDocument = null;
+        let degrees = null;
+        let promoTimer = null;
+
         // ==========================================
         // CUSTOM ALERT SYSTEM (Replaces native alerts)
         // ==========================================
@@ -942,76 +970,67 @@
         }
 
         // ==========================================
-        // FIREBASE SETUP (Firestore Database & Auth)
+        // AUTHENTICATION LOGIC (BULLETPROOF POPUP)
         // ==========================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyB9jEmFFEPNT0iIUH6ro-0BZSBfvdDy9XU",
-            authDomain: "pdf-loves-me.firebaseapp.com",
-            projectId: "pdf-loves-me",
-            storageBucket: "pdf-loves-me.firebasestorage.app",
-            messagingSenderId: "397926920358",
-            appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
-        };
-
-        let auth = null;
-        let db = null;
-        let spotsLeft = 50; 
-
-        try {
-            if (typeof firebase !== 'undefined') {
-                firebase.initializeApp(firebaseConfig);
-                auth = firebase.auth();
-                db = firebase.firestore();
-
-                auth.onAuthStateChanged((user) => {
-                    if (user) {
-                        document.getElementById('auth-buttons').style.display = 'none';
-                        document.getElementById('user-profile').style.display = 'flex';
-                        document.getElementById('user-display-name').innerText = `👤 ${user.displayName || "User"}`;
-                        closeAuthModal();
-                    } else {
-                        document.getElementById('auth-buttons').style.display = 'flex';
-                        document.getElementById('user-profile').style.display = 'none';
-                    }
-                });
-
-                // LEGIT GLOBAL PROMO COUNTER 
-                try {
-                    const promoRef = db.collection("promo").doc("stats");
-                    promoRef.onSnapshot((doc) => {
-                        if(doc.exists) {
-                            spotsLeft = doc.data().spotsLeft;
-                        } else {
-                            promoRef.set({ spotsLeft: 50 }, { merge: true });
-                            spotsLeft = 50;
-                        }
-
-                        document.querySelectorAll('.promo-spots-count').forEach(el => {
-                            el.innerText = spotsLeft;
-                        });
-
-                        if(spotsLeft <= 0) {
-                            const pModal = document.getElementById('promo-modal');
-                            if(pModal && !pModal.classList.contains('hidden')) pModal.classList.add('hidden');
-                            document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'none');
-                        } else {
-                            document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'block');
-                        }
-                    }, (err) => {
-                        console.error("Firestore Error:", err);
-                    });
-                } catch(err) {
-                    console.error("Database connection failed", err);
-                }
+        function openAuthModal() { 
+            document.getElementById('auth-modal').classList.remove('hidden'); 
+        }
+        
+        function closeAuthModal() { 
+            document.getElementById('auth-modal').classList.add('hidden'); 
+        }
+        
+        function loginWithGoogle() {
+            if(!auth) { 
+                playFail(); 
+                return showAppAlert("Adblocker? 🛡️", "Auth Error", "Firebase Auth is blocked by your browser.", "Authentication service is currently unavailable."); 
             }
-        } catch (e) { console.error("Firebase failed to load:", e); }
+            
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+            
+            // Standard Popup logic (Extremely stable)
+            auth.signInWithPopup(provider).then((result) => {
+                // If brand new user, deduct 1 from global spots!
+                if(result.additionalUserInfo && result.additionalUserInfo.isNewUser && spotsLeft > 0) {
+                    if(db) {
+                        db.collection("promo").doc("stats").set({
+                            spotsLeft: firebase.firestore.FieldValue.increment(-1)
+                        }, { merge: true });
+                    }
+                    showAppAlert("W RIZZ 🎉", "Success!", "You just claimed a lifetime Premium account!", "Congratulations! You've successfully claimed a free Premium account.");
+                } else {
+                    showAppAlert("Welcome Back! 👋", "Logged In", "You're back in. Let's get to work.", "You have successfully logged in.");
+                }
+                closeAuthModal();
+            }).catch(err => { 
+                console.error("Login Error:", err);
+                
+                // If user has a strict popup blocker installed on their browser
+                if(err.code === 'auth/popup-blocked') {
+                    showAppAlert("Blocked 🛑", "Popup Blocked", "Please allow pop-ups for this site so Google can log you in.", "Please allow popups to continue signing in.");
+                    return;
+                }
+                
+                playFail(); 
+                let errorMsg = err.message;
+                if(err.code === 'auth/operation-not-allowed') {
+                    errorMsg = "Google Sign-In is disabled. You must enable 'Google' under Authentication > Sign-in method in your Firebase Console.";
+                } else if(err.code === 'auth/unauthorized-domain') {
+                    errorMsg = "This domain is not authorized. Add your website URL to Authorized Domains in your Firebase Console Settings.";
+                }
+                showAppAlert("Failed 🛑", "Login Error", errorMsg, errorMsg); 
+            });
+        }
+        
+        function logoutFirebase() { if(auth) auth.signOut(); }
 
         // ==========================================
         // PROMO POPUP LOGIC (FOMO)
         // ==========================================
         function showPromoModal() {
             // Uses a new key so it shows up for you again during testing
-            if (localStorage.getItem('promoDismissedV4') === 'true' || spotsLeft <= 0) return; 
+            if (localStorage.getItem('promoDismissedV5') === 'true' || spotsLeft <= 0) return; 
             
             const promo = document.getElementById('promo-modal');
             if(promo) {
@@ -1021,7 +1040,7 @@
 
         function closePromoModal() {
             document.getElementById('promo-modal').classList.add('hidden');
-            localStorage.setItem('promoDismissedV4', 'true'); 
+            localStorage.setItem('promoDismissedV5', 'true'); 
         }
 
         function claimPremium() {
@@ -1061,55 +1080,6 @@
                 showAppAlert("RIP 💀", "Error", "Failed to save: " + e.message, "Failed to submit bug: " + e.message);
             }
         }
-
-        // ==========================================
-        // AUTHENTICATION LOGIC (BULLETPROOF)
-        // ==========================================
-        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
-        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
-        
-        function loginWithGoogle() {
-            if(!auth) { 
-                playFail(); 
-                return showAppAlert("Adblocker? 🛡️", "Auth Error", "Firebase Auth is blocked by your browser.", "Authentication service is currently unavailable."); 
-            }
-            
-            const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({ prompt: 'select_account' });
-            
-            auth.signInWithPopup(provider).then((result) => {
-                // If brand new user, deduct 1 from global spots!
-                if(result.additionalUserInfo && result.additionalUserInfo.isNewUser && spotsLeft > 0) {
-                    if(db) {
-                        db.collection("promo").doc("stats").set({
-                            spotsLeft: firebase.firestore.FieldValue.increment(-1)
-                        }, { merge: true });
-                    }
-                    showAppAlert("W RIZZ 🎉", "Success!", "You just claimed a lifetime Premium account!", "Congratulations! You've successfully claimed a free Premium account.");
-                } else {
-                    showAppAlert("Welcome Back! 👋", "Logged In", "You're back in. Let's get to work.", "You have successfully logged in.");
-                }
-                closeAuthModal();
-            }).catch(err => { 
-                console.error("Login Error:", err);
-                
-                if(err.code === 'auth/popup-blocked') {
-                    showAppAlert("Blocked 🛑", "Popup Blocked", "Please allow pop-ups for this site so Google can log you in.", "Please allow popups to continue signing in.");
-                    return;
-                }
-                
-                playFail(); 
-                let errorMsg = err.message;
-                if(err.code === 'auth/operation-not-allowed') {
-                    errorMsg = "Google Sign-In is disabled. You must enable 'Google' under Authentication > Sign-in method in your Firebase Console.";
-                } else if(err.code === 'auth/unauthorized-domain') {
-                    errorMsg = "This domain is not authorized. Add your website URL to Authorized Domains in your Firebase Console Settings.";
-                }
-                showAppAlert("Failed 🛑", "Login Error", errorMsg, errorMsg); 
-            });
-        }
-        
-        function logoutFirebase() { if(auth) auth.signOut(); }
 
         // ==========================================
         // THEME MANAGEMENT & TOGGLE SWITCH
@@ -1299,6 +1269,100 @@
             document.getElementById('upload-area').classList.remove('hidden');
             document.getElementById('file-input').value = '';
         }
+
+        // ==========================================
+        // FIREBASE INITIALIZATION & EVENT LISTENERS
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. INITIALIZE THEME
+            const savedTheme = localStorage.getItem('userTheme');
+            if (savedTheme) {
+                setTheme(savedTheme); 
+            } else {
+                document.getElementById('theme-selector').style.display = 'flex';
+                document.getElementById('app-container').classList.add('hidden');
+            }
+
+            // 2. TRIGGER FOMO PROMO
+            setTimeout(() => { showPromoModal(); }, 1500);
+
+            // 3. INITIALIZE LIBRARIES
+            try {
+                if (typeof pdfjsLib !== 'undefined') {
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+                }
+                if (typeof PDFLib !== 'undefined') {
+                    PDFDocument = PDFLib.PDFDocument;
+                    degrees = PDFLib.degrees;
+                }
+
+                ['file-input', 'add-more-input'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.addEventListener('change', (e) => { playPop(); handleFiles(e.target.files); });
+                });
+
+                const wv = document.getElementById('workspace-view');
+                if(wv) {
+                    wv.addEventListener('dragover', (e) => { e.preventDefault(); wv.classList.add('dragover-active'); });
+                    wv.addEventListener('dragleave', (e) => { e.preventDefault(); if (!wv.contains(e.relatedTarget)) wv.classList.remove('dragover-active'); });
+                    wv.addEventListener('drop', (e) => { e.preventDefault(); wv.classList.remove('dragover-active'); playPop(); handleFiles(e.dataTransfer.files); });
+                }
+
+                if (typeof Sortable !== 'undefined') {
+                    new Sortable(document.getElementById('pages-container'), { animation: 150, onEnd: () => { playPop(); updateMergePageNumbers(); } });
+                }
+            } catch(e) { console.error("Init error:", e); }
+            
+            // 4. INITIALIZE FIREBASE SAFELY
+            try {
+                if (typeof firebase !== 'undefined') {
+                    firebase.initializeApp(firebaseConfig);
+                    auth = firebase.auth();
+                    db = firebase.firestore();
+
+                    // Listen to Auth State
+                    auth.onAuthStateChanged((user) => {
+                        if (user) {
+                            document.getElementById('auth-buttons').style.display = 'none';
+                            document.getElementById('user-profile').style.display = 'flex';
+                            document.getElementById('user-display-name').innerText = `👤 ${user.displayName || "User"}`;
+                            closeAuthModal();
+                        } else {
+                            document.getElementById('auth-buttons').style.display = 'flex';
+                            document.getElementById('user-profile').style.display = 'none';
+                        }
+                    });
+
+                    // LEGIT GLOBAL PROMO COUNTER 
+                    const promoRef = db.collection("promo").doc("stats");
+                    promoRef.onSnapshot((doc) => {
+                        if(doc.exists) {
+                            spotsLeft = doc.data().spotsLeft;
+                        } else {
+                            promoRef.set({ spotsLeft: 50 }, { merge: true });
+                            spotsLeft = 50;
+                        }
+
+                        document.querySelectorAll('.promo-spots-count').forEach(el => {
+                            el.innerText = spotsLeft;
+                        });
+
+                        if(spotsLeft <= 0) {
+                            const pModal = document.getElementById('promo-modal');
+                            if(pModal && !pModal.classList.contains('hidden')) pModal.classList.add('hidden');
+                            document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'none');
+                        } else {
+                            document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'block');
+                        }
+                    }, (err) => {
+                        console.error("Firestore Error:", err);
+                    });
+                }
+            } catch (e) { 
+                console.error("Firebase failed to load securely:", e); 
+            }
+        });
 
         // ==========================================
         // FILE PROCESSING ENGINE
