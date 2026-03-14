@@ -25,11 +25,21 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      // Remember to replace this with your actual GA4 tracking ID later!
       gtag('config', 'G-YOUR_ID_HERE'); 
     </script>
 
     <style>
+        /* ==========================================
+           GLOBAL SCALING (The 15% Shrink Fix)
+           ========================================== */
+        html {
+            font-size: 14px; /* Scales down all rem units globally */
+        }
+        
+        @media (max-width: 768px) {
+            html { font-size: 16px; } /* Keep normal size for mobile readability */
+        }
+
         /* ==========================================
            DUAL THEME CSS VARIABLES
            ========================================== */
@@ -122,23 +132,23 @@
         .bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 0.15; mix-blend-mode: screen; pointer-events: none; }
 
         /* ==========================================
-           GLOBAL UI STYLES
+           GLOBAL UI STYLES (Header tightened to prevent wrapping)
            ========================================== */
         header { 
             background: var(--bg-header); backdrop-filter: var(--glass-backdrop);
             border-bottom: 2px solid var(--primary); display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 30px; height: 90px; z-index: 100; position: relative; 
+            padding: 0 20px; height: 90px; z-index: 100; position: relative; 
         }
         body.theme-z header { box-shadow: 0 4px 30px rgba(255, 0, 255, 0.2); border-bottom-color: var(--primary); }
         body.theme-m header { border-bottom: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-        .logo { font-size: 1.8rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; letter-spacing: -0.5px;}
+        .logo { font-size: 1.6rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; letter-spacing: -0.5px; flex-shrink: 0;}
         body.theme-z .logo { text-transform: lowercase; }
-        .logo span { color: var(--primary); margin-right: 5px; font-size: 2.2rem; }
+        .logo span { color: var(--primary); margin-right: 5px; font-size: 2rem; }
         body.theme-z .logo span { text-shadow: 2px 2px 0px var(--secondary); }
         
-        .top-nav { display: flex; height: 100%; align-items: center; gap: 10px;}
-        .top-nav > a, .dropbtn { text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 0.95rem; padding: 10px 15px; border-radius: var(--border-radius); transition: all 0.2s; cursor: pointer; }
+        .top-nav { display: flex; height: 100%; align-items: center; gap: 5px;}
+        .top-nav > a, .dropbtn { text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 0.9rem; padding: 8px 10px; border-radius: var(--border-radius); transition: all 0.2s; cursor: pointer; white-space: nowrap; }
         .top-nav > a:hover, .dropdown:hover .dropbtn { color: var(--primary); }
         body.theme-z .top-nav > a:hover, body.theme-z .dropdown:hover .dropbtn { background: var(--primary); color: #000; transform: translateY(-3px) rotate(-2deg); box-shadow: 4px 4px 0px var(--secondary); }
         
@@ -154,35 +164,35 @@
         .drop-column a:hover { color: var(--primary); }
         body.theme-z .drop-column a:hover { background: rgba(255, 0, 255, 0.2); transform: translateX(5px); color: #fff;}
         
-        .auth-buttons { display: flex; gap: 15px; align-items: center; }
+        .auth-buttons { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
         
         /* THEME TOGGLE SWITCH */
-        .theme-switch-wrapper { display: flex; align-items: center; gap: 10px; margin-right: 15px; }
-        .ts-label { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s;}
+        .theme-switch-wrapper { display: flex; align-items: center; gap: 8px; margin-right: 10px; }
+        .ts-label { font-size: 0.8rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s;}
         body.theme-z .ts-label.z-lbl { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
         body.theme-m .ts-label.m-lbl { color: var(--primary); }
         
-        .theme-switch { position: relative; display: inline-block; width: 54px; height: 28px; }
+        .theme-switch { position: relative; display: inline-block; width: 48px; height: 24px; }
         .theme-switch input { opacity: 0; width: 0; height: 0; }
         .ts-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);}
-        .ts-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+        .ts-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
         input:checked + .ts-slider { background-color: var(--primary); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
-        input:checked + .ts-slider:before { transform: translateX(26px); background-color: #fff; box-shadow: 0 0 10px var(--secondary); }
+        input:checked + .ts-slider:before { transform: translateX(24px); background-color: #fff; box-shadow: 0 0 10px var(--secondary); }
 
-        .btn-login { text-decoration: none; color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-login { text-decoration: none; color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .btn-login:hover { color: var(--primary); }
-        .btn-signup { background: var(--primary); color: var(--btn-text); padding: 10px 20px; border-radius: var(--btn-radius); text-decoration: none; font-weight: bold; cursor: pointer; transition: all 0.2s; box-shadow: var(--btn-shadow); white-space: nowrap;}
+        .btn-signup { background: var(--primary); color: var(--btn-text); padding: 10px 15px; border-radius: var(--btn-radius); text-decoration: none; font-weight: bold; cursor: pointer; transition: all 0.2s; box-shadow: var(--btn-shadow); white-space: nowrap;}
         body.theme-z .btn-signup { background: var(--secondary); color: #000; font-weight: 900;}
         .btn-signup:hover { transform: scale(1.05); }
         body.theme-z .btn-signup:hover { box-shadow: 0 0 25px rgba(0, 255, 255, 0.8); }
         
         /* SPOTS LEFT BADGE */
-        .spots-badge { font-size: 0.75rem; color: #ff4757; font-weight: bold; margin-top: 5px; animation: pulse 2s infinite alternate; text-align: center;}
+        .spots-badge { font-size: 0.75rem; color: #ff4757; font-weight: bold; margin-top: 5px; animation: pulse 2s infinite alternate; text-align: center; white-space: nowrap;}
         body.theme-z .spots-badge { color: var(--secondary); text-shadow: 0 0 5px var(--secondary); }
 
         .user-profile { display: none; align-items: center; gap: 15px; font-size: 1rem; font-weight: bold; color: var(--text-main); }
         body.theme-z .user-profile { color: var(--secondary); }
-        .btn-logout { text-decoration: none; color: #e5322d; border: 2px solid #e5322d; padding: 8px 20px; border-radius: var(--btn-radius); transition: 0.2s; font-weight: bold; cursor: pointer;}
+        .btn-logout { text-decoration: none; color: #e5322d; border: 2px solid #e5322d; padding: 8px 15px; border-radius: var(--btn-radius); transition: 0.2s; font-weight: bold; cursor: pointer;}
         .btn-logout:hover { background: #e5322d; color: #fff;}
         body.theme-z .btn-logout { border-radius: 30px; color: #ff4757; border-color: #ff4757; }
         body.theme-z .btn-logout:hover { background: #ff4757; box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);}
@@ -739,27 +749,6 @@
             </div>
         </header>
 
-        <div id="auth-modal" class="modal-overlay hidden">
-            <div class="modal-content">
-                <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
-                
-                <div class="show-z" style="display:flex; justify-content:center;">
-                    <dotlottie-player src="rocket-man.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
-                </div>
-
-                <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
-                <p style="color:var(--text-muted); font-weight:600; margin-bottom: 30px;">
-                    <span class="tz">Login to claim your Premium Account.</span>
-                    <span class="tm">Log in to claim your Premium Account.</span>
-                </p>
-                
-                <button class="google-btn" onclick="playPop(); loginWithGoogle();">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
-                    <span class="tz">Vibe with Google</span><span class="tm">Continue with Google</span>
-                </button>
-            </div>
-        </div>
-
         <div id="home-view">
             <div class="show-z" style="display:flex; justify-content:center;">
                 <dotlottie-player src="love-dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
@@ -944,26 +933,6 @@
 
     </div> <script>
         // ==========================================
-        // GLOBAL VARIABLES 
-        // ==========================================
-        const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
-        let currentTool = "";
-        let loadedFiles = []; 
-        let fileIdCounter = 0;
-        let pageIdCounter = 0;
-        let pdfJsCache = {}; 
-        let splitRanges = [];
-        let totalSplitPages = 0;
-        let compressMode = 'recommended'; 
-        let currentTheme = 'm'; 
-        let audioCtx = null;
-        let auth = null;
-        let db = null;
-        let spotsLeft = 50; 
-        let PDFDocument = null;
-        let degrees = null;
-
-        // ==========================================
         // CUSTOM ALERT SYSTEM (Replaces native alerts)
         // ==========================================
         function showAppAlert(titleZ, titleM, msgZ, msgM) {
@@ -983,6 +952,10 @@
             messagingSenderId: "397926920358",
             appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
         };
+
+        let auth = null;
+        let db = null;
+        let spotsLeft = 50; 
 
         try {
             if (typeof firebase !== 'undefined') {
@@ -1030,28 +1003,6 @@
                 } catch(err) {
                     console.error("Database connection failed", err);
                 }
-
-                // SECURE REDIRECT HANDLING ON PAGE LOAD
-                auth.getRedirectResult().then((result) => {
-                    if (result && result.credential) {
-                        if(result.additionalUserInfo && result.additionalUserInfo.isNewUser && spotsLeft > 0) {
-                            if(db) {
-                                db.collection("promo").doc("stats").set({
-                                    spotsLeft: firebase.firestore.FieldValue.increment(-1)
-                                }, { merge: true });
-                            }
-                            showAppAlert("W RIZZ 🎉", "Success!", "You just claimed a lifetime Premium account!", "Congratulations! You've successfully claimed a free Premium account.");
-                        } else {
-                            showAppAlert("Welcome Back! 👋", "Logged In", "You're back in. Let's get to work.", "You have successfully logged in.");
-                        }
-                    }
-                }).catch((err) => {
-                    console.error("Redirect Auth Error:", err);
-                    let errorMsg = err.message;
-                    if(err.code === 'auth/operation-not-allowed') errorMsg = "Google Sign-In is disabled in Firebase Console.";
-                    if(err.code === 'auth/unauthorized-domain') errorMsg = "Domain not authorized in Firebase Console.";
-                    showAppAlert("Failed 🛑", "Login Error", errorMsg, errorMsg);
-                });
             }
         } catch (e) { console.error("Firebase failed to load:", e); }
 
@@ -1059,14 +1010,18 @@
         // PROMO POPUP LOGIC (FOMO)
         // ==========================================
         function showPromoModal() {
-            if (localStorage.getItem('promoDismissedV3') === 'true' || spotsLeft <= 0) return; 
+            // Uses a new key so it shows up for you again during testing
+            if (localStorage.getItem('promoDismissedV4') === 'true' || spotsLeft <= 0) return; 
+            
             const promo = document.getElementById('promo-modal');
-            if(promo) promo.classList.remove('hidden');
+            if(promo) {
+                promo.classList.remove('hidden');
+            }
         }
 
         function closePromoModal() {
             document.getElementById('promo-modal').classList.add('hidden');
-            localStorage.setItem('promoDismissedV3', 'true'); 
+            localStorage.setItem('promoDismissedV4', 'true'); 
         }
 
         function claimPremium() {
@@ -1114,46 +1069,44 @@
         function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
         
         function loginWithGoogle() {
-            if(!auth) { playFail(); return showAppAlert("Adblocker? 🛡️", "Auth Error", "Firebase Auth is blocked by your browser.", "Authentication service is currently unavailable."); }
+            if(!auth) { 
+                playFail(); 
+                return showAppAlert("Adblocker? 🛡️", "Auth Error", "Firebase Auth is blocked by your browser.", "Authentication service is currently unavailable."); 
+            }
             
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.setCustomParameters({ prompt: 'select_account' });
             
-            // IN-APP BROWSER FIX (LinkedIn, Instagram, Mobile Safari block popups)
-            const isMobileOrInApp = /iPhone|iPad|iPod|Android|LinkedIn|Instagram|FBAN/i.test(navigator.userAgent);
-
-            if (isMobileOrInApp) {
-                auth.signInWithRedirect(provider);
-            } else {
-                auth.signInWithPopup(provider).then((result) => {
-                    if(result.additionalUserInfo && result.additionalUserInfo.isNewUser && spotsLeft > 0) {
-                        if(db) {
-                            db.collection("promo").doc("stats").set({
-                                spotsLeft: firebase.firestore.FieldValue.increment(-1)
-                            }, { merge: true });
-                        }
-                        showAppAlert("W RIZZ 🎉", "Success!", "You just claimed a lifetime Premium account!", "Congratulations! You've successfully claimed a free Premium account.");
-                    } else if(result.additionalUserInfo && !result.additionalUserInfo.isNewUser) {
-                        showAppAlert("Welcome Back! 👋", "Logged In", "You're back in. Let's get to work.", "You have successfully logged in.");
+            auth.signInWithPopup(provider).then((result) => {
+                // If brand new user, deduct 1 from global spots!
+                if(result.additionalUserInfo && result.additionalUserInfo.isNewUser && spotsLeft > 0) {
+                    if(db) {
+                        db.collection("promo").doc("stats").set({
+                            spotsLeft: firebase.firestore.FieldValue.increment(-1)
+                        }, { merge: true });
                     }
-                    closeAuthModal();
-                }).catch(err => { 
-                    console.error("Login Error:", err);
-                    // If desktop popup blocker stops it, fallback to redirect
-                    if(err.code === 'auth/popup-blocked') {
-                        auth.signInWithRedirect(provider);
-                        return;
-                    }
-                    playFail(); 
-                    let errorMsg = err.message;
-                    if(err.code === 'auth/operation-not-allowed') {
-                        errorMsg = "Google Sign-In is disabled. You must enable 'Google' under Authentication > Sign-in method in your Firebase Console.";
-                    } else if(err.code === 'auth/unauthorized-domain') {
-                        errorMsg = "This domain is not authorized. Add your website URL to Authorized Domains in your Firebase Console Settings.";
-                    }
-                    showAppAlert("Failed 🛑", "Login Error", errorMsg, errorMsg); 
-                });
-            }
+                    showAppAlert("W RIZZ 🎉", "Success!", "You just claimed a lifetime Premium account!", "Congratulations! You've successfully claimed a free Premium account.");
+                } else {
+                    showAppAlert("Welcome Back! 👋", "Logged In", "You're back in. Let's get to work.", "You have successfully logged in.");
+                }
+                closeAuthModal();
+            }).catch(err => { 
+                console.error("Login Error:", err);
+                
+                if(err.code === 'auth/popup-blocked') {
+                    showAppAlert("Blocked 🛑", "Popup Blocked", "Please allow pop-ups for this site so Google can log you in.", "Please allow popups to continue signing in.");
+                    return;
+                }
+                
+                playFail(); 
+                let errorMsg = err.message;
+                if(err.code === 'auth/operation-not-allowed') {
+                    errorMsg = "Google Sign-In is disabled. You must enable 'Google' under Authentication > Sign-in method in your Firebase Console.";
+                } else if(err.code === 'auth/unauthorized-domain') {
+                    errorMsg = "This domain is not authorized. Add your website URL to Authorized Domains in your Firebase Console Settings.";
+                }
+                showAppAlert("Failed 🛑", "Login Error", errorMsg, errorMsg); 
+            });
         }
         
         function logoutFirebase() { if(auth) auth.signOut(); }
@@ -1346,50 +1299,6 @@
             document.getElementById('upload-area').classList.remove('hidden');
             document.getElementById('file-input').value = '';
         }
-
-        // ==========================================
-        // EVENT LISTENERS
-        // ==========================================
-        window.addEventListener('DOMContentLoaded', () => {
-            
-            // THEME PERSISTENCE
-            const savedTheme = localStorage.getItem('userTheme');
-            if (savedTheme) {
-                setTheme(savedTheme); 
-            } else {
-                document.getElementById('theme-selector').style.display = 'flex';
-                document.getElementById('app-container').classList.add('hidden');
-            }
-
-            // Trigger FOMO promo 1.5s after load
-            setTimeout(() => { showPromoModal(); }, 1500);
-
-            try {
-                if (typeof pdfjsLib !== 'undefined') {
-                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-                }
-                if (typeof PDFLib !== 'undefined') {
-                    PDFDocument = PDFLib.PDFDocument;
-                    degrees = PDFLib.degrees;
-                }
-
-                ['file-input', 'add-more-input'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) el.addEventListener('change', (e) => { playPop(); handleFiles(e.target.files); });
-                });
-
-                const wv = document.getElementById('workspace-view');
-                if(wv) {
-                    wv.addEventListener('dragover', (e) => { e.preventDefault(); wv.classList.add('dragover-active'); });
-                    wv.addEventListener('dragleave', (e) => { e.preventDefault(); if (!wv.contains(e.relatedTarget)) wv.classList.remove('dragover-active'); });
-                    wv.addEventListener('drop', (e) => { e.preventDefault(); wv.classList.remove('dragover-active'); playPop(); handleFiles(e.dataTransfer.files); });
-                }
-
-                if (typeof Sortable !== 'undefined') {
-                    new Sortable(document.getElementById('pages-container'), { animation: 150, onEnd: () => { playPop(); updateMergePageNumbers(); } });
-                }
-            } catch(e) { console.error("Init error:", e); }
-        });
 
         // ==========================================
         // FILE PROCESSING ENGINE
