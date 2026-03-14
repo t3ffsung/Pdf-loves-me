@@ -625,8 +625,6 @@
                     
                     <h3 style="color: var(--primary); margin-top: 15px; font-size: 1.1rem;">3. Cookies & Local Storage</h3>
                     <p style="color: var(--text-muted);">We use your browser's local storage to remember your theme preference (Gen-Z vs. Millennial) and to ensure we don't spam you with the promo popup. We do not use invasive tracking cookies.</p>
-                    
-                    <p style="margin-top: 20px; text-align: center; color: var(--text-muted);"><strong>Questions?</strong> Contact the developer at nitesh.thinks@gmail.com</p>
                 </div>
                 
                 <div style="text-align: center; margin-top: 25px;">
@@ -959,26 +957,54 @@
                 });
 
                 // LEGIT GLOBAL PROMO COUNTER 
-                const promoRef = db.collection("promo").doc("stats");
-                promoRef.onSnapshot((doc) => {
-                    if(doc.exists) {
-                        spotsLeft = doc.data().spotsLeft;
-                    } else {
-                        promoRef.set({ spotsLeft: 50 }, { merge: true });
-                        spotsLeft = 50;
-                    }
+                try {
+                    const promoRef = db.collection("promo").doc("stats");
+                    promoRef.onSnapshot((doc) => {
+                        if(doc.exists) {
+                            spotsLeft = doc.data().spotsLeft;
+                        } else {
+                            promoRef.set({ spotsLeft: 50 }, { merge: true });
+                            spotsLeft = 50;
+                        }
 
-                    document.querySelectorAll('.promo-spots-count').forEach(el => {
-                        el.innerText = spotsLeft;
+                        document.querySelectorAll('.promo-spots-count').forEach(el => {
+                            el.innerText = spotsLeft;
+                        });
+
+                        if(spotsLeft <= 0) {
+                            const pModal = document.getElementById('promo-modal');
+                            if(pModal && !pModal.classList.contains('hidden')) pModal.classList.add('hidden');
+                            document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'none');
+                        } else {
+                            document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'block');
+                        }
+                    }, (err) => {
+                        console.error("Firestore Error:", err);
                     });
+                } catch(err) {
+                    console.error("Database connection failed", err);
+                }
 
-                    if(spotsLeft <= 0) {
-                        const pModal = document.getElementById('promo-modal');
-                        if(pModal && !pModal.classList.contains('hidden')) pModal.classList.add('hidden');
-                        document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'none');
-                    } else {
-                        document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'block');
+                // SECURE REDIRECT HANDLING ON PAGE LOAD
+                auth.getRedirectResult().then((result) => {
+                    if (result && result.credential) {
+                        if(result.additionalUserInfo && result.additionalUserInfo.isNewUser && spotsLeft > 0) {
+                            if(db) {
+                                db.collection("promo").doc("stats").set({
+                                    spotsLeft: firebase.firestore.FieldValue.increment(-1)
+                                }, { merge: true });
+                            }
+                            showAppAlert("W RIZZ 🎉", "Success!", "You just claimed a lifetime Premium account!", "Congratulations! You've successfully claimed a free Premium account.");
+                        } else {
+                            showAppAlert("Welcome Back! 👋", "Logged In", "You're back in. Let's get to work.", "You have successfully logged in.");
+                        }
                     }
+                }).catch((err) => {
+                    console.error("Redirect Auth Error:", err);
+                    let errorMsg = err.message;
+                    if(err.code === 'auth/operation-not-allowed') errorMsg = "Google Sign-In is disabled in Firebase Console.";
+                    if(err.code === 'auth/unauthorized-domain') errorMsg = "Domain not authorized in Firebase Console.";
+                    showAppAlert("Failed 🛑", "Login Error", errorMsg, errorMsg);
                 });
             }
         } catch (e) { console.error("Firebase failed to load:", e); }
@@ -987,13 +1013,9 @@
         // PROMO POPUP LOGIC (FOMO)
         // ==========================================
         function showPromoModal() {
-            // Uses a new key so it shows up for you again during testing
             if (localStorage.getItem('promoDismissedV3') === 'true' || spotsLeft <= 0) return; 
-            
             const promo = document.getElementById('promo-modal');
-            if(promo) {
-                promo.classList.remove('hidden');
-            }
+            if(promo) promo.classList.remove('hidden');
         }
 
         function closePromoModal() {
@@ -1040,48 +1062,55 @@
         }
 
         // ==========================================
-        // AUTHENTICATION LOGIC
+        // AUTHENTICATION LOGIC (BULLETPROOF)
         // ==========================================
-        function openAuthModal() {
-            document.getElementById('auth-modal').classList.remove('hidden');
-        }
-        
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.add('hidden');
-        }
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
         
         function loginWithGoogle() {
             if(!auth) { playFail(); return showAppAlert("Adblocker? 🛡️", "Auth Error", "Firebase Auth is blocked by your browser.", "Authentication service is currently unavailable."); }
+            
             const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
             
-            // This forces the account selector to appear every time if needed
-            provider.setCustomParameters({
-                prompt: 'select_account'
-            });
-            
-            auth.signInWithPopup(provider).then((result) => {
-                // If brand new user, deduct 1 from global spots!
-                if(result.additionalUserInfo && result.additionalUserInfo.isNewUser && spotsLeft > 0) {
-                    db.collection("promo").doc("stats").set({
-                        spotsLeft: firebase.firestore.FieldValue.increment(-1)
-                    }, { merge: true }).then(() => {
-                         showAppAlert("W RIZZ 🎉", "Success!", "You just claimed a lifetime Premium account!", "Congratulations! You've successfully claimed a free Premium account.");
-                    }).catch(e => console.error(e));
-                } else if(result.additionalUserInfo && !result.additionalUserInfo.isNewUser) {
-                    showAppAlert("Welcome Back! 👋", "Logged In", "You're back in. Let's get to work.", "You have successfully logged in.");
-                }
-                closeAuthModal();
-            }).catch(err => { 
-                console.error("Login Error:", err);
-                playFail(); 
-                let errorMsg = err.message;
-                if(err.code === 'auth/operation-not-allowed') {
-                    errorMsg = "Google Sign-In is disabled. You must enable 'Google' under Authentication > Sign-in method in your Firebase Console.";
-                } else if(err.code === 'auth/unauthorized-domain') {
-                    errorMsg = "This domain is not authorized. Add your website URL to Authorized Domains in your Firebase Console Settings.";
-                }
-                showAppAlert("Failed 🛑", "Login Error", errorMsg, errorMsg); 
-            });
+            // IN-APP BROWSER FIX (LinkedIn, Instagram, Mobile Safari block popups)
+            const isMobileOrInApp = /iPhone|iPad|iPod|Android|LinkedIn|Instagram|FBAN/i.test(navigator.userAgent);
+
+            if (isMobileOrInApp) {
+                // Uses redirect, the result is caught by auth.getRedirectResult() on load
+                auth.signInWithRedirect(provider);
+            } else {
+                auth.signInWithPopup(provider).then((result) => {
+                    if(result.additionalUserInfo && result.additionalUserInfo.isNewUser && spotsLeft > 0) {
+                        if(db) {
+                            db.collection("promo").doc("stats").set({
+                                spotsLeft: firebase.firestore.FieldValue.increment(-1)
+                            }, { merge: true });
+                        }
+                        showAppAlert("W RIZZ 🎉", "Success!", "You just claimed a lifetime Premium account!", "Congratulations! You've successfully claimed a free Premium account.");
+                    } else if(result.additionalUserInfo && !result.additionalUserInfo.isNewUser) {
+                        showAppAlert("Welcome Back! 👋", "Logged In", "You're back in. Let's get to work.", "You have successfully logged in.");
+                    }
+                    closeAuthModal();
+                }).catch(err => { 
+                    console.error("Login Error:", err);
+                    
+                    // If desktop popup blocker stops it, fallback to redirect
+                    if(err.code === 'auth/popup-blocked') {
+                        auth.signInWithRedirect(provider);
+                        return;
+                    }
+                    
+                    playFail(); 
+                    let errorMsg = err.message;
+                    if(err.code === 'auth/operation-not-allowed') {
+                        errorMsg = "Google Sign-In is disabled. You must enable 'Google' under Authentication > Sign-in method in your Firebase Console.";
+                    } else if(err.code === 'auth/unauthorized-domain') {
+                        errorMsg = "This domain is not authorized. Add your website URL to Authorized Domains in your Firebase Console Settings.";
+                    }
+                    showAppAlert("Failed 🛑", "Login Error", errorMsg, errorMsg); 
+                });
+            }
         }
         
         function logoutFirebase() { if(auth) auth.signOut(); }
