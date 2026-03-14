@@ -30,15 +30,10 @@
 
     <style>
         /* ==========================================
-           GLOBAL SCALING (15% Shrink for Desktop)
+           GLOBAL SCALING (15% Shrink for Desktop UI)
            ========================================== */
-        html {
-            font-size: 14px; 
-        }
-        
-        @media (max-width: 768px) {
-            html { font-size: 16px; } /* Normal size for mobile readability */
-        }
+        html { font-size: 14px; }
+        @media (max-width: 768px) { html { font-size: 16px; } }
 
         /* ==========================================
            DUAL THEME CSS VARIABLES
@@ -448,7 +443,7 @@
         .modal-content { background: var(--bg-header); padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: relative; text-align: center; }
         body.theme-z .modal-content { border-radius: 24px; border: 2px solid var(--primary); box-shadow: 10px 10px 0px rgba(255,0,255,0.3); }
         
-        /* PROMO POPUP CUSTOM THEME (BLUE & RED) */
+        /* PROMO POPUP CUSTOM THEME */
         .promo-box { background: linear-gradient(135deg, #090979 0%, #ff4757 100%); border: 3px solid #ff4757; color: white; box-shadow: 0 10px 40px rgba(255, 71, 87, 0.4); }
         body.theme-z .promo-box { background: linear-gradient(135deg, #141e30 0%, #243b55 50%, #e52d27 100%); border-color: #00ffff; }
 
@@ -558,7 +553,7 @@
                 <span class="close-modal" onclick="playPop(); document.getElementById('notification-modal').classList.add('hidden');">✕</span>
                 <h2 id="notif-title">Notice</h2>
                 <p id="notif-message" style="margin-top: 15px; font-size: 1rem; color: var(--text-muted); line-height: 1.5;">Message goes here</p>
-                <button class="btn-process" onclick="playPop(); document.getElementById('notification-modal').classList.add('hidden');" style="margin-top: 25px;">
+                <button type="button" class="btn-process" onclick="playPop(); document.getElementById('notification-modal').classList.add('hidden');" style="margin-top: 25px;">
                     <span class="tz">Got it 💯</span><span class="tm">Close</span>
                 </button>
             </div>
@@ -583,11 +578,11 @@
                     🔥 Only <span class="promo-spots-count">--</span> spots left!
                 </div>
                 
-                <button class="btn-process" onclick="playPop(); claimPremium();" style="background: linear-gradient(45deg, #ffd700, #ff9f43); color: #000; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4); margin-bottom: 15px; font-size: 1.3rem;">
+                <button type="button" class="btn-process" onclick="playPop(); claimPremium();" style="background: linear-gradient(45deg, #ffd700, #ff9f43); color: #000; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4); margin-bottom: 15px; font-size: 1.3rem;">
                     <span class="tz">Claim Premium NOW 🚀</span><span class="tm">Claim Free Premium</span>
                 </button>
                 
-                <button onclick="playPop(); closePromoModal();" style="background: transparent; border: none; color: #ccc; text-decoration: underline; cursor: pointer; font-family: var(--font-main); font-weight: bold; font-size: 0.95rem; margin-top: 10px;">
+                <button type="button" onclick="playPop(); closePromoModal();" style="background: transparent; border: none; color: #ccc; text-decoration: underline; cursor: pointer; font-family: var(--font-main); font-weight: bold; font-size: 0.95rem; margin-top: 10px;">
                     <span class="tz">Nah, I love ads 💀</span><span class="tm">Continue with Free Tier</span>
                 </button>
             </div>
@@ -603,7 +598,7 @@
                 <dotlottie-player src="chatbot.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: 0 auto;" loop autoplay></dotlottie-player>
                 <h2 style="margin-top: 10px;"><span class="tz">Yo! I'm learning 🧠</span><span class="tm">Coming Soon</span></h2>
                 <p style="margin-top: 10px; font-size: 0.95rem;"><span class="tz">AI Support is cooking right now. Check back later bro!</span><span class="tm">Our AI support assistant is currently under development.</span></p>
-                <button class="btn-process" onclick="playPop(); document.getElementById('chatbot-modal').classList.add('hidden');" style="margin-top: 20px;">
+                <button type="button" class="btn-process" onclick="playPop(); document.getElementById('chatbot-modal').classList.add('hidden');" style="margin-top: 20px;">
                     <span class="tz">Got it 💯</span><span class="tm">Close</span>
                 </button>
             </div>
@@ -618,7 +613,7 @@
                     <span class="tm">Please describe the issue you encountered. It will be sent securely to our database.</span>
                 </p>
                 <textarea id="bug-description" class="modal-input" rows="5" placeholder="Describe what went wrong..." style="resize: none; width: 100%; padding: 15px; border-radius: 8px;"></textarea>
-                <button class="btn-process" onclick="playPop(); submitBug();">
+                <button type="button" class="btn-process" onclick="playPop(); submitBug();">
                     <span class="tz">Send Report 🚀</span><span class="tm">Submit Issue</span>
                 </button>
             </div>
@@ -647,7 +642,7 @@
                 </div>
                 
                 <div style="text-align: center; margin-top: 25px;">
-                    <button class="btn-process" style="width: auto; padding: 10px 40px; display: inline-block;" onclick="playPop(); document.getElementById('privacy-modal').classList.add('hidden');">
+                    <button type="button" class="btn-process" style="width: auto; padding: 10px 40px; display: inline-block;" onclick="playPop(); document.getElementById('privacy-modal').classList.add('hidden');">
                         <span class="tz">Looks Good 💯</span><span class="tm">I Understand</span>
                     </button>
                 </div>
@@ -678,37 +673,37 @@
             <div class="logo" onclick="playPop(); goHome();" style="cursor:pointer;"><span>pdf</span> loves me</div>
             
             <nav class="top-nav">
-                <a onclick="playPop(); openWorkspace('Merge PDF');" data-tooltip="Merge PDF" style="cursor:pointer;">
+                <a href="javascript:void(0);" onclick="playPop(); openWorkspace('Merge PDF');" data-tooltip="Merge PDF" style="cursor:pointer;">
                     <span class="tz">SQUISH PDF</span><span class="tm">MERGE PDF</span>
                 </a>
-                <a onclick="playPop(); openWorkspace('Split PDF');" data-tooltip="Split PDF" style="cursor:pointer;">
+                <a href="javascript:void(0);" onclick="playPop(); openWorkspace('Split PDF');" data-tooltip="Split PDF" style="cursor:pointer;">
                     <span class="tz">CHOP PDF</span><span class="tm">SPLIT PDF</span>
                 </a>
-                <a onclick="playPop(); openWorkspace('Compress PDF');" data-tooltip="Compress PDF" style="cursor:pointer;">
+                <a href="javascript:void(0);" onclick="playPop(); openWorkspace('Compress PDF');" data-tooltip="Compress PDF" style="cursor:pointer;">
                     <span class="tz">MAKE SMOL</span><span class="tm">COMPRESS PDF</span>
                 </a>
                 
                 <div class="dropdown">
-                    <a class="dropbtn" onclick="playPop(); openConvertMenu();" data-tooltip="Convert to/from PDF" style="cursor:pointer;">
+                    <a href="javascript:void(0);" class="dropbtn" onclick="playPop(); openConvertMenu();" data-tooltip="Convert to/from PDF" style="cursor:pointer;">
                         <span class="tz">MORPH PDF</span><span class="tm">CONVERT PDF</span> <span style="font-size:0.7em; margin-left:5px;">▼</span>
                     </a>
                     <div class="dropdown-content" id="nav-dropdown-pdf">
                         <div class="drop-column">
                             <h4>Convert to PDF</h4>
-                            <a onclick="playPop(); openWorkspace('JPG to PDF');">🖼️ JPG to PDF</a>
-                            <a onclick="playPop(); openWorkspace('WORD to PDF');">📄 WORD to PDF</a>
-                            <a onclick="playPop(); openWorkspace('EXCEL to PDF');">📈 EXCEL to PDF</a>
+                            <a href="javascript:void(0);" onclick="playPop(); openWorkspace('JPG to PDF');">🖼️ JPG to PDF</a>
+                            <a href="javascript:void(0);" onclick="playPop(); openWorkspace('WORD to PDF');">📄 WORD to PDF</a>
+                            <a href="javascript:void(0);" onclick="playPop(); openWorkspace('EXCEL to PDF');">📈 EXCEL to PDF</a>
                         </div>
                         <div class="drop-column">
                             <h4>Convert from PDF</h4>
-                            <a onclick="playPop(); openWorkspace('PDF to JPG');">🖼️ PDF to JPG</a>
-                            <a onclick="playPop(); openWorkspace('PDF to WORD');">📄 PDF to WORD</a>
-                            <a onclick="playPop(); openWorkspace('PDF to EXCEL');">📈 PDF to EXCEL</a>
+                            <a href="javascript:void(0);" onclick="playPop(); openWorkspace('PDF to JPG');">🖼️ PDF to JPG</a>
+                            <a href="javascript:void(0);" onclick="playPop(); openWorkspace('PDF to WORD');">📄 PDF to WORD</a>
+                            <a href="javascript:void(0);" onclick="playPop(); openWorkspace('PDF to EXCEL');">📈 PDF to EXCEL</a>
                         </div>
                     </div>
                 </div>
 
-                <a onclick="playPop(); openWorkspace('Image to Word');" data-tooltip="Image to Word" style="cursor:pointer;">
+                <a href="javascript:void(0);" onclick="playPop(); openWorkspace('Image to Word');" data-tooltip="Image to Word" style="cursor:pointer;">
                     <span class="tz">STEAL TEXT (OCR)</span><span class="tm">IMAGE TO WORD</span>
                 </a>
             </nav>
@@ -723,9 +718,9 @@
                     <span class="ts-label z-lbl">Gen-Z</span>
                 </div>
 
-                <a href="javascript:void(0);" class="btn-login" onclick="playPop(); openAuthModal();">Login</a>
+                <a href="javascript:void(0);" class="btn-login" onclick="playPop(); openAuthModal();" style="cursor:pointer;">Login</a>
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                    <a href="javascript:void(0);" class="btn-signup" onclick="playPop(); openAuthModal();">
+                    <a href="javascript:void(0);" class="btn-signup" onclick="playPop(); openAuthModal();" style="cursor:pointer;">
                         <span class="tz">Sign up, no cap</span><span class="tm">Sign up</span>
                     </a>
                     <span class="spots-badge"><span class="promo-spots-count">--</span> spots left! 🎁</span>
@@ -743,11 +738,32 @@
                 </div>
 
                 <span id="user-display-name">👤 User</span>
-                <a href="javascript:void(0);" class="btn-logout" onclick="playPop(); logoutFirebase();">
+                <a href="javascript:void(0);" class="btn-logout" onclick="playPop(); logoutFirebase();" style="cursor:pointer;">
                     <span class="tz">Dip 👋</span><span class="tm">Logout</span>
                 </a>
             </div>
         </header>
+
+        <div id="auth-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
+                
+                <div class="show-z" style="display:flex; justify-content:center;">
+                    <dotlottie-player src="rocket-man.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
+                </div>
+
+                <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
+                <p style="color:var(--text-muted); font-weight:600; margin-bottom: 30px;">
+                    <span class="tz">Login to claim your Premium Account.</span>
+                    <span class="tm">Log in to claim your Premium Account.</span>
+                </p>
+                
+                <button type="button" class="google-btn" onclick="playPop(); loginWithGoogle();">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
+                    <span class="tz">Vibe with Google</span><span class="tm">Continue with Google</span>
+                </button>
+            </div>
+        </div>
 
         <div id="home-view">
             <div class="show-z" style="display:flex; justify-content:center;">
@@ -887,10 +903,10 @@
                         <label class="btn-secondary" style="background: var(--primary); color: var(--btn-text); border: none;" onclick="playPop();">
                             + Add more <input type="file" id="add-more-input" multiple>
                         </label>
-                        <button class="btn-secondary" onclick="playPop(); sortPages('asc');">A-Z ⬇️</button>
-                        <button class="btn-secondary" onclick="playPop(); sortPages('desc');">Z-A ⬆️</button>
+                        <button type="button" class="btn-secondary" onclick="playPop(); sortPages('asc');">A-Z ⬇️</button>
+                        <button type="button" class="btn-secondary" onclick="playPop(); sortPages('desc');">Z-A ⬆️</button>
                     </div>
-                    <button class="btn-process" id="merge-action-btn" style="width: auto; padding: 15px 40px;" onclick="playPop(); executeMainAction();">
+                    <button type="button" class="btn-process" id="merge-action-btn" style="width: auto; padding: 15px 40px;" onclick="playPop(); executeMainAction();">
                         <span class="tz">Send it 🚀</span><span class="tm">Process PDF</span>
                     </button>
                 </div>
@@ -900,11 +916,11 @@
                 <div class="sidebar-header"><span class="tz">Slice & Dice 🔪</span><span class="tm">Split PDF</span></div>
                 <div class="sidebar-content">
                     <div id="ranges-list"></div>
-                    <button class="btn-add-range" onclick="playPop(); addSplitRange();">+ <span class="tz">Add another cut</span><span class="tm">Add Range</span></button>
+                    <button type="button" class="btn-add-range" onclick="playPop(); addSplitRange();">+ <span class="tz">Add another cut</span><span class="tm">Add Range</span></button>
                 </div>
                 <div class="sidebar-footer">
                     <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges in one</span></label>
-                    <button class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">
+                    <button type="button" class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">
                         <span class="tz">Chop it up ✂️</span><span class="tm">Split PDF ➔</span>
                     </button>
                 </div>
@@ -914,7 +930,7 @@
                 <div class="sidebar-header" id="generic-sidebar-title">Options</div>
                 <div class="sidebar-content" id="sidebar-options-content"></div>
                 <div class="sidebar-footer">
-                    <button class="btn-process" id="sidebar-action-btn" onclick="playPop(); executeSidebarAction();">
+                    <button type="button" class="btn-process" id="sidebar-action-btn" onclick="playPop(); executeSidebarAction();">
                         <span class="tz">Do the thing ✨</span><span class="tm">Process ➔</span>
                     </button>
                 </div>
@@ -922,18 +938,29 @@
         </div>
 
         <div id="app-footer">
-            <a onclick="playPop(); document.getElementById('bug-modal').classList.remove('hidden');">
+            <a href="javascript:void(0);" onclick="playPop(); document.getElementById('bug-modal').classList.remove('hidden');">
                 🐛 <span class="tz">Snitch a bug</span><span class="tm">Report a Bug</span>
             </a>
             <span style="color: var(--text-muted); margin: 0 10px;">|</span>
-            <a onclick="playPop(); document.getElementById('privacy-modal').classList.remove('hidden');">
+            <a href="javascript:void(0);" onclick="playPop(); document.getElementById('privacy-modal').classList.remove('hidden');">
                 🛡️ <span class="tz">Privacy Vibe Check</span><span class="tm">Privacy Policy</span>
             </a>
         </div>
 
     </div> <script>
-        // --- GLOBAL VARIABLES ---
+        // ==========================================
+        // 1. GLOBAL VARIABLES & CONFIG
+        // ==========================================
         const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9jEmFFEPNT0iIUH6ro-0BZSBfvdDy9XU",
+            authDomain: "pdf-loves-me.firebaseapp.com",
+            projectId: "pdf-loves-me",
+            storageBucket: "pdf-loves-me.firebasestorage.app",
+            messagingSenderId: "397926920358",
+            appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
+        };
+        
         let currentTool = "";
         let loadedFiles = []; 
         let fileIdCounter = 0;
@@ -952,7 +979,22 @@
         let promoTimer = null;
 
         // ==========================================
-        // CUSTOM ALERT SYSTEM
+        // 2. FIREBASE INITIALIZATION (IMMEDIATE)
+        // ==========================================
+        try {
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                auth = firebase.auth();
+                db = firebase.firestore();
+            }
+        } catch(e) {
+            console.error("Firebase Init Error:", e);
+        }
+
+        // ==========================================
+        // 3. UI, ALERT & MODAL FUNCTIONS
         // ==========================================
         function showAppAlert(titleZ, titleM, msgZ, msgM) {
             document.getElementById('notif-title').innerHTML = `<span class="tz">${titleZ}</span><span class="tm">${titleM}</span>`;
@@ -960,11 +1002,13 @@
             document.getElementById('notification-modal').classList.remove('hidden');
         }
 
-        // ==========================================
-        // AUTHENTICATION LOGIC
-        // ==========================================
-        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
-        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+        function openAuthModal() { 
+            document.getElementById('auth-modal').classList.remove('hidden'); 
+        }
+        
+        function closeAuthModal() { 
+            document.getElementById('auth-modal').classList.add('hidden'); 
+        }
         
         function loginWithGoogle() {
             if(!auth) { 
@@ -989,10 +1033,12 @@
                 closeAuthModal();
             }).catch(err => { 
                 console.error("Login Error:", err);
+                
                 if(err.code === 'auth/popup-blocked') {
                     showAppAlert("Blocked 🛑", "Popup Blocked", "Please allow pop-ups for this site so Google can log you in.", "Please allow popups to continue signing in.");
                     return;
                 }
+                
                 playFail(); 
                 let errorMsg = err.message;
                 if(err.code === 'auth/operation-not-allowed') {
@@ -1006,9 +1052,6 @@
         
         function logoutFirebase() { if(auth) auth.signOut(); }
 
-        // ==========================================
-        // PROMO POPUP LOGIC
-        // ==========================================
         function showPromoModal() {
             if (localStorage.getItem('promoDismissedV6') === 'true' || spotsLeft <= 0) return; 
             const promo = document.getElementById('promo-modal');
@@ -1024,10 +1067,7 @@
             closePromoModal();
             openAuthModal(); 
         }
-
-        // ==========================================
-        // BUG REPORTING
-        // ==========================================
+        
         async function submitBug() {
             const desc = document.getElementById('bug-description').value;
             if(!desc) {
@@ -1038,6 +1078,7 @@
                 playFail();
                 return showAppAlert("Yikes 🔌", "Connection Error", "Database not connected. Check network.", "Cannot connect to database. Please check your network.");
             }
+
             try {
                 await db.collection("bugs").add({
                     description: desc,
@@ -1046,21 +1087,196 @@
                     reporterName: auth.currentUser ? auth.currentUser.displayName : "Anonymous",
                     status: "new"
                 });
+                
                 document.getElementById('bug-modal').classList.add('hidden');
                 document.getElementById('bug-description').value = '';
                 showAppAlert("Big W 🐛", "Bug Reported", "Dev is on it. Good looks!", "Your issue has been submitted successfully and will be reviewed.");
+                
             } catch(e) {
                 playFail();
                 showAppAlert("RIP 💀", "Error", "Failed to save: " + e.message, "Failed to submit bug: " + e.message);
             }
         }
 
+        function setTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('userTheme', theme);
+            
+            document.body.className = `theme-${theme}`;
+            document.getElementById('theme-selector').style.display = 'none';
+            document.getElementById('app-container').classList.remove('hidden');
+            
+            syncSwitches();
+
+            if(theme === 'z') {
+                document.body.style.backgroundSize = '400% 400%';
+            } else {
+                document.body.style.backgroundSize = 'auto';
+            }
+        }
+
+        function toggleThemeSwitch(checkbox) {
+            playPop();
+            const newTheme = checkbox.checked ? 'z' : 'm';
+            setTheme(newTheme);
+        }
+
+        function syncSwitches() {
+            const cb1 = document.getElementById('theme-toggle-checkbox');
+            const cb2 = document.getElementById('theme-toggle-checkbox-logged');
+            if(cb1) cb1.checked = (currentTheme === 'z');
+            if(cb2) cb2.checked = (currentTheme === 'z');
+        }
+
+        function playPop() {
+            if (currentTheme !== 'z') return; 
+            try {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContext) audioCtx = new AudioContext();
+                }
+                if (!audioCtx) return;
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+                osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch (e) { console.warn("Audio pop suppressed"); }
+        }
+
+        function playFail() {
+            if (currentTheme !== 'z') return;
+            try { 
+                const a1 = document.getElementById('sfx-fail');
+                const a2 = document.getElementById('sfx-fail2');
+                const choices = [a1, a2].filter(Boolean);
+                const choice = choices[Math.floor(Math.random() * choices.length)];
+                if(choice) choice.play().catch(()=>{}); 
+            } catch(e){}
+        }
+
+        function playWtf() {
+            if (currentTheme !== 'z') return;
+            try { const a = document.getElementById('sfx-wtf'); if(a) a.play().catch(()=>{}); } catch(e){}
+        }
+
+        const successAnimations = [
+            'fist-bump.lottie',
+            'dancing-bug.lottie',
+            'savage-cat.lottie',
+            'dancing-monkey.lottie',
+            'cute-bear-dancing.lottie'
+        ];
+
+        function showSuccess() {
+            if (currentTheme === 'z') {
+                const overlay = document.getElementById('success-overlay');
+                const container = document.getElementById('success-lottie-container');
+                
+                const randomAnim = successAnimations[Math.floor(Math.random() * successAnimations.length)];
+                
+                container.innerHTML = ''; 
+                const newPlayer = document.createElement('dotlottie-player');
+                newPlayer.setAttribute('src', randomAnim);
+                newPlayer.setAttribute('background', 'transparent');
+                newPlayer.setAttribute('speed', '1');
+                newPlayer.setAttribute('style', 'width: 300px; height: 300px;');
+                newPlayer.setAttribute('autoplay', 'true');
+                container.appendChild(newPlayer);
+
+                overlay.classList.remove('hidden');
+                setTimeout(() => { overlay.classList.add('hidden'); }, 3500);
+            }
+        }
+
+        function showLoading() { document.getElementById('loading-overlay').classList.remove('hidden'); }
+        function hideLoading() { document.getElementById('loading-overlay').classList.add('hidden'); }
+        function hideDropdowns() {
+            document.querySelectorAll('.dropdown-content').forEach(el => {
+                el.style.display = 'none';
+                setTimeout(() => el.style.display = '', 200); 
+            });
+        }
+        function goHome() {
+            document.getElementById('home-view').classList.remove('hidden');
+            document.getElementById('convert-menu-view').classList.add('hidden');
+            document.getElementById('workspace-view').classList.add('hidden');
+            document.getElementById('workspace-view').style.display = 'none'; 
+            resetWorkspace();
+            hideDropdowns();
+        }
+        function openConvertMenu() {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('workspace-view').classList.add('hidden');
+            document.getElementById('convert-menu-view').classList.remove('hidden');
+            hideDropdowns();
+        }
+        
+        function setCompressMode(mode) {
+            compressMode = mode;
+            document.querySelectorAll('#compress-options .sidebar-option').forEach(el => el.classList.remove('active'));
+            document.getElementById(`comp-${mode}`).classList.add('active');
+        }
+
+        function openWorkspace(toolName) {
+            currentTool = toolName;
+            
+            let displayTitle = toolName;
+            if(currentTheme === 'z') {
+                if(toolName === 'Merge PDF') displayTitle = 'Squish PDFs 🥪';
+                if(toolName === 'Split PDF') displayTitle = 'Chop PDFs 🔪';
+                if(toolName === 'Compress PDF') displayTitle = 'Make Smol 🤏';
+                if(toolName === 'Image to Word') displayTitle = 'Steal Text 🥷';
+            }
+            
+            document.getElementById('tool-title').innerText = displayTitle;
+            hideDropdowns();
+
+            const fileInput = document.getElementById('file-input');
+            const addMoreInput = document.getElementById('add-more-input');
+            
+            if (toolName === 'JPG to PDF' || toolName === 'Image to Word') fileInput.accept = addMoreInput.accept = "image/jpeg, image/png, image/webp";
+            else if (toolName === 'WORD to PDF') fileInput.accept = addMoreInput.accept = ".doc, .docx";
+            else if (toolName === 'EXCEL to PDF') fileInput.accept = addMoreInput.accept = ".xls, .xlsx, .csv";
+            else fileInput.accept = addMoreInput.accept = ".pdf";
+            
+            const needsSidebar = ['Split PDF', 'Compress PDF', 'PDF to JPG', 'WORD to PDF', 'EXCEL to PDF', 'PDF to WORD', 'PDF to EXCEL', 'Image to Word'].includes(toolName);
+            document.getElementById('workspace-view').style.display = needsSidebar ? 'flex' : 'block';
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('convert-menu-view').classList.add('hidden');
+            document.getElementById('workspace-view').classList.remove('hidden');
+            resetWorkspace();
+        }
+        
+        function resetWorkspace() {
+            loadedFiles = [];
+            pdfJsCache = {};
+            compressMode = 'recommended';
+            document.getElementById('pages-container').innerHTML = '';
+            document.getElementById('editor-area-merge').style.display = 'none';
+            document.getElementById('editor-area-split').style.display = 'none';
+            document.getElementById('editor-area-generic').style.display = 'none';
+            document.getElementById('action-bar-merge').classList.add('hidden');
+            document.getElementById('sidebar-split').classList.add('hidden');
+            document.getElementById('sidebar-generic').classList.add('hidden');
+            document.getElementById('upload-area').classList.remove('hidden');
+            document.getElementById('file-input').value = '';
+        }
+
         // ==========================================
-        // EVENT LISTENERS & INITIALIZATION
+        // 4. ON PAGE LOAD LISTENERS
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
             
-            // THEME PERSISTENCE
+            // THEME INIT
             const savedTheme = localStorage.getItem('userTheme');
             if (savedTheme) {
                 setTheme(savedTheme); 
@@ -1069,61 +1285,49 @@
                 document.getElementById('app-container').classList.add('hidden');
             }
 
-            // PROMO POPUP
+            // PROMO INIT
             setTimeout(() => { showPromoModal(); }, 1500);
 
-            // FIREBASE INIT
-            try {
-                if (typeof firebase !== 'undefined') {
-                    const firebaseConfig = {
-                        apiKey: "AIzaSyB9jEmFFEPNT0iIUH6ro-0BZSBfvdDy9XU",
-                        authDomain: "pdf-loves-me.firebaseapp.com",
-                        projectId: "pdf-loves-me",
-                        storageBucket: "pdf-loves-me.firebasestorage.app",
-                        messagingSenderId: "397926920358",
-                        appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
-                    };
-                    
-                    if (!firebase.apps.length) {
-                        firebase.initializeApp(firebaseConfig);
+            // FIREBASE AUTH & DB LISTENERS
+            if(auth) {
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        document.getElementById('auth-buttons').style.display = 'none';
+                        document.getElementById('user-profile').style.display = 'flex';
+                        document.getElementById('user-display-name').innerText = `👤 ${user.displayName || "User"}`;
+                        closeAuthModal();
+                    } else {
+                        document.getElementById('auth-buttons').style.display = 'flex';
+                        document.getElementById('user-profile').style.display = 'none';
                     }
-                    auth = firebase.auth();
-                    db = firebase.firestore();
+                });
+            }
 
-                    auth.onAuthStateChanged((user) => {
-                        if (user) {
-                            document.getElementById('auth-buttons').style.display = 'none';
-                            document.getElementById('user-profile').style.display = 'flex';
-                            document.getElementById('user-display-name').innerText = `👤 ${user.displayName || "User"}`;
-                            closeAuthModal();
-                        } else {
-                            document.getElementById('auth-buttons').style.display = 'flex';
-                            document.getElementById('user-profile').style.display = 'none';
-                        }
+            if(db) {
+                const promoRef = db.collection("promo").doc("stats");
+                promoRef.onSnapshot((doc) => {
+                    if(doc.exists) {
+                        spotsLeft = doc.data().spotsLeft;
+                    } else {
+                        promoRef.set({ spotsLeft: 50 }, { merge: true });
+                        spotsLeft = 50;
+                    }
+
+                    document.querySelectorAll('.promo-spots-count').forEach(el => {
+                        el.innerText = spotsLeft;
                     });
 
-                    // LEGIT GLOBAL PROMO COUNTER 
-                    const promoRef = db.collection("promo").doc("stats");
-                    promoRef.onSnapshot((doc) => {
-                        if(doc.exists) {
-                            spotsLeft = doc.data().spotsLeft;
-                        } else {
-                            promoRef.set({ spotsLeft: 50 }, { merge: true });
-                            spotsLeft = 50;
-                        }
-                        document.querySelectorAll('.promo-spots-count').forEach(el => { el.innerText = spotsLeft; });
-                        if(spotsLeft <= 0) {
-                            const pModal = document.getElementById('promo-modal');
-                            if(pModal && !pModal.classList.contains('hidden')) pModal.classList.add('hidden');
-                            document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'none');
-                        } else {
-                            document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'block');
-                        }
-                    });
-                }
-            } catch (e) { console.error("Firebase Init Error:", e); }
+                    if(spotsLeft <= 0) {
+                        const pModal = document.getElementById('promo-modal');
+                        if(pModal && !pModal.classList.contains('hidden')) pModal.classList.add('hidden');
+                        document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'none');
+                    } else {
+                        document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'block');
+                    }
+                });
+            }
 
-            // PDF LIBRARIES
+            // PDF LIBRARIES INIT
             try {
                 if (typeof pdfjsLib !== 'undefined') {
                     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -1148,120 +1352,31 @@
                 if (typeof Sortable !== 'undefined') {
                     new Sortable(document.getElementById('pages-container'), { animation: 150, onEnd: () => { playPop(); updateMergePageNumbers(); } });
                 }
-            } catch(e) { console.error("PDF Lib Error:", e); }
+            } catch(e) { console.error("Init error:", e); }
         });
 
         // ==========================================
-        // UI & THEME FUNCTIONS
-        // ==========================================
-        function setTheme(theme) {
-            currentTheme = theme;
-            localStorage.setItem('userTheme', theme); 
-            document.body.className = `theme-${theme}`;
-            document.getElementById('theme-selector').style.display = 'none';
-            document.getElementById('app-container').classList.remove('hidden');
-            syncSwitches();
-            if(theme === 'z') { document.body.style.backgroundSize = '400% 400%'; playPop(); } 
-            else { document.body.style.backgroundSize = 'auto'; }
-        }
-
-        function toggleThemeSwitch(checkbox) {
-            playPop();
-            setTheme(checkbox.checked ? 'z' : 'm');
-        }
-
-        function syncSwitches() {
-            const cb1 = document.getElementById('theme-toggle-checkbox');
-            const cb2 = document.getElementById('theme-toggle-checkbox-logged');
-            if(cb1) cb1.checked = (currentTheme === 'z');
-            if(cb2) cb2.checked = (currentTheme === 'z');
-        }
-
-        function showLoading() { document.getElementById('loading-overlay').classList.remove('hidden'); }
-        function hideLoading() { document.getElementById('loading-overlay').classList.add('hidden'); }
-        function hideDropdowns() { document.querySelectorAll('.dropdown-content').forEach(el => { el.style.display = 'none'; setTimeout(() => el.style.display = '', 200); }); }
-        
-        function goHome() {
-            document.getElementById('home-view').classList.remove('hidden');
-            document.getElementById('convert-menu-view').classList.add('hidden');
-            document.getElementById('workspace-view').classList.add('hidden');
-            document.getElementById('workspace-view').style.display = 'none'; 
-            resetWorkspace();
-            hideDropdowns();
-        }
-        
-        function openConvertMenu() {
-            document.getElementById('home-view').classList.add('hidden');
-            document.getElementById('workspace-view').classList.add('hidden');
-            document.getElementById('convert-menu-view').classList.remove('hidden');
-            hideDropdowns();
-        }
-        
-        function setCompressMode(mode) {
-            compressMode = mode;
-            document.querySelectorAll('#compress-options .sidebar-option').forEach(el => el.classList.remove('active'));
-            document.getElementById(`comp-${mode}`).classList.add('active');
-        }
-
-        function openWorkspace(toolName) {
-            currentTool = toolName;
-            let displayTitle = toolName;
-            if(currentTheme === 'z') {
-                if(toolName === 'Merge PDF') displayTitle = 'Squish PDFs 🥪';
-                if(toolName === 'Split PDF') displayTitle = 'Chop PDFs 🔪';
-                if(toolName === 'Compress PDF') displayTitle = 'Make Smol 🤏';
-                if(toolName === 'Image to Word') displayTitle = 'Steal Text 🥷';
-            }
-            document.getElementById('tool-title').innerText = displayTitle;
-            hideDropdowns();
-
-            const fileInput = document.getElementById('file-input');
-            const addMoreInput = document.getElementById('add-more-input');
-            if (toolName === 'JPG to PDF' || toolName === 'Image to Word') fileInput.accept = addMoreInput.accept = "image/jpeg, image/png, image/webp";
-            else if (toolName === 'WORD to PDF') fileInput.accept = addMoreInput.accept = ".doc, .docx";
-            else if (toolName === 'EXCEL to PDF') fileInput.accept = addMoreInput.accept = ".xls, .xlsx, .csv";
-            else fileInput.accept = addMoreInput.accept = ".pdf";
-            
-            const needsSidebar = ['Split PDF', 'Compress PDF', 'PDF to JPG', 'WORD to PDF', 'EXCEL to PDF', 'PDF to WORD', 'PDF to EXCEL', 'Image to Word'].includes(toolName);
-            document.getElementById('workspace-view').style.display = needsSidebar ? 'flex' : 'block';
-            document.getElementById('home-view').classList.add('hidden');
-            document.getElementById('convert-menu-view').classList.add('hidden');
-            document.getElementById('workspace-view').classList.remove('hidden');
-            resetWorkspace();
-        }
-
-        function resetWorkspace() {
-            loadedFiles = [];
-            pdfJsCache = {};
-            compressMode = 'recommended';
-            document.getElementById('pages-container').innerHTML = '';
-            document.getElementById('editor-area-merge').style.display = 'none';
-            document.getElementById('editor-area-split').style.display = 'none';
-            document.getElementById('editor-area-generic').style.display = 'none';
-            document.getElementById('action-bar-merge').classList.add('hidden');
-            document.getElementById('sidebar-split').classList.add('hidden');
-            document.getElementById('sidebar-generic').classList.add('hidden');
-            document.getElementById('upload-area').classList.remove('hidden');
-            document.getElementById('file-input').value = '';
-        }
-
-        // ==========================================
-        // FILE PROCESSING ENGINE
+        // 5. FILE PROCESSING ENGINE
         // ==========================================
         async function handleFiles(files) {
             if (files.length === 0) return;
+            
             const file = files[0];
             
             if (currentTool === 'Image to Word' && !file.type.startsWith('image/')) {
-                playWtf(); return showAppAlert("Wrong Vibe 💀", "Invalid File", "Bro, upload an IMAGE for this, not a PDF! 🖼️", "Please upload an Image file (JPG/PNG).");
+                playWtf(); 
+                return showAppAlert("Wrong Vibe 💀", "Invalid File", "Bro, upload an IMAGE for this, not a PDF! 🖼️", "Please upload an Image file (JPG/PNG).");
             }
             if (currentTool.startsWith('PDF') && !file.type.includes('pdf')) {
-                playWtf(); return showAppAlert("Wrong Vibe 💀", "Invalid File", "That ain't a PDF chief 💀", "Please upload a valid PDF file.");
+                playWtf(); 
+                return showAppAlert("Wrong Vibe 💀", "Invalid File", "That ain't a PDF chief 💀", "Please upload a valid PDF file.");
             }
             
             showLoading();
+            
             try {
                 if(!PDFDocument && currentTool.includes('PDF')) throw new Error("PDF Library got blocked by your browser. Turn off adblocker.");
+                
                 document.getElementById('upload-area').classList.add('hidden');
 
                 if (currentTool === 'Merge PDF' || currentTool === 'JPG to PDF') {
@@ -1270,9 +1385,11 @@
                     
                     for (let f of files) {
                         const fileId = `file_${fileIdCounter++}`;
+                        
                         if (currentTool === 'Merge PDF') {
                             const fileUrl = URL.createObjectURL(f);
                             const pdf = await pdfjsLib.getDocument(fileUrl).promise;
+                            
                             const arrayBuffer = await f.arrayBuffer();
                             loadedFiles.push({ id: fileId, file: f, bytes: arrayBuffer, name: f.name, type: f.type });
 
@@ -1287,6 +1404,7 @@
                         } else {
                             const arrayBuffer = await f.arrayBuffer();
                             loadedFiles.push({ id: fileId, file: f, bytes: arrayBuffer, name: f.name, type: f.type });
+                            
                             const url = URL.createObjectURL(f);
                             const img = new Image();
                             await new Promise(r => {
@@ -1309,7 +1427,9 @@
                 } else if (currentTool === 'Split PDF') {
                     document.getElementById('editor-area-split').style.display = 'flex';
                     document.getElementById('sidebar-split').classList.remove('hidden');
+                    
                     loadedFiles = [{ id: 'split_file', file: file, bytes: await file.arrayBuffer(), name: file.name }];
+                    
                     const fileUrl = URL.createObjectURL(file);
                     const pdf = await pdfjsLib.getDocument(fileUrl).promise;
                     pdfJsCache.doc = pdf;
@@ -1321,7 +1441,9 @@
                     document.getElementById('editor-area-generic').style.display = 'flex';
                     const sidebar = document.getElementById('sidebar-generic');
                     sidebar.classList.remove('hidden');
+                    
                     loadedFiles = [{ id: 'generic_file', file: file, bytes: await file.arrayBuffer(), name: file.name, type: file.type }];
+                    
                     let icon = "📄", fileMeta = (file.size / 1024 / 1024).toFixed(2) + " MB";
                     const optionsContent = document.getElementById('sidebar-options-content');
                     
@@ -1340,7 +1462,9 @@
                                     <strong><span class="tz">Thicc Boy</span><span class="tm">Less Compression</span></strong>
                                     <p><span class="tz">High quality, large file.</span><span class="tm">High quality, less compression.</span></p>
                                 </div>
-                            </div>`;
+                            </div>
+                        `;
+                        
                         const fileUrl = URL.createObjectURL(file);
                         const pdf = await pdfjsLib.getDocument(fileUrl).promise;
                         pdfJsCache.doc = pdf;
@@ -1350,7 +1474,8 @@
                         canvas.height = viewport.height; canvas.width = viewport.width;
                         await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
                         document.getElementById('editor-area-generic').innerHTML = `<div class="preview-card">${canvas.outerHTML}<div class="preview-filename">${file.name}</div><div class="preview-meta">${fileMeta}</div></div>`;
-                    } else if (currentTool === 'Image to Word') {
+                    } 
+                    else if (currentTool === 'Image to Word') {
                         optionsContent.innerHTML = `
                             <div class="show-z" style="display:flex; justify-content:center;">
                                 <dotlottie-player src="cat-playing.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
@@ -1374,11 +1499,14 @@
                             };
                             img.src = url;
                         });
-                    } else {
+                    }
+                    else {
                         if(currentTool === 'WORD to PDF') icon = "📝"; 
                         if(currentTool === 'EXCEL to PDF') icon = "📈"; 
+                        
                         if(currentTool === 'PDF to EXCEL' || currentTool === 'PDF to WORD' || currentTool === 'PDF to JPG') { 
                             if(currentTool === 'PDF to JPG') icon = "🖼️"; else icon = currentTool.includes('WORD') ? "📄" : "📈"; 
+                            
                             const fileUrl = URL.createObjectURL(file);
                             const pdf = await pdfjsLib.getDocument(fileUrl).promise;
                             pdfJsCache.doc = pdf;
@@ -1405,7 +1533,9 @@
                 playWtf();
                 showAppAlert("Bruh 💀", "Loading Error", "Something broke: " + e.message, "Error loading file: " + e.message);
                 resetWorkspace();
-            } finally { hideLoading(); }
+            } finally {
+                hideLoading();
+            }
         }
 
         // --- SHARED UI LOGIC ---
@@ -1427,7 +1557,10 @@
         // --- MERGE / JPG TO PDF ACTIONS ---
         async function executeMainAction() {
             const thumbs = document.querySelectorAll('#pages-container .page-thumb');
-            if (!thumbs.length) { playWtf(); return showAppAlert("Hold up ✋", "Missing Files", "Where are the files bro? 💀", "Please upload files before processing."); }
+            if (!thumbs.length) { 
+                playWtf(); 
+                return showAppAlert("Hold up ✋", "Missing Files", "Where are the files bro? 💀", "Please upload files before processing."); 
+            }
             
             showLoading();
             try {
@@ -1508,7 +1641,7 @@
 
             try {
                 if (currentTool === 'Compress PDF') {
-                    let scale = 1.5, jpegQuality = 0.6;
+                    let scale = 1.5, jpegQuality = 0.6; // recommended
                     if(compressMode === 'extreme') { scale = 0.8; jpegQuality = 0.3; }
                     if(compressMode === 'less') { scale = 2.0; jpegQuality = 0.9; }
 
@@ -1537,6 +1670,7 @@
                     let finalUploadBlob = new Blob([fileData.bytes], { type: fileData.type || 'application/pdf' });
                     let uploadName = fileData.name;
 
+                    // Wrap Image to PDF locally before sending to OCR
                     if (currentTool === 'Image to Word') {
                         const imgPdf = await PDFDocument.create();
                         let imgEmbed;
@@ -1571,7 +1705,9 @@
                         try {
                             const errData = await response.json();
                             errMsg = errData.Message || errData.error || errMsg;
-                        } catch(e) { errMsg = await response.text(); }
+                        } catch(e) {
+                            errMsg = await response.text();
+                        }
                         throw new Error(`${errMsg}`);
                     }
                     
@@ -1582,7 +1718,10 @@
                         triggerDownload(await fileRes.blob(), outFileName, true);
                     } else throw new Error("Server sent back an empty response.");
                 }
-            } catch (e) { playFail(); showAppAlert("API Tripped 🛑", "Processing Error", "Failed: " + e.message, "Failed: " + e.message); }
+            } catch (e) { 
+                playFail(); 
+                showAppAlert("API Tripped 🛑", "Processing Error", "Failed: " + e.message, "Failed: " + e.message); 
+            }
             hideLoading();
         }
 
