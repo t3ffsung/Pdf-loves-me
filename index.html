@@ -144,6 +144,12 @@
         body.theme-z .drop-column a:hover { background: rgba(255, 0, 255, 0.2); transform: translateX(5px); color: #fff;}
         
         .auth-buttons { display: flex; gap: 15px; align-items: center; }
+        
+        /* New Theme Toggle Button */
+        .theme-toggle-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; margin-right: 10px; font-family: var(--font-main); display: flex; align-items: center; gap: 5px;}
+        .theme-toggle-btn:hover { background: rgba(128,128,128,0.2); color: var(--text-main); }
+        body.theme-z .theme-toggle-btn { border-color: rgba(255,255,255,0.3); color: #fff; }
+        
         .btn-login { text-decoration: none; color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-login:hover { color: var(--primary); }
         .btn-signup { background: var(--primary); color: var(--btn-text); padding: 10px 20px; border-radius: var(--btn-radius); text-decoration: none; font-weight: bold; cursor: pointer; transition: all 0.2s; box-shadow: var(--btn-shadow); white-space: nowrap;}
@@ -405,11 +411,6 @@
         body.theme-z .google-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
         .google-btn img { width: 24px; }
         
-        .modal-input { width: 100%; padding: 12px; margin-bottom: 15px; border: var(--input-border); background: var(--input-bg); color: var(--text-main); border-radius: 6px; font-size: 1rem; box-sizing: border-box; font-family: var(--font-main); outline: none; transition: 0.3s; }
-        body.theme-z .modal-input { padding: 15px; border-radius: 12px; }
-        .modal-input:focus { border-color: var(--primary); }
-        body.theme-z .modal-input:focus { border-color: var(--secondary); box-shadow: 0 0 10px rgba(0,255,255,0.3); }
-
         /* ==========================================
            MOBILE RESPONSIVENESS
            ========================================== */
@@ -424,6 +425,7 @@
             
             .auth-buttons, .user-profile { width: 100%; justify-content: center; margin-top: 10px; flex-wrap: wrap;}
             .btn-signup { font-size: 0.85rem; padding: 8px 15px;}
+            .theme-toggle-btn { margin-bottom: 10px; }
 
             .hero-title { font-size: 2.2rem; line-height: 1.2; margin-top: 20px;}
             body.theme-z .hero-title { font-size: 2.8rem; }
@@ -510,18 +512,18 @@
         <header>
             <div class="logo" onclick="playPop(); goHome();"><span>pdf</span> loves me</div>
             <nav class="top-nav">
-                <a onclick="playPop(); openWorkspace('Merge PDF');">
+                <a onclick="playPop(); openWorkspace('Merge PDF');" title="Merge PDF">
                     <span class="tz">SQUISH PDF</span><span class="tm">MERGE PDF</span>
                 </a>
-                <a onclick="playPop(); openWorkspace('Split PDF');">
+                <a onclick="playPop(); openWorkspace('Split PDF');" title="Split PDF">
                     <span class="tz">CHOP PDF</span><span class="tm">SPLIT PDF</span>
                 </a>
-                <a onclick="playPop(); openWorkspace('Compress PDF');">
+                <a onclick="playPop(); openWorkspace('Compress PDF');" title="Compress PDF">
                     <span class="tz">MAKE SMOL</span><span class="tm">COMPRESS PDF</span>
                 </a>
                 
                 <div class="dropdown">
-                    <a class="dropbtn" onclick="playPop(); openConvertMenu();">
+                    <a class="dropbtn" onclick="playPop(); openConvertMenu();" title="Convert PDF">
                         <span class="tz">MORPH PDF</span><span class="tm">CONVERT PDF</span> <span style="font-size:0.7em; margin-left:5px;">▼</span>
                     </a>
                     <div class="dropdown-content" id="nav-dropdown-pdf">
@@ -540,18 +542,28 @@
                     </div>
                 </div>
 
-                <a onclick="playPop(); openWorkspace('Image to Word');">
+                <a onclick="playPop(); openWorkspace('Image to Word');" title="Image to Word">
                     <span class="tz">STEAL TEXT (OCR)</span><span class="tm">IMAGE TO WORD</span>
                 </a>
             </nav>
             
             <div class="auth-buttons" id="auth-buttons">
+                <button onclick="playPop(); toggleTheme()" class="theme-toggle-btn">
+                    <span class="tz">🔄 Go Millennial</span>
+                    <span class="tm">🔄 Go Gen-Z</span>
+                </button>
+            
                 <a class="btn-login" onclick="playPop(); openAuthModal();">Login</a>
                 <a class="btn-signup" onclick="playPop(); openAuthModal();">
                     <span class="tz">Sign up, no cap</span><span class="tm">Sign up</span>
                 </a>
             </div>
             <div class="user-profile" id="user-profile">
+                <button onclick="playPop(); toggleTheme()" class="theme-toggle-btn">
+                    <span class="tz">🔄 Go Millennial</span>
+                    <span class="tm">🔄 Go Gen-Z</span>
+                </button>
+
                 <span id="user-display-name">👤 User</span>
                 <a class="btn-logout" onclick="playPop(); logoutFirebase();">
                     <span class="tz">Dip 👋</span><span class="tm">Logout</span>
@@ -577,27 +589,6 @@
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
                     <span class="tz">Vibe with Google</span><span class="tm">Continue with Google</span>
                 </button>
-
-                <div style="display: flex; align-items: center; margin: 25px 0; color: var(--text-muted); font-weight: 800;">
-                    <span style="flex: 1; height: 1px; background: rgba(128,128,128,0.2);"></span>
-                    <span style="padding: 0 15px;">OR</span>
-                    <span style="flex: 1; height: 1px; background: rgba(128,128,128,0.2);"></span>
-                </div>
-
-                <div id="phone-auth-section">
-                    <input type="tel" id="phone-input" class="modal-input" placeholder="Phone (+1234567890)">
-                    <div id="recaptcha-container"></div>
-                    <button class="btn-process" id="send-otp-btn" onclick="playPop(); sendOTP();" style="border-radius: var(--btn-radius); padding: 15px; font-size:1.1rem;">
-                        <span class="tz">Send digits 📱</span><span class="tm">Send OTP</span>
-                    </button>
-                </div>
-
-                <div id="otp-section" class="hidden">
-                    <input type="text" id="otp-input" class="modal-input" placeholder="Enter 6-digit code">
-                    <button class="btn-process" onclick="playPop(); verifyOTP();" style="border-radius: var(--btn-radius); padding: 15px; font-size:1.1rem;">
-                        <span class="tz">Let me in 🚀</span><span class="tm">Verify & Login</span>
-                    </button>
-                </div>
             </div>
         </div>
 
@@ -616,27 +607,27 @@
             </div>
             
             <div class="grid">
-                <div class="card" onclick="playPop(); openWorkspace('Merge PDF');">
+                <div class="card" onclick="playPop(); openWorkspace('Merge PDF');" title="Merge PDF">
                     <div class="icon"><span class="tz">🥪</span><span class="tm">🔗</span></div>
                     <h3><span class="tz">Squish PDF</span><span class="tm">Merge PDF</span></h3>
                     <p><span class="tz">Combine them into a mega file.</span><span class="tm">Combine, reorder, and sort visually.</span></p>
                 </div>
-                <div class="card" onclick="playPop(); openWorkspace('Split PDF');">
+                <div class="card" onclick="playPop(); openWorkspace('Split PDF');" title="Split PDF">
                     <div class="icon">✂️</div>
                     <h3><span class="tz">Chop PDF</span><span class="tm">Split PDF</span></h3>
                     <p><span class="tz">Slice specific pages right out.</span><span class="tm">Extract specific pages or ranges.</span></p>
                 </div>
-                <div class="card" onclick="playPop(); openWorkspace('Compress PDF');">
+                <div class="card" onclick="playPop(); openWorkspace('Compress PDF');" title="Compress PDF">
                     <div class="icon"><span class="tz">🤏</span><span class="tm">📉</span></div>
                     <h3><span class="tz">Make it Smol</span><span class="tm">Compress PDF</span></h3>
                     <p><span class="tz">Crush file size, keep the quality.</span><span class="tm">Reduce file size client-side.</span></p>
                 </div>
-                <div class="card" onclick="playPop(); openConvertMenu();">
+                <div class="card" onclick="playPop(); openConvertMenu();" title="Convert PDF">
                     <div class="icon"><span class="tz">🦋</span><span class="tm">🔄</span></div>
                     <h3><span class="tz">Morph PDF</span><span class="tm">Convert PDF</span></h3>
                     <p><span class="tz">Word, Excel, JPG shape-shifting.</span><span class="tm">Convert Word, Excel, Images to/from PDF.</span></p>
                 </div>
-                <div class="card" onclick="playPop(); openWorkspace('Image to Word');">
+                <div class="card" onclick="playPop(); openWorkspace('Image to Word');" title="Image to Word">
                     <div class="icon">🔍</div>
                     <h3><span class="tz">Steal Text</span><span class="tm">Image to Word</span></h3>
                     <p><span class="tz">Rip words straight off images (OCR).</span><span class="tm">Extract editable text from images (OCR).</span></p>
@@ -654,22 +645,6 @@
             <div class="hero-title" style="margin-bottom: 50px;">
                 <span class="tz">Morph your files 🧬</span><span class="tm">Convert PDF Tools</span>
             </div>
-            
-            <style>
-                .z-icon-group { display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 3.5rem; height: 80px; }
-                .z-left { animation: floatUp 3s ease-in-out infinite; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-                .z-right { animation: floatDown 3s ease-in-out infinite; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-                .z-zap { font-size: 1.8rem; animation: pulseGlow 1.5s infinite; color: var(--secondary); transition: all 0.2s;}
-        
-                @keyframes floatUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-                @keyframes floatDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
-                @keyframes pulseGlow { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px var(--secondary)); } 50% { transform: scale(1.3); filter: drop-shadow(0 0 15px var(--secondary)); } }
-        
-                /* Hover Smash Effect */
-                body.theme-z .card:hover .z-left { transform: translateX(50px) scale(0.3) rotate(45deg); opacity: 0; animation: none; z-index: 1;}
-                body.theme-z .card:hover .z-zap { opacity: 0; transform: scale(0); animation: none;}
-                body.theme-z .card:hover .z-right { transform: translateX(-20px) scale(1.3); animation: none; z-index: 2; filter: drop-shadow(0 0 20px var(--primary)); }
-            </style>
 
             <div class="grid">
                 <div class="card" onclick="playPop(); openWorkspace('JPG to PDF');">
@@ -771,7 +746,7 @@
                     <button class="btn-add-range" onclick="playPop(); addSplitRange();">+ <span class="tz">Add another cut</span><span class="tm">Add Range</span></button>
                 </div>
                 <div class="sidebar-footer">
-                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges in one</span></label>
+                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges</span></label>
                     <button class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">
                         <span class="tz">Chop it up ✂️</span><span class="tm">Split PDF ➔</span>
                     </button>
@@ -807,6 +782,10 @@
             } else {
                 document.body.style.backgroundSize = 'auto';
             }
+        }
+        
+        function toggleTheme() {
+            setTheme(currentTheme === 'm' ? 'z' : 'm');
         }
 
         // ==========================================
@@ -856,7 +835,6 @@
         // ==========================================
         // RANDOM SUCCESS ANIMATION LOGIC
         // ==========================================
-        // Using exactly what is in your repo
         const successAnimations = [
             'fist-bump.lottie',
             'dancing-bug.lottie',
@@ -870,24 +848,18 @@
                 const overlay = document.getElementById('success-overlay');
                 const container = document.getElementById('success-lottie-container');
                 
-                // Pick a random animation
                 const randomAnim = successAnimations[Math.floor(Math.random() * successAnimations.length)];
                 
-                // Destroy and rebuild player to fix the cache loop bug
                 container.innerHTML = ''; 
-                
                 const newPlayer = document.createElement('dotlottie-player');
                 newPlayer.setAttribute('src', randomAnim);
                 newPlayer.setAttribute('background', 'transparent');
                 newPlayer.setAttribute('speed', '1');
                 newPlayer.setAttribute('style', 'width: 300px; height: 300px;');
                 newPlayer.setAttribute('autoplay', 'true');
-                
                 container.appendChild(newPlayer);
 
                 overlay.classList.remove('hidden');
-                
-                // Hide after 3.5 seconds
                 setTimeout(() => { overlay.classList.add('hidden'); }, 3500);
             }
         }
@@ -903,15 +875,15 @@
         let pdfJsCache = {}; 
         let splitRanges = [];
         let totalSplitPages = 0;
+        let compressMode = 'recommended'; // Default
 
         let PDFDocument = null;
         let degrees = null;
 
         // ==========================================
-        // FIREBASE SETUP
+        // FIREBASE SETUP (Google Only)
         // ==========================================
         let auth = null;
-        let recaptchaVerifier = null;
         
         try {
             if (typeof firebase !== 'undefined') {
@@ -930,7 +902,7 @@
                     if (user) {
                         document.getElementById('auth-buttons').style.display = 'none';
                         document.getElementById('user-profile').style.display = 'flex';
-                        document.getElementById('user-display-name').innerText = `👤 ${user.displayName || user.phoneNumber || "User"}`;
+                        document.getElementById('user-display-name').innerText = `👤 ${user.displayName || "User"}`;
                         closeAuthModal();
                     } else {
                         document.getElementById('auth-buttons').style.display = 'flex';
@@ -942,42 +914,14 @@
 
         function openAuthModal() {
             document.getElementById('auth-modal').classList.remove('hidden');
-            try { if(!recaptchaVerifier && auth) setupRecaptcha(); } catch(e){}
         }
         function closeAuthModal() {
             document.getElementById('auth-modal').classList.add('hidden');
-            document.getElementById('otp-section').classList.add('hidden');
-            document.getElementById('phone-auth-section').classList.remove('hidden');
         }
         function loginWithGoogle() {
             if(!auth) { playFail(); return alert("Firebase Auth is blocked by your browser/adblocker."); }
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider).catch(err => { playFail(); alert("Google Sign-In failed: " + err.message); });
-        }
-        function setupRecaptcha() {
-            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'normal' });
-            recaptchaVerifier.render();
-        }
-        function sendOTP() {
-            if(!auth) { playFail(); return alert("Auth blocked by browser."); }
-            const phone = document.getElementById('phone-input').value;
-            if(!phone) { playWtf(); return alert("Please enter a valid phone number."); }
-            const btn = document.getElementById('send-otp-btn');
-            btn.innerText = "Sending..."; btn.disabled = true;
-            auth.signInWithPhoneNumber(phone, recaptchaVerifier)
-                .then((res) => {
-                    window.confirmationResult = res;
-                    document.getElementById('phone-auth-section').classList.add('hidden');
-                    document.getElementById('otp-section').classList.remove('hidden');
-                }).catch((err) => {
-                    playFail(); alert("Failed to send OTP: " + err.message);
-                    btn.innerText = currentTheme === 'z' ? "Send digits 📱" : "Send OTP"; btn.disabled = false;
-                });
-        }
-        function verifyOTP() {
-            const code = document.getElementById('otp-input').value;
-            if(!code) { playWtf(); return alert("Please enter the code."); }
-            window.confirmationResult.confirm(code).catch((err) => { playFail(); alert("Incorrect OTP: " + err.message); });
         }
         function logoutFirebase() { if(auth) auth.signOut(); }
 
@@ -1010,6 +954,13 @@
             document.getElementById('convert-menu-view').classList.remove('hidden');
             hideDropdowns();
         }
+        
+        function setCompressMode(mode) {
+            compressMode = mode;
+            document.querySelectorAll('#compress-options .sidebar-option').forEach(el => el.classList.remove('active'));
+            document.getElementById(`comp-${mode}`).classList.add('active');
+        }
+
         function openWorkspace(toolName) {
             currentTool = toolName;
             
@@ -1042,6 +993,7 @@
         function resetWorkspace() {
             loadedFiles = [];
             pdfJsCache = {};
+            compressMode = 'recommended';
             document.getElementById('pages-container').innerHTML = '';
             document.getElementById('editor-area-merge').style.display = 'none';
             document.getElementById('editor-area-split').style.display = 'none';
@@ -1089,13 +1041,23 @@
         // ==========================================
         async function handleFiles(files) {
             if (files.length === 0) return;
+            
+            const file = files[0];
+            
+            // STRICT FILE TYPE CHECKING
+            if (currentTool === 'Image to Word' && !file.type.startsWith('image/')) {
+                playWtf(); return alert(currentTheme === 'z' ? "Bro, upload an IMAGE for this, not a PDF! 🖼️" : "Please upload an Image file (JPG/PNG).");
+            }
+            if (currentTool.startsWith('PDF') && !file.type.includes('pdf')) {
+                playWtf(); return alert(currentTheme === 'z' ? "That ain't a PDF chief 💀" : "Please upload a valid PDF file.");
+            }
+            
             showLoading();
             
             try {
                 if(!PDFDocument && currentTool.includes('PDF')) throw new Error("PDF Library got blocked by your browser. Turn off adblocker.");
                 
                 document.getElementById('upload-area').classList.add('hidden');
-                const file = files[0];
 
                 if (currentTool === 'Merge PDF' || currentTool === 'JPG to PDF') {
                     document.getElementById('editor-area-merge').style.display = 'block';
@@ -1166,14 +1128,23 @@
                     const optionsContent = document.getElementById('sidebar-options-content');
                     
                     if (currentTool === 'Compress PDF') {
+                        // ADDED 3 COMPRESSION OPTIONS
                         optionsContent.innerHTML = `
-                            <div class="show-z" style="display:flex; justify-content:center;">
-                                <dotlottie-player src="loader-ball.lottie" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+                            <div id="compress-options">
+                                <div class="sidebar-option" id="comp-extreme" onclick="playPop(); setCompressMode('extreme');">
+                                    <strong><span class="tz">Max Squish</span><span class="tm">Extreme Compression</span></strong>
+                                    <p><span class="tz">Looks crusty, but tiny size.</span><span class="tm">Less quality, high compression.</span></p>
+                                </div>
+                                <div class="sidebar-option active" id="comp-recommended" onclick="playPop(); setCompressMode('recommended');">
+                                    <strong><span class="tz">Vibe Check</span><span class="tm">Recommended Compression</span></strong>
+                                    <p><span class="tz">Good balance of quality and size.</span><span class="tm">Good quality, good compression.</span></p>
+                                </div>
+                                <div class="sidebar-option" id="comp-less" onclick="playPop(); setCompressMode('less');">
+                                    <strong><span class="tz">Thicc Boy</span><span class="tm">Less Compression</span></strong>
+                                    <p><span class="tz">High quality, large file.</span><span class="tm">High quality, less compression.</span></p>
+                                </div>
                             </div>
-                            <div class="sidebar-option active">
-                                <strong><span class="tz">Super Squish</span><span class="tm">Recommended</span></strong>
-                                <p><span class="tz">Rasterize pages to make it tiny.</span><span class="tm">Standard client-side compression.</span></p>
-                            </div>`;
+                        `;
                         
                         const fileUrl = URL.createObjectURL(file);
                         const pdf = await pdfjsLib.getDocument(fileUrl).promise;
@@ -1348,11 +1319,17 @@
 
             try {
                 if (currentTool === 'Compress PDF') {
+                    let scale = 1.5, jpegQuality = 0.6; // recommended
+                    if(compressMode === 'extreme') { scale = 0.8; jpegQuality = 0.3; }
+                    if(compressMode === 'less') { scale = 2.0; jpegQuality = 0.9; }
+
                     const newPdf = await PDFDocument.create();
                     for (let i = 1; i <= pdfJsCache.doc.numPages; i++) {
-                        const p = await pdfJsCache.doc.getPage(i); const v = p.getViewport({ scale: 1.5 });
-                        const c = document.createElement('canvas'); c.height = v.height; c.width = v.width; await p.render({ canvasContext: c.getContext('2d'), viewport: v }).promise;
-                        const img = await newPdf.embedJpg(c.toDataURL('image/jpeg', 0.6));
+                        const p = await pdfJsCache.doc.getPage(i); 
+                        const v = p.getViewport({ scale: scale });
+                        const c = document.createElement('canvas'); c.height = v.height; c.width = v.width; 
+                        await p.render({ canvasContext: c.getContext('2d'), viewport: v }).promise;
+                        const img = await newPdf.embedJpg(c.toDataURL('image/jpeg', jpegQuality));
                         const np = newPdf.addPage([v.width, v.height]); np.drawImage(img, { x: 0, y: 0, width: v.width, height: v.height });
                     }
                     triggerDownload(await newPdf.save(), "compressed.pdf");
@@ -1368,22 +1345,39 @@
                     triggerDownload(await zip.generateAsync({type:"blob"}), "images_extracted.zip", true);
                 }
                 else {
+                    
+                    // FIXED IMAGE TO WORD API
+                    // If Image to Word, we must first wrap it into a PDF because ConvertAPI doesn't do jpg->docx directly.
+                    let finalUploadBlob = new Blob([fileData.bytes], { type: fileData.type || 'application/pdf' });
+                    let uploadName = fileData.name;
+
+                    if (currentTool === 'Image to Word') {
+                        const imgPdf = await PDFDocument.create();
+                        let imgEmbed;
+                        if(fileData.type.includes('png')) imgEmbed = await imgPdf.embedPng(fileData.bytes);
+                        else imgEmbed = await imgPdf.embedJpg(fileData.bytes);
+                        
+                        const iPage = imgPdf.addPage([imgEmbed.width, imgEmbed.height]);
+                        iPage.drawImage(imgEmbed, { x: 0, y: 0, width: imgEmbed.width, height: imgEmbed.height });
+                        
+                        const imgPdfBytes = await imgPdf.save();
+                        finalUploadBlob = new Blob([imgPdfBytes], { type: 'application/pdf' });
+                        uploadName = "temp_image.pdf"; // Trick API into reading it as a PDF for OCR
+                    }
+
                     // API CONVERSIONS
                     const formData = new FormData();
-                    formData.append('File', fileData.file, fileData.name);
+                    formData.append('File', finalUploadBlob, uploadName);
 
-                    // Added &StoreFile=true to force URL generation, preventing Base64 binary corruption
                     let endpoint = "", mimeType = "", outExt = "";
                     const inputExt = fileData.name.split('.').pop().toLowerCase();
 
-                    if (currentTool === 'PDF to WORD') { endpoint = `https://v2.convertapi.com/convert/pdf/to/docx?Secret=${CONVERT_API_SECRET}&StoreFile=true`; mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; outExt = ".docx"; } 
+                    if (currentTool === 'PDF to WORD' || currentTool === 'Image to Word') { 
+                        endpoint = `https://v2.convertapi.com/convert/pdf/to/docx?Secret=${CONVERT_API_SECRET}&StoreFile=true`; 
+                        mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; outExt = ".docx"; 
+                    } 
                     else if (currentTool === 'PDF to EXCEL') { endpoint = `https://v2.convertapi.com/convert/pdf/to/xlsx?Secret=${CONVERT_API_SECRET}&StoreFile=true`; mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; outExt = ".xlsx"; }
                     else if (currentTool === 'WORD to PDF' || currentTool === 'EXCEL to PDF') { endpoint = `https://v2.convertapi.com/convert/${inputExt}/to/pdf?Secret=${CONVERT_API_SECRET}&StoreFile=true`; mimeType = "application/pdf"; outExt = ".pdf"; }
-                    else if (currentTool === 'Image to Word') {
-                        let validExt = ['jpg', 'jpeg', 'png', 'webp'].includes(inputExt) ? inputExt : 'jpg';
-                        if(validExt === 'jpeg') validExt = 'jpg'; 
-                        endpoint = `https://v2.convertapi.com/convert/${validExt}/to/docx?Secret=${CONVERT_API_SECRET}&StoreFile=true`; mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; outExt = ".docx";
-                    }
 
                     const response = await fetch(endpoint, { method: 'POST', body: formData });
                     
