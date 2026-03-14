@@ -167,7 +167,7 @@
         .btn-signup:hover { transform: scale(1.05); }
         body.theme-z .btn-signup:hover { box-shadow: 0 0 25px rgba(0, 255, 255, 0.8); }
         
-        /* SPOTS LEFT BADGE (Under Sign up) */
+        /* SPOTS LEFT BADGE */
         .spots-badge { font-size: 0.75rem; color: #ff4757; font-weight: bold; margin-top: 5px; animation: pulse 2s infinite alternate; text-align: center;}
         body.theme-z .spots-badge { color: var(--secondary); text-shadow: 0 0 5px var(--secondary); }
 
@@ -453,10 +453,10 @@
         .modal-input:focus { border-color: var(--primary); }
         body.theme-z .modal-input:focus { border-color: var(--secondary); box-shadow: 0 0 10px rgba(0,255,255,0.3); }
 
-        /* Report Bug Footer */
-        #bug-footer { text-align: center; padding: 20px; font-size: 0.95rem; margin-top: auto; }
-        #bug-footer a { color: var(--text-muted); cursor: pointer; text-decoration: underline; font-weight: bold; transition: 0.2s;}
-        #bug-footer a:hover { color: var(--primary); }
+        /* App Footer */
+        #app-footer { text-align: center; padding: 20px; font-size: 0.95rem; margin-top: auto; }
+        #app-footer a { color: var(--text-muted); cursor: pointer; text-decoration: underline; font-weight: bold; transition: 0.2s;}
+        #app-footer a:hover { color: var(--primary); }
 
         /* ==========================================
            MOBILE RESPONSIVENESS
@@ -466,11 +466,9 @@
             .logo { font-size: 1.5rem; justify-content: center; margin-bottom: 15px;}
             .logo span { font-size: 1.8rem; }
             
-            /* FIXED MOBILE NAVBAR: Wrap instead of scroll */
             .top-nav { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding-bottom: 10px; overflow: visible; }
             .top-nav > a, .dropbtn { font-size: 0.85rem; padding: 8px 12px; white-space: nowrap; border: 1px solid rgba(128,128,128,0.2); margin: 0;}
             
-            /* FIXED MOBILE DROPDOWN OVERFLOW */
             .dropdown-content { position: fixed; top: 180px; left: 5%; width: 90%; transform: none; flex-direction: column; padding: 15px; box-sizing: border-box; }
             .drop-column { width: 100%; padding: 0; }
             .drop-column:first-child { border-right: none; border-bottom: 1px solid rgba(128,128,128,0.2); padding-bottom: 10px; margin-bottom: 10px; }
@@ -607,6 +605,38 @@
             </div>
         </div>
 
+        <div id="privacy-modal" class="modal-overlay hidden" style="z-index: 4000;">
+            <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto; text-align: left;">
+                <span class="close-modal" onclick="playPop(); document.getElementById('privacy-modal').classList.add('hidden');">✕</span>
+                <h2 style="margin-bottom: 20px; text-align: center;"><span class="tz">Privacy Vibe Check 🛡️</span><span class="tm">Privacy Policy</span></h2>
+                
+                <div style="color: var(--text-main); font-size: 0.95rem; line-height: 1.6;">
+                    <p><strong>Last Updated:</strong> March 2026</p>
+                    <p>Your privacy is extremely important to us. Here is exactly how we handle your data:</p>
+                    
+                    <h3 style="color: var(--primary); margin-top: 15px; font-size: 1.1rem;">1. Your Files & Documents</h3>
+                    <ul style="margin-left: 20px; color: var(--text-muted);">
+                        <li style="margin-bottom: 10px;"><strong>Local Processing (Squish, Chop, Compress):</strong> These tools run entirely inside your browser. Your files <strong>never</strong> leave your computer. We do not see, upload, or store them.</li>
+                        <li><strong>API Processing (Morph PDF & OCR):</strong> To convert complex files (Word, Excel, Images), your file is temporarily sent to our secure conversion partner (ConvertAPI) via an encrypted connection. The file is processed and <strong>instantly deleted</strong> from their servers. We keep no copies.</li>
+                    </ul>
+                    
+                    <h3 style="color: var(--primary); margin-top: 15px; font-size: 1.1rem;">2. Account Information</h3>
+                    <p style="color: var(--text-muted);">If you claim a Premium Account using Google Sign-In, we store your basic profile information (Name, Email) securely via Google Firebase to authenticate your premium status. We do not sell this data.</p>
+                    
+                    <h3 style="color: var(--primary); margin-top: 15px; font-size: 1.1rem;">3. Cookies & Local Storage</h3>
+                    <p style="color: var(--text-muted);">We use your browser's local storage to remember your theme preference (Gen-Z vs. Millennial) and to ensure we don't spam you with the promo popup. We do not use invasive tracking cookies.</p>
+                    
+                    <p style="margin-top: 20px; text-align: center; color: var(--text-muted);"><strong>Questions?</strong> Contact the developer at mrsecret11118@gmail.com</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 25px;">
+                    <button class="btn-process" style="width: auto; padding: 10px 40px; display: inline-block;" onclick="playPop(); document.getElementById('privacy-modal').classList.add('hidden');">
+                        <span class="tz">Looks Good 💯</span><span class="tm">I Understand</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div id="loading-overlay" class="hidden">
             <div class="show-z" style="width: 100%; display: flex; justify-content: center;">
                 <dotlottie-player src="loader-ball.lottie" background="transparent" speed="1" style="width: 300px; height: 300px; max-width:100%;" loop autoplay></dotlottie-player>
@@ -701,27 +731,6 @@
                 </a>
             </div>
         </header>
-
-        <div id="auth-modal" class="modal-overlay hidden">
-            <div class="modal-content">
-                <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
-                
-                <div class="show-z" style="display:flex; justify-content:center;">
-                    <dotlottie-player src="rocket-man.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
-                </div>
-
-                <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
-                <p style="color:var(--text-muted); font-weight:600; margin-bottom: 30px;">
-                    <span class="tz">Login to claim your Premium Account.</span>
-                    <span class="tm">Log in to claim your Premium Account.</span>
-                </p>
-                
-                <button class="google-btn" onclick="playPop(); loginWithGoogle();">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
-                    <span class="tz">Vibe with Google</span><span class="tm">Continue with Google</span>
-                </button>
-            </div>
-        </div>
 
         <div id="home-view">
             <div class="show-z" style="display:flex; justify-content:center;">
@@ -895,9 +904,13 @@
             </div>
         </div>
 
-        <div id="bug-footer">
+        <div id="app-footer">
             <a onclick="playPop(); document.getElementById('bug-modal').classList.remove('hidden');">
-                🐛 <span class="tz">Found a bug? Snitch on it.</span><span class="tm">Report a Bug</span>
+                🐛 <span class="tz">Snitch a bug</span><span class="tm">Report a Bug</span>
+            </a>
+            <span style="color: var(--text-muted); margin: 0 10px;">|</span>
+            <a onclick="playPop(); document.getElementById('privacy-modal').classList.remove('hidden');">
+                🛡️ <span class="tz">Privacy Vibe Check</span><span class="tm">Privacy Policy</span>
             </a>
         </div>
 
@@ -1419,7 +1432,6 @@
                     const optionsContent = document.getElementById('sidebar-options-content');
                     
                     if (currentTool === 'Compress PDF') {
-                        // 3 COMPRESSION OPTIONS RENDERED IN SIDEBAR
                         optionsContent.innerHTML = `
                             <div id="compress-options" style="display:flex; flex-direction:column; gap:10px;">
                                 <div class="sidebar-option" id="comp-extreme" onclick="playPop(); setCompressMode('extreme');">
