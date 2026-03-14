@@ -97,7 +97,7 @@
            ========================================== */
         #theme-selector {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 99999;
-            display: flex; flex-direction: row; font-family: 'Inter', sans-serif;
+            display: flex; flex-direction: row; font-family: 'Inter', sans-serif; background: #fff;
         }
         .theme-half { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s; padding: 40px; text-align: center; }
         .theme-m-btn { background: #f3f3f5; color: #333; }
@@ -466,10 +466,15 @@
             .logo { font-size: 1.5rem; justify-content: center; margin-bottom: 15px;}
             .logo span { font-size: 1.8rem; }
             
-            .top-nav { width: 100%; overflow-x: auto; padding-bottom: 10px; justify-content: flex-start; scroll-behavior: smooth; }
-            .top-nav::-webkit-scrollbar { display: none; }
-            .top-nav > a, .dropbtn { font-size: 0.85rem; padding: 8px 12px; white-space: nowrap; border: 1px solid rgba(128,128,128,0.2); margin-right: 5px;}
+            /* FIXED MOBILE NAVBAR: Wrap instead of scroll */
+            .top-nav { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding-bottom: 10px; overflow: visible; }
+            .top-nav > a, .dropbtn { font-size: 0.85rem; padding: 8px 12px; white-space: nowrap; border: 1px solid rgba(128,128,128,0.2); margin: 0;}
             
+            /* FIXED MOBILE DROPDOWN OVERFLOW */
+            .dropdown-content { position: fixed; top: 180px; left: 5%; width: 90%; transform: none; flex-direction: column; padding: 15px; box-sizing: border-box; }
+            .drop-column { width: 100%; padding: 0; }
+            .drop-column:first-child { border-right: none; border-bottom: 1px solid rgba(128,128,128,0.2); padding-bottom: 10px; margin-bottom: 10px; }
+
             .auth-buttons, .user-profile { width: 100%; justify-content: center; margin-top: 10px; flex-wrap: wrap; flex-direction: column; gap:10px;}
             .btn-signup { font-size: 0.85rem; padding: 8px 15px;}
             .theme-switch-wrapper { margin-bottom: 5px; width: 100%; justify-content: center; margin-right: 0;}
@@ -697,27 +702,6 @@
             </div>
         </header>
 
-        <div id="auth-modal" class="modal-overlay hidden">
-            <div class="modal-content">
-                <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
-                
-                <div class="show-z" style="display:flex; justify-content:center;">
-                    <dotlottie-player src="rocket-man.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
-                </div>
-
-                <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
-                <p style="color:var(--text-muted); font-weight:600; margin-bottom: 30px;">
-                    <span class="tz">Login to claim your Premium Account.</span>
-                    <span class="tm">Log in to claim your Premium Account.</span>
-                </p>
-                
-                <button class="google-btn" onclick="playPop(); loginWithGoogle();">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
-                    <span class="tz">Vibe with Google</span><span class="tm">Continue with Google</span>
-                </button>
-            </div>
-        </div>
-
         <div id="home-view">
             <div class="show-z" style="display:flex; justify-content:center;">
                 <dotlottie-player src="love-dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
@@ -872,7 +856,7 @@
                     <button class="btn-add-range" onclick="playPop(); addSplitRange();">+ <span class="tz">Add another cut</span><span class="tm">Add Range</span></button>
                 </div>
                 <div class="sidebar-footer">
-                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges</span></label>
+                    <label class="checkbox-group" onclick="playPop();"><input type="checkbox" id="merge-ranges-checkbox"> <span class="tz">Mash all cuts into one</span><span class="tm">Merge all ranges in one</span></label>
                     <button class="btn-process" id="split-btn" onclick="playPop(); executeSplit();">
                         <span class="tz">Chop it up ✂️</span><span class="tm">Split PDF ➔</span>
                     </button>
@@ -958,6 +942,8 @@
                         const pModal = document.getElementById('promo-modal');
                         if(pModal && !pModal.classList.contains('hidden')) pModal.classList.add('hidden');
                         document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'none');
+                    } else {
+                        document.querySelectorAll('.spots-badge').forEach(el => el.style.display = 'block');
                     }
                 });
             }
@@ -967,7 +953,8 @@
         // PROMO POPUP LOGIC (FOMO)
         // ==========================================
         function showPromoModal() {
-            if (localStorage.getItem('promoDismissed') === 'true' || spotsLeft <= 0) return; 
+            // Uses a new key so it shows up for you again during testing
+            if (localStorage.getItem('promoDismissedV3') === 'true' || spotsLeft <= 0) return; 
             
             const promo = document.getElementById('promo-modal');
             if(promo) {
@@ -977,7 +964,7 @@
 
         function closePromoModal() {
             document.getElementById('promo-modal').classList.add('hidden');
-            localStorage.setItem('promoDismissed', 'true'); 
+            localStorage.setItem('promoDismissedV3', 'true'); 
         }
 
         function claimPremium() {
@@ -1056,6 +1043,8 @@
 
         function setTheme(theme) {
             currentTheme = theme;
+            localStorage.setItem('userTheme', theme); // Save user preference
+            
             document.body.className = `theme-${theme}`;
             document.getElementById('theme-selector').style.display = 'none';
             document.getElementById('app-container').classList.remove('hidden');
@@ -1064,7 +1053,6 @@
 
             if(theme === 'z') {
                 document.body.style.backgroundSize = '400% 400%';
-                playPop();
             } else {
                 document.body.style.backgroundSize = 'auto';
             }
@@ -1072,16 +1060,8 @@
 
         function toggleThemeSwitch(checkbox) {
             playPop();
-            currentTheme = checkbox.checked ? 'z' : 'm';
-            document.body.className = `theme-${currentTheme}`;
-            
-            syncSwitches();
-
-            if(currentTheme === 'z') {
-                document.body.style.backgroundSize = '400% 400%';
-            } else {
-                document.body.style.backgroundSize = 'auto';
-            }
+            const newTheme = checkbox.checked ? 'z' : 'm';
+            setTheme(newTheme);
         }
 
         function syncSwitches() {
@@ -1267,6 +1247,19 @@
         // EVENT LISTENERS
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
+            
+            // THEME PERSISTENCE
+            const savedTheme = localStorage.getItem('userTheme');
+            if (savedTheme) {
+                setTheme(savedTheme); 
+            } else {
+                document.getElementById('theme-selector').style.display = 'flex';
+                document.getElementById('app-container').classList.add('hidden');
+            }
+
+            // Trigger FOMO promo 1.5s after load
+            setTimeout(() => { showPromoModal(); }, 1500);
+
             try {
                 if (typeof pdfjsLib !== 'undefined') {
                     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -1302,6 +1295,7 @@
             
             const file = files[0];
             
+            // STRICT FILE TYPE CHECKING
             if (currentTool === 'Image to Word' && !file.type.startsWith('image/')) {
                 playWtf(); 
                 return showAppAlert("Wrong Vibe 💀", "Invalid File", "Bro, upload an IMAGE for this, not a PDF! 🖼️", "Please upload an Image file (JPG/PNG).");
