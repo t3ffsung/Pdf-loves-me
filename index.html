@@ -435,7 +435,7 @@
 
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
         .close-modal:hover { color: var(--primary); }
-        body.theme-z .close-modal:hover { transform: rotate(90deg); }
+        body.theme-z .close-modal:hover { transform: rotate(90deg); color: #fff; }
         .promo-box .close-modal { color: white; opacity: 0.8; }
         .promo-box .close-modal:hover { opacity: 1; color: white; }
 
@@ -628,21 +628,21 @@
         </div>
 
         <header>
-            <div class="logo" onclick="playPop(); goHome();"><span>pdf</span> loves me</div>
+            <div class="logo" onclick="playPop(); goHome();" style="cursor:pointer;"><span>pdf</span> loves me</div>
             
             <nav class="top-nav">
-                <a onclick="playPop(); openWorkspace('Merge PDF');" data-tooltip="Merge PDF">
+                <a onclick="playPop(); openWorkspace('Merge PDF');" data-tooltip="Merge PDF" style="cursor:pointer;">
                     <span class="tz">SQUISH PDF</span><span class="tm">MERGE PDF</span>
                 </a>
-                <a onclick="playPop(); openWorkspace('Split PDF');" data-tooltip="Split PDF">
+                <a onclick="playPop(); openWorkspace('Split PDF');" data-tooltip="Split PDF" style="cursor:pointer;">
                     <span class="tz">CHOP PDF</span><span class="tm">SPLIT PDF</span>
                 </a>
-                <a onclick="playPop(); openWorkspace('Compress PDF');" data-tooltip="Compress PDF">
+                <a onclick="playPop(); openWorkspace('Compress PDF');" data-tooltip="Compress PDF" style="cursor:pointer;">
                     <span class="tz">MAKE SMOL</span><span class="tm">COMPRESS PDF</span>
                 </a>
                 
                 <div class="dropdown">
-                    <a class="dropbtn" onclick="playPop(); openConvertMenu();" data-tooltip="Convert to/from PDF">
+                    <a class="dropbtn" onclick="playPop(); openConvertMenu();" data-tooltip="Convert to/from PDF" style="cursor:pointer;">
                         <span class="tz">MORPH PDF</span><span class="tm">CONVERT PDF</span> <span style="font-size:0.7em; margin-left:5px;">▼</span>
                     </a>
                     <div class="dropdown-content" id="nav-dropdown-pdf">
@@ -661,7 +661,7 @@
                     </div>
                 </div>
 
-                <a onclick="playPop(); openWorkspace('Image to Word');" data-tooltip="Image to Word">
+                <a onclick="playPop(); openWorkspace('Image to Word');" data-tooltip="Image to Word" style="cursor:pointer;">
                     <span class="tz">STEAL TEXT (OCR)</span><span class="tm">IMAGE TO WORD</span>
                 </a>
             </nav>
@@ -676,9 +676,9 @@
                     <span class="ts-label z-lbl">Gen-Z</span>
                 </div>
 
-                <a class="btn-login" onclick="playPop(); openAuthModal();">Login</a>
+                <a class="btn-login" onclick="playPop(); openAuthModal();" style="cursor:pointer;">Login</a>
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                    <a class="btn-signup" onclick="playPop(); openAuthModal();">
+                    <a class="btn-signup" onclick="playPop(); openAuthModal();" style="cursor:pointer;">
                         <span class="tz">Sign up, no cap</span><span class="tm">Sign up</span>
                     </a>
                     <span class="spots-badge"><span class="promo-spots-count">--</span> spots left! 🎁</span>
@@ -696,11 +696,32 @@
                 </div>
 
                 <span id="user-display-name">👤 User</span>
-                <a class="btn-logout" onclick="playPop(); logoutFirebase();">
+                <a class="btn-logout" onclick="playPop(); logoutFirebase();" style="cursor:pointer;">
                     <span class="tz">Dip 👋</span><span class="tm">Logout</span>
                 </a>
             </div>
         </header>
+
+        <div id="auth-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
+                
+                <div class="show-z" style="display:flex; justify-content:center;">
+                    <dotlottie-player src="rocket-man.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
+                </div>
+
+                <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
+                <p style="color:var(--text-muted); font-weight:600; margin-bottom: 30px;">
+                    <span class="tz">Login to claim your Premium Account.</span>
+                    <span class="tm">Log in to claim your Premium Account.</span>
+                </p>
+                
+                <button class="google-btn" onclick="playPop(); loginWithGoogle();">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
+                    <span class="tz">Vibe with Google</span><span class="tm">Continue with Google</span>
+                </button>
+            </div>
+        </div>
 
         <div id="home-view">
             <div class="show-z" style="display:flex; justify-content:center;">
@@ -1020,17 +1041,33 @@
             if(!auth) { playFail(); return showAppAlert("Adblocker? 🛡️", "Auth Error", "Firebase Auth is blocked by your browser.", "Authentication service is currently unavailable."); }
             const provider = new firebase.auth.GoogleAuthProvider();
             
+            // This forces the account selector to appear every time if needed
+            provider.setCustomParameters({
+                prompt: 'select_account'
+            });
+            
             auth.signInWithPopup(provider).then((result) => {
                 // If brand new user, deduct 1 from global spots!
                 if(result.additionalUserInfo && result.additionalUserInfo.isNewUser && spotsLeft > 0) {
                     db.collection("promo").doc("stats").set({
                         spotsLeft: firebase.firestore.FieldValue.increment(-1)
-                    }, { merge: true });
-                    showAppAlert("W RIZZ 🎉", "Success!", "You just claimed a lifetime Premium account!", "Congratulations! You've successfully claimed a free Premium account.");
+                    }, { merge: true }).then(() => {
+                         showAppAlert("W RIZZ 🎉", "Success!", "You just claimed a lifetime Premium account!", "Congratulations! You've successfully claimed a free Premium account.");
+                    }).catch(e => console.error(e));
+                } else if(result.additionalUserInfo && !result.additionalUserInfo.isNewUser) {
+                    showAppAlert("Welcome Back! 👋", "Logged In", "You're back in. Let's get to work.", "You have successfully logged in.");
                 }
+                closeAuthModal();
             }).catch(err => { 
+                console.error("Login Error:", err);
                 playFail(); 
-                showAppAlert("Failed 🛑", "Login Error", err.message, err.message); 
+                let errorMsg = err.message;
+                if(err.code === 'auth/operation-not-allowed') {
+                    errorMsg = "Google Sign-In is disabled. You must enable 'Google' under Authentication > Sign-in method in your Firebase Console.";
+                } else if(err.code === 'auth/unauthorized-domain') {
+                    errorMsg = "This domain is not authorized. Add your website URL to Authorized Domains in your Firebase Console Settings.";
+                }
+                showAppAlert("Failed 🛑", "Login Error", errorMsg, errorMsg); 
             });
         }
         
@@ -1053,6 +1090,7 @@
 
             if(theme === 'z') {
                 document.body.style.backgroundSize = '400% 400%';
+                playPop();
             } else {
                 document.body.style.backgroundSize = 'auto';
             }
@@ -1381,6 +1419,7 @@
                     const optionsContent = document.getElementById('sidebar-options-content');
                     
                     if (currentTool === 'Compress PDF') {
+                        // 3 COMPRESSION OPTIONS RENDERED IN SIDEBAR
                         optionsContent.innerHTML = `
                             <div id="compress-options" style="display:flex; flex-direction:column; gap:10px;">
                                 <div class="sidebar-option" id="comp-extreme" onclick="playPop(); setCompressMode('extreme');">
