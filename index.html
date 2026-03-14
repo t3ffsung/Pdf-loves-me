@@ -104,7 +104,7 @@
         
         .theme-z-btn { background: #0f0c29; color: #fff; font-family: 'Space Grotesk', sans-serif;}
         .theme-z-btn:hover { background: #1a1a2e; box-shadow: inset 0 0 50px rgba(255,0,255,0.2);}
-        .theme-z-btn h1 { font-size: 3rem; margin: 0; font-weight: 900; }
+        .theme-z-btn h1 { font-size: 3rem; margin: 0; font-weight: 900; background: -webkit-linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         @media (max-width: 768px) { #theme-selector { flex-direction: column; } .theme-half h1 { font-size: 2.2rem;} }
 
@@ -145,11 +145,9 @@
         
         .auth-buttons { display: flex; gap: 15px; align-items: center; }
         
-        /* ----------------------------------
-           THEME TOGGLE SWITCH (NEW)
-           ---------------------------------- */
+        /* THEME TOGGLE SWITCH */
         .theme-switch-wrapper { display: flex; align-items: center; gap: 10px; margin-right: 15px; }
-        .ts-label { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .ts-label { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s;}
         body.theme-z .ts-label.z-lbl { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
         body.theme-m .ts-label.m-lbl { color: var(--primary); }
         
@@ -174,7 +172,6 @@
         body.theme-z .btn-logout { border-radius: 30px; color: #ff4757; border-color: #ff4757; }
         body.theme-z .btn-logout:hover { background: #ff4757; box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);}
 
-        /* Text Gradient Class (Fixed Emoji Bug) */
         .text-grad { background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         /* Views */
@@ -204,7 +201,7 @@
         .card p { margin: 0; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; font-weight: 500;}
 
         /* ==========================================
-           CUSTOM TOOLTIPS (Replaces title attr)
+           CUSTOM TOOLTIPS (Hover Translations)
            ========================================== */
         [data-tooltip] { position: relative; }
         
@@ -392,10 +389,7 @@
         .sidebar-option p { margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;}
         body.theme-z .sidebar-option p { font-size: 0.95rem; }
         
-        .client-warning { background: #fff3cd; color: #856404; padding: 12px; border-radius: 6px; font-size: 0.85rem; border: 1px solid #ffeeba; margin-top: 20px; line-height: 1.4;}
-        body.theme-z .client-warning { background: rgba(255, 193, 7, 0.1); color: #ffdca8; padding: 15px; border-radius: 12px; font-size: 0.9rem; border: 1px solid rgba(255, 193, 7, 0.3); font-weight: 600; }
-
-        /* Loading Overlay */
+        /* Modals & Overlays */
         #loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255,255,255,0.95); z-index: 9999;
@@ -403,15 +397,9 @@
         }
         body.theme-z #loading-overlay { background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(15px); }
         
-        #loading-overlay h2 {
-            color: var(--primary); font-size: 1.8rem; margin-top: 20px; text-align: center; padding: 0 20px;
-        }
-        body.theme-z #loading-overlay h2 {
-            color: var(--secondary); font-size: 2.5rem; text-transform: uppercase; letter-spacing: 3px;
-            animation: pulse 1s infinite alternate; text-shadow: 0 0 20px var(--secondary); font-weight: 900;
-        }
+        #loading-overlay h2 { color: var(--primary); font-size: 1.8rem; margin-top: 20px; text-align: center; padding: 0 20px; }
+        body.theme-z #loading-overlay h2 { color: var(--secondary); font-size: 2.5rem; text-transform: uppercase; letter-spacing: 3px; animation: pulse 1s infinite alternate; text-shadow: 0 0 20px var(--secondary); font-weight: 900; }
         
-        /* Success Overlay */
         #success-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 255, 0, 0.15); z-index: 10000;
@@ -420,7 +408,6 @@
         }
         #success-overlay h2 { color: #fff; font-size: 4rem; text-transform: uppercase; font-weight: 900; text-shadow: 0 0 30px #2ecc71; margin-top: 20px; text-align: center;}
 
-        /* Chatbot FAB */
         #chatbot-fab {
             position: fixed; bottom: 30px; right: 30px; z-index: 1000; cursor: pointer;
             background: var(--card-bg); border: var(--card-border); border-radius: 50%;
@@ -430,7 +417,6 @@
         #chatbot-fab:hover { transform: scale(1.1) translateY(-5px); border-color: var(--primary); }
         body.theme-z #chatbot-fab { box-shadow: 0 5px 20px rgba(0,255,255,0.4); }
 
-        /* Modals (Auth & Chatbot) */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;}
         body.theme-z .modal-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
         
@@ -449,7 +435,7 @@
         body.theme-z .google-btn { padding: 15px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 900; color: #000; }
         body.theme-z .google-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
         .google-btn img { width: 24px; }
-        
+
         /* ==========================================
            MOBILE RESPONSIVENESS
            ========================================== */
@@ -523,6 +509,35 @@
 
     <div id="app-container" class="hidden">
 
+        <div id="promo-modal" class="modal-overlay hidden" style="z-index: 2000;">
+            <div class="modal-content" style="border-color: #ffd700; box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);">
+                <span class="close-modal" onclick="playPop(); closePromoModal();">✕</span>
+                <div style="font-size: 3.5rem; margin-bottom: 10px; animation: pulseGlow 2s infinite;">🎁</div>
+                
+                <h2 style="font-size: 1.8rem; margin-bottom: 15px;">
+                    <span class="tz text-grad" style="font-weight: 900;">LIFETIME PREMIUM DROP!</span>
+                    <span class="tm" style="color: #e5322d;">Early Adopter Bonus</span>
+                </h2>
+                
+                <p style="color:var(--text-muted); font-size: 1.05rem; line-height: 1.5; margin-bottom: 25px;">
+                    <span class="tz">Skip the ads. Get priority server speeds. We're giving away free Premium to the first 50 users.</span>
+                    <span class="tm">Enjoy an ad-free experience with priority processing speeds. Free Premium for the first 50 sign-ups.</span>
+                </p>
+                
+                <div style="background: rgba(255, 71, 87, 0.1); border: 2px solid #ff4757; color: #ff4757; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.2rem; margin-bottom: 25px; animation: pulse 1s infinite alternate;">
+                    🔥 Only <span class="promo-spots-count">17</span> spots left!
+                </div>
+                
+                <button class="btn-process" onclick="playPop(); claimPremium();" style="background: linear-gradient(45deg, #ffd700, #ff9f43); color: #000; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4); margin-bottom: 15px; font-size: 1.3rem;">
+                    <span class="tz">Claim Premium NOW 🚀</span><span class="tm">Claim Free Premium</span>
+                </button>
+                
+                <button onclick="playPop(); closePromoModal();" style="background: transparent; border: none; color: var(--text-muted); text-decoration: underline; cursor: pointer; font-family: var(--font-main); font-weight: bold; font-size: 0.95rem; margin-top: 10px;">
+                    <span class="tz">Nah, I love ads 💀</span><span class="tm">Continue with Free Tier</span>
+                </button>
+            </div>
+        </div>
+
         <div id="chatbot-fab" onclick="playPop(); document.getElementById('chatbot-modal').classList.remove('hidden');" data-tooltip="Need Help?">
             <dotlottie-player src="chatbot.lottie" background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
         </div>
@@ -532,8 +547,8 @@
                 <span class="close-modal" onclick="playPop(); document.getElementById('chatbot-modal').classList.add('hidden');">✕</span>
                 <dotlottie-player src="chatbot.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: 0 auto;" loop autoplay></dotlottie-player>
                 <h2 style="margin-top: 10px;"><span class="tz">Yo! I'm learning 🧠</span><span class="tm">Coming Soon</span></h2>
-                <p style="margin-top: 10px;"><span class="tz">AI Support is cooking right now. Check back later bro!</span><span class="tm">Our AI support assistant is currently under development.</span></p>
-                <button class="btn-process" onclick="playPop(); document.getElementById('chatbot-modal').classList.add('hidden');">
+                <p style="margin-top: 10px; font-size: 0.95rem;"><span class="tz">AI Support is cooking right now. Check back later bro!</span><span class="tm">Our AI support assistant is currently under development.</span></p>
+                <button class="btn-process" onclick="playPop(); document.getElementById('chatbot-modal').classList.add('hidden');" style="margin-top: 20px;">
                     <span class="tz">Got it 💯</span><span class="tm">Close</span>
                 </button>
             </div>
@@ -826,6 +841,48 @@
 
     </div> <script>
         // ==========================================
+        // PROMO POPUP LOGIC (FOMO)
+        // ==========================================
+        let promoTimer;
+        let spotsLeft = 17;
+
+        function showPromoModal() {
+            // Only show once per session so we don't annoy users constantly
+            if (sessionStorage.getItem('promoSeen')) return; 
+            
+            const promo = document.getElementById('promo-modal');
+            if(promo) {
+                promo.classList.remove('hidden');
+                
+                // Panic Countdown Simulator
+                promoTimer = setInterval(() => {
+                    if (spotsLeft > 2) {
+                        // Drop by 1, 2, or 3 randomly
+                        spotsLeft -= Math.floor(Math.random() * 3) + 1;
+                        if(spotsLeft < 2) spotsLeft = 2; // Always keep 2 left to keep hope alive
+                        
+                        document.querySelectorAll('.promo-spots-count').forEach(el => {
+                            el.innerText = spotsLeft;
+                        });
+                    } else {
+                        clearInterval(promoTimer);
+                    }
+                }, 3500); // Drops every 3.5 seconds
+            }
+        }
+
+        function closePromoModal() {
+            document.getElementById('promo-modal').classList.add('hidden');
+            clearInterval(promoTimer);
+            sessionStorage.setItem('promoSeen', 'true');
+        }
+
+        function claimPremium() {
+            closePromoModal();
+            openAuthModal(); // Directly opens Google Login
+        }
+
+        // ==========================================
         // THEME MANAGEMENT & TOGGLE SWITCH
         // ==========================================
         let currentTheme = 'm'; 
@@ -860,7 +917,6 @@
             }
         }
 
-        // Keeps both navbar switches (logged in/out) synchronized
         function syncSwitches() {
             const cb1 = document.getElementById('theme-toggle-checkbox');
             const cb2 = document.getElementById('theme-toggle-checkbox-logged');
@@ -1090,6 +1146,9 @@
         // EVENT LISTENERS
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
+            // Trigger FOMO promo
+            setTimeout(() => { showPromoModal(); }, 1500);
+
             try {
                 if (typeof pdfjsLib !== 'undefined') {
                     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
