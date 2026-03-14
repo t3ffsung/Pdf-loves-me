@@ -20,6 +20,15 @@
 
     <script type="module" src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"></script>
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_ID_HERE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      // Remember to replace this with your actual GA4 tracking ID later!
+      gtag('config', 'G-YOUR_ID_HERE'); 
+    </script>
+
     <style>
         /* ==========================================
            DUAL THEME CSS VARIABLES
@@ -423,7 +432,7 @@
         #chatbot-fab:hover { transform: scale(1.1) translateY(-5px); border-color: var(--primary); }
         body.theme-z #chatbot-fab { box-shadow: 0 5px 20px rgba(0,255,255,0.4); }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;}
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 5000; display: flex; justify-content: center; align-items: center; padding: 20px;}
         body.theme-z .modal-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
         
         .modal-content { background: var(--bg-header); padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: relative; text-align: center; }
@@ -534,7 +543,7 @@
 
     <div id="app-container" class="hidden">
 
-        <div id="notification-modal" class="modal-overlay hidden" style="z-index: 3000;">
+        <div id="notification-modal" class="modal-overlay hidden">
             <div class="modal-content" style="max-width: 350px;">
                 <span class="close-modal" onclick="playPop(); document.getElementById('notification-modal').classList.add('hidden');">✕</span>
                 <h2 id="notif-title">Notice</h2>
@@ -730,6 +739,27 @@
             </div>
         </header>
 
+        <div id="auth-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <span class="close-modal" onclick="playPop(); closeAuthModal();">✕</span>
+                
+                <div class="show-z" style="display:flex; justify-content:center;">
+                    <dotlottie-player src="rocket-man.lottie" background="transparent" speed="1" style="width: 150px; height: 150px; margin: -20px auto 10px auto;" loop autoplay></dotlottie-player>
+                </div>
+
+                <h2><span class="tz">Welcome to the Vibe</span><span class="tm">Welcome Back</span></h2>
+                <p style="color:var(--text-muted); font-weight:600; margin-bottom: 30px;">
+                    <span class="tz">Login to claim your Premium Account.</span>
+                    <span class="tm">Log in to claim your Premium Account.</span>
+                </p>
+                
+                <button class="google-btn" onclick="playPop(); loginWithGoogle();">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> 
+                    <span class="tz">Vibe with Google</span><span class="tm">Continue with Google</span>
+                </button>
+            </div>
+        </div>
+
         <div id="home-view">
             <div class="show-z" style="display:flex; justify-content:center;">
                 <dotlottie-player src="love-dancing.lottie" background="transparent" speed="1" style="width: 250px; height: 250px; max-width: 100%; margin: 0 auto -20px auto;" loop autoplay></dotlottie-player>
@@ -914,6 +944,26 @@
 
     </div> <script>
         // ==========================================
+        // GLOBAL VARIABLES 
+        // ==========================================
+        const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
+        let currentTool = "";
+        let loadedFiles = []; 
+        let fileIdCounter = 0;
+        let pageIdCounter = 0;
+        let pdfJsCache = {}; 
+        let splitRanges = [];
+        let totalSplitPages = 0;
+        let compressMode = 'recommended'; 
+        let currentTheme = 'm'; 
+        let audioCtx = null;
+        let auth = null;
+        let db = null;
+        let spotsLeft = 50; 
+        let PDFDocument = null;
+        let degrees = null;
+
+        // ==========================================
         // CUSTOM ALERT SYSTEM (Replaces native alerts)
         // ==========================================
         function showAppAlert(titleZ, titleM, msgZ, msgM) {
@@ -933,10 +983,6 @@
             messagingSenderId: "397926920358",
             appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
         };
-
-        let auth = null;
-        let db = null;
-        let spotsLeft = 50; 
 
         try {
             if (typeof firebase !== 'undefined') {
@@ -1077,7 +1123,6 @@
             const isMobileOrInApp = /iPhone|iPad|iPod|Android|LinkedIn|Instagram|FBAN/i.test(navigator.userAgent);
 
             if (isMobileOrInApp) {
-                // Uses redirect, the result is caught by auth.getRedirectResult() on load
                 auth.signInWithRedirect(provider);
             } else {
                 auth.signInWithPopup(provider).then((result) => {
@@ -1094,13 +1139,11 @@
                     closeAuthModal();
                 }).catch(err => { 
                     console.error("Login Error:", err);
-                    
                     // If desktop popup blocker stops it, fallback to redirect
                     if(err.code === 'auth/popup-blocked') {
                         auth.signInWithRedirect(provider);
                         return;
                     }
-                    
                     playFail(); 
                     let errorMsg = err.message;
                     if(err.code === 'auth/operation-not-allowed') {
@@ -1118,8 +1161,6 @@
         // ==========================================
         // THEME MANAGEMENT & TOGGLE SWITCH
         // ==========================================
-        let currentTheme = 'm'; 
-
         function setTheme(theme) {
             currentTheme = theme;
             localStorage.setItem('userTheme', theme); // Save user preference
@@ -1132,7 +1173,6 @@
 
             if(theme === 'z') {
                 document.body.style.backgroundSize = '400% 400%';
-                playPop();
             } else {
                 document.body.style.backgroundSize = 'auto';
             }
@@ -1154,7 +1194,6 @@
         // ==========================================
         // AUDIO SETUP
         // ==========================================
-        let audioCtx = null;
         function playPop() {
             if (currentTheme !== 'z') return; 
             try {
@@ -1228,22 +1267,6 @@
         }
 
         // ==========================================
-        // GLOBAL VARIABLES 
-        // ==========================================
-        const CONVERT_API_SECRET = 'QExCML7YYZCPRdM0HJOKGGI5ldQandNh';
-        let currentTool = "";
-        let loadedFiles = []; 
-        let fileIdCounter = 0;
-        let pageIdCounter = 0;
-        let pdfJsCache = {}; 
-        let splitRanges = [];
-        let totalSplitPages = 0;
-        let compressMode = 'recommended'; 
-
-        let PDFDocument = null;
-        let degrees = null;
-
-        // ==========================================
         // APP UI FLOW
         // ==========================================
         function showLoading() {
@@ -1308,6 +1331,7 @@
             document.getElementById('workspace-view').classList.remove('hidden');
             resetWorkspace();
         }
+        
         function resetWorkspace() {
             loadedFiles = [];
             pdfJsCache = {};
