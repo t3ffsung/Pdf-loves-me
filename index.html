@@ -17,15 +17,16 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 
     <script type="module" src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"></script>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_ID_HERE"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8L9ERDBC0G"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-YOUR_ID_HERE'); 
+      gtag('config', 'G-8L9ERDBC0G'); 
     </script>
 
     <style>
@@ -795,7 +796,7 @@
                     <h3><span class="tz">Make it Smol</span><span class="tm">Compress PDF</span></h3>
                     <p><span class="tz">Crush file size, keep the quality.</span><span class="tm">Reduce file size client-side.</span></p>
                 </div>
-                <div class="card" onclick="playPop(); openConvertMenu();" data-tooltip="Convert PDF">
+                <div class="card" onclick="playPop(); openWorkspace('Morph PDF');" data-tooltip="Convert PDF">
                     <div class="icon"><span class="tz">🦋</span><span class="tm">🔄</span></div>
                     <h3><span class="tz">Morph PDF</span><span class="tm">Convert PDF</span></h3>
                     <p><span class="tz">Word, Excel, JPG shape-shifting.</span><span class="tm">Convert Word, Excel, Images to/from PDF.</span></p>
@@ -958,7 +959,8 @@
             projectId: "pdf-loves-me",
             storageBucket: "pdf-loves-me.firebasestorage.app",
             messagingSenderId: "397926920358",
-            appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467"
+            appId: "1:397926920358:web:a1c9ed0fc870c1f82f0467",
+            measurementId: "G-8L9ERDBC0G" // UPDATED: From your dashboard screenshot
         };
         
         let currentTool = "";
@@ -973,6 +975,7 @@
         let audioCtx = null;
         let auth = null;
         let db = null;
+        let analytics = null; // ADDED
         let spotsLeft = 50; 
         let PDFDocument = null;
         let degrees = null;
@@ -988,6 +991,7 @@
                 }
                 auth = firebase.auth();
                 db = firebase.firestore();
+                analytics = firebase.analytics(); // ADDED: Starts tracking views
             }
         } catch(e) {
             console.error("Firebase Init Error:", e);
